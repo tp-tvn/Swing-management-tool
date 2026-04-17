@@ -960,69 +960,50 @@
     <div class="tab-pane" id="pane-feedback" style="display:none;">
 
         <div class="card">
-            <div class="card-title">Share Your Feedback</div>
-            <p style="margin-bottom:14px;color:var(--muted);">Help us improve the Safety Meetings Tool with your suggestions, bugs, or observations. Your feedback is valuable and helps shape the future of this tool.</p>
-
-            <div class="field" style="margin-bottom:12px;">
-                <label>Your Name</label>
-                <input type="text" id="fb-name" placeholder="Your name">
+            <div class="card-title">Your Feedback</div>
+            <div class="row">
+                <div class="field">
+                    <label>Your Name</label>
+                    <input type="text" id="fb-name" placeholder="Your name">
+                </div>
+                <div class="field">
+                    <label>Feedback Type</label>
+                    <select id="fb-type">
+                        <option value="">— Select a type —</option>
+                        <option value="Bug Report">🐛 Bug Report</option>
+                        <option value="Feature Request">✨ Feature Request</option>
+                        <option value="Improvement">💡 Improvement</option>
+                        <option value="Documentation">📖 Documentation</option>
+                        <option value="Other">💬 Other</option>
+                    </select>
+                </div>
             </div>
-
-            <div class="field" style="margin-bottom:12px;">
-                <label>Feedback Type</label>
-                <select id="fb-type">
-                    <option value="">— Select a type —</option>
-                    <option value="Bug Report">🐛 Bug Report (something isn't working)</option>
-                    <option value="Feature Request">✨ Feature Request (new capability)</option>
-                    <option value="Improvement">💡 Improvement (enhance existing feature)</option>
-                    <option value="Documentation">📖 Documentation (help/guide feedback)</option>
-                    <option value="Other">💬 Other comment</option>
-                </select>
-            </div>
-
-            <div class="field" style="margin-bottom:12px;">
+            <div class="field" style="margin-top:12px;">
                 <label>Feature/Area</label>
                 <select id="fb-feature">
-                    <option value="">— Select what part you're providing feedback about —</option>
-                    <option value="Prestart Meeting">📋 Today's Prestart Meeting</option>
+                    <option value="">— Select area —</option>
+                    <option value="Prestart Meeting">📋 Prestart Meeting</option>
                     <option value="Swing Log">📊 Swing Log</option>
-                    <option value="Handover Document">📄 Handover Document</option>
+                    <option value="Handover Document">📄 Handover</option>
                     <option value="Toolbox Talks">🎯 Toolbox Talks</option>
-                    <option value="Settings">⚙️ Settings & Configuration</option>
-                    <option value="General">💬 General / Other</option>
+                    <option value="Settings">⚙️ Settings</option>
+                    <option value="General">💬 General</option>
                 </select>
             </div>
-
-            <div class="field" style="margin-bottom:12px;">
+            <div class="field" style="margin-top:12px;">
                 <label>Your Feedback</label>
-                <textarea id="fb-message" placeholder="Describe what you'd like us to know. Be as specific as possible — what were you trying to do? What happened? What did you expect?"></textarea>
+                <textarea id="fb-message" placeholder="Describe your feedback in detail…" style="min-height:100px;"></textarea>
             </div>
-
-            <div class="btn-group no-print" style="margin-top:0;">
+            <div class="btn-group no-print" style="margin-top:12px;">
                 <button class="btn btn-primary" onclick="submitFeedback()">✓ Submit Feedback</button>
                 <button class="btn btn-ghost" onclick="clearFeedbackForm()">Clear</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-title">Recent Feedback (This Device)</div>
-            <p style="margin-bottom:12px;color:var(--muted);font-size:0.88rem;">Feedback submitted from this device. This list is stored locally and not shared.</p>
+            <div class="card-title">Submitted Feedback</div>
             <div id="fb-list-container">
-                <p style="color:var(--muted);font-style:italic;">No feedback submitted yet. Share your thoughts above!</p>
-            </div>
-        </div>
-
-        <div class="card" style="background:var(--blue);color:white;border:none;">
-            <div class="card-title" style="color:white;border-color:rgba(255,255,255,0.3);">Feedback Submission</div>
-            <p style="margin-bottom:10px;color:rgba(255,255,255,0.9);">When you submit feedback above, it will be:</p>
-            <ol style="margin-left:20px;line-height:2;color:rgba(255,255,255,0.9);">
-                <li><strong>Saved locally</strong> on this device for your records</li>
-                <li><strong>Sent to Slack</strong> instantly (if webhook is configured in Settings)</li>
-            </ol>
-            <p style="margin-top:10px;color:rgba(255,255,255,0.8);font-size:0.9rem;">💡 <strong>To enable Slack notifications:</strong> Go to Settings at the top and paste your Slack webhook URL.</p>
-            <div class="btn-group no-print" style="margin-top:14px;">
-                <button class="btn btn-ghost-white" onclick="exportFeedback()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);">⬇ Export Feedback</button>
-                <button class="btn btn-ghost-white" onclick="clearAllFeedback()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);">🗑 Clear All Feedback</button>
+                <p style="color:var(--muted);font-style:italic;">No feedback submitted yet.</p>
             </div>
         </div>
 
