@@ -1096,7 +1096,7 @@ function showTab(name) {
     document.body.dataset.tab = name;
     if (name === 'log')      renderLog();
     if (name === 'handover') renderHandover();
-    if (name === 'feedback') renderFeedbackList();
+    if (name === 'feedback') { try { renderFeedbackList(); } catch(e) { console.error('Feedback render error:', e); } }
 }
 
 // ══════════════════════════════════════════════════
