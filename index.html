@@ -43,52 +43,52 @@
     </script>
     <style>
         :root {
-            --blue:       #1e3a5f;
-            --blue-light: #2c5282;
-            --red:        #c53030;
-            --amber:      #b7791f;
-            --green:      #276749;
-            --purple:     #553c9a;
-            --bg:         #f7fafc;
-            --white:      #ffffff;
-            --border:     #e2e8f0;
-            --text:       #2d3748;
-            --muted:      #718096;
+            --blue:       #0d2847;
+            --blue-light: #1a3a52;
+            --red:        #ef4444;
+            --amber:      #f59e0b;
+            --green:      #10b981;
+            --purple:     #8b5cf6;
+            --bg:         #0f172a;
+            --white:      #1e293b;
+            --border:     #334155;
+            --text:       #f1f5f9;
+            --muted:      #94a3b8;
         }
 
-        /* ── Dark mode ── */
+        /* ── Light mode (lighter variant) ── */
         body[data-theme="dark"] {
-            --bg:     #0f1923;
-            --white:  #1a2635;
-            --border: #2d3f52;
-            --text:   #e2e8f0;
-            --muted:  #7a95b0;
+            --bg:     #0a0f1e;
+            --white:  #161f2e;
+            --border: #293143;
+            --text:   #e8ecf1;
+            --muted:  #8899aa;
         }
-        body[data-theme="dark"] .header       { background: #0d1520; }
-        body[data-theme="dark"] .tabs         { background: #162030; }
-        body[data-theme="dark"] .tab-btn.active { border-bottom-color: #f6ad55; }
-        body[data-theme="dark"] .swing-banner { background: #162030; }
-        body[data-theme="dark"] thead th      { background: #162030; }
-        body[data-theme="dark"] tbody tr:hover td { background: #1f2f3f; }
-        body[data-theme="dark"] .ctx-box      { background: #162030; border-color: #2c5282; color: #90cdf4; }
-        body[data-theme="dark"] .log-item     { background: var(--white); }
-        body[data-theme="dark"] .log-item:hover { border-color: #4a90d9; }
+        body[data-theme="dark"] .header       { background: #0a0f1e; }
+        body[data-theme="dark"] .tabs         { background: #131c2a; }
+        body[data-theme="dark"] .tab-btn.active { border-bottom-color: #60a5fa; }
+        body[data-theme="dark"] .swing-banner { background: #131c2a; }
+        body[data-theme="dark"] thead th      { background: #0d2847; }
+        body[data-theme="dark"] tbody tr:hover td { background: #1a2a3a; }
+        body[data-theme="dark"] .ctx-box      { background: #131c2a; border-color: #60a5fa; color: #93c5fd; }
+        body[data-theme="dark"] .log-item     { background: #161f2e; }
+        body[data-theme="dark"] .log-item:hover { border-color: #60a5fa; }
         body[data-theme="dark"] input[type=text],
         body[data-theme="dark"] input[type=date],
         body[data-theme="dark"] input[type=email],
         body[data-theme="dark"] input[type=password],
         body[data-theme="dark"] select,
-        body[data-theme="dark"] textarea      { background: #0f1923; color: var(--text); border-color: var(--border); }
+        body[data-theme="dark"] textarea      { background: #0a0f1e; color: var(--text); border-color: var(--border); }
         body[data-theme="dark"] .btn-ghost    { border-color: var(--border); color: var(--text); }
-        body[data-theme="dark"] .card.safety  { border-left-color: #fc8181; }
-        body[data-theme="dark"] .card.safety .card-title { color: #fc8181; border-color: #fc8181; }
-        body[data-theme="dark"] .card.highrisk { border-left-color: #f6ad55; }
-        body[data-theme="dark"] .card.highrisk .card-title { color: #f6ad55; border-color: #f6ad55; }
-        body[data-theme="dark"] .card.actions-card { border-left-color: #68d391; }
-        body[data-theme="dark"] .card.actions-card .card-title { color: #68d391; border-color: #68d391; }
-        body[data-theme="dark"] .card-title { color: #90cdf4; border-color: #90cdf4; }
-        body[data-theme="dark"] select.pass   { color: #68d391; }
-        body[data-theme="dark"] select.fail   { color: #fc8181; }
+        body[data-theme="dark"] .card.safety  { border-left-color: #f87171; }
+        body[data-theme="dark"] .card.safety .card-title { color: #f87171; border-color: #f87171; }
+        body[data-theme="dark"] .card.highrisk { border-left-color: #fbbf24; }
+        body[data-theme="dark"] .card.highrisk .card-title { color: #fbbf24; border-color: #fbbf24; }
+        body[data-theme="dark"] .card.actions-card { border-left-color: #34d399; }
+        body[data-theme="dark"] .card.actions-card .card-title { color: #34d399; border-color: #34d399; }
+        body[data-theme="dark"] .card-title { color: #93c5fd; border-color: #93c5fd; }
+        body[data-theme="dark"] select.pass   { color: #34d399; }
+        body[data-theme="dark"] select.fail   { color: #f87171; }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -371,7 +371,7 @@
 
         /* ── Settings panel ── */
         .settings-panel {
-            background: #edf2f7;
+            background: #1a2332;
             border-bottom: 1px solid var(--border);
             display: none;
         }
@@ -399,7 +399,7 @@
             margin-top: 4px;
         }
         body[data-theme="dark"] .settings-panel {
-            background: #162030;
+            background: #0f151f;
             border-bottom-color: var(--border);
         }
 
@@ -448,7 +448,6 @@
             body[data-tab="handover"] #pane-handover { display: block !important; }
             body[data-tab="toolbox"]  #pane-toolbox  { display: block !important; }
             body[data-tab="guide"]    #pane-guide    { display: block !important; }
-            body[data-tab="feedback"] #pane-feedback { display: block !important; }
             /* Proxy divs that replace textareas/inputs for print */
             .print-proxy {
                 display: block !important;
@@ -516,7 +515,6 @@
     <button class="tab-btn" data-tab="handover" onclick="showTab('handover')">Handover Document</button>
     <button class="tab-btn" data-tab="toolbox" onclick="showTab('toolbox')">Toolbox Talks</button>
     <button class="tab-btn" data-tab="guide"   onclick="showTab('guide')">Tool Guide</button>
-    <button class="tab-btn" data-tab="feedback" onclick="showTab('feedback')">📝 Feedback</button>
 </div>
 
 <!-- ══════════════════════════════════ SETTINGS PANEL -->
@@ -962,59 +960,6 @@
             If you have questions about the tool or encounter any issues, email thomas.pilote@tivan.com.au.
 
     </div><!-- /guide -->
-
-    <!-- ══════════════════════════════════ FEEDBACK -->
-    <div class="tab-pane" id="pane-feedback" style="display:none;">
-
-        <div class="card">
-            <div class="card-title">Your Feedback</div>
-            <div class="row">
-                <div class="field">
-                    <label>Your Name</label>
-                    <input type="text" id="fb-name" placeholder="Your name">
-                </div>
-                <div class="field">
-                    <label>Feedback Type</label>
-                    <select id="fb-type">
-                        <option value="">— Select a type —</option>
-                        <option value="Bug Report">🐛 Bug Report</option>
-                        <option value="Feature Request">✨ Feature Request</option>
-                        <option value="Improvement">💡 Improvement</option>
-                        <option value="Documentation">📖 Documentation</option>
-                        <option value="Other">💬 Other</option>
-                    </select>
-                </div>
-            </div>
-            <div class="field" style="margin-top:12px;">
-                <label>Feature/Area</label>
-                <select id="fb-feature">
-                    <option value="">— Select area —</option>
-                    <option value="Prestart Meeting">📋 Prestart Meeting</option>
-                    <option value="Swing Log">📊 Swing Log</option>
-                    <option value="Handover Document">📄 Handover</option>
-                    <option value="Toolbox Talks">🎯 Toolbox Talks</option>
-                    <option value="Settings">⚙️ Settings</option>
-                    <option value="General">💬 General</option>
-                </select>
-            </div>
-            <div class="field" style="margin-top:12px;">
-                <label>Your Feedback</label>
-                <textarea id="fb-message" placeholder="Describe your feedback in detail…" style="min-height:100px;"></textarea>
-            </div>
-            <div class="btn-group no-print" style="margin-top:12px;">
-                <button class="btn btn-primary" onclick="submitFeedback()">✓ Submit Feedback</button>
-                <button class="btn btn-ghost" onclick="clearFeedbackForm()">Clear</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Submitted Feedback</div>
-            <div id="fb-list-container">
-                <p style="color:var(--muted);font-style:italic;">No feedback submitted yet.</p>
-            </div>
-        </div>
-
-    </div><!-- /feedback -->
 
 </div><!-- /main -->
 
