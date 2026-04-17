@@ -20,9 +20,9 @@
                     const password = prompt("🔐 Enter password to access Swing Management Tool:", "");
 
                     if (password === null) {
-                        // User clicked Cancel
-                        document.body.innerHTML = "<h1>Access Denied</h1><p>⚠️ This tool is for Tivan Limited employees only.</p>";
-                        throw new Error("Access denied");
+                        // User clicked Cancel - deny access
+                        document.documentElement.innerHTML = "<html><head><title>Access Denied</title></head><body style='font-family:sans-serif;padding:40px;'><h1>Access Denied</h1><p>⚠️ This tool is for Tivan Limited employees only.</p></body></html>";
+                        return;
                     }
 
                     if (password === CORRECT_PASSWORD) {
@@ -34,8 +34,8 @@
                             alert("❌ Incorrect password. Try again.\n⚠️ This tool is for Tivan Limited employees only.");
                         } else {
                             alert("❌ Access denied. Too many incorrect attempts.\n⚠️ This tool is for Tivan Limited employees only.");
-                            document.body.innerHTML = "<h1>Access Denied</h1><p>⚠️ This tool is for Tivan Limited employees only.</p>";
-                            throw new Error("Access denied");
+                            document.documentElement.innerHTML = "<html><head><title>Access Denied</title></head><body style='font-family:sans-serif;padding:40px;'><h1>Access Denied</h1><p>⚠️ This tool is for Tivan Limited employees only.</p></body></html>";
+                            return;
                         }
                     }
                 }
