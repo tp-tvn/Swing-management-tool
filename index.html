@@ -2191,16 +2191,13 @@ async function sendToTeam() {
     const mailto  = buildMailto(points);
 
     try {
-        const htmlStr = generateMeetingHTML();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlStr, 'text/html');
-        const element = doc.body;
+        const element = document.getElementById('pane-prestart');
 
         const opt = {
             margin: 10,
             filename: sugName,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
+            html2canvas: { scale: 2, logging: false },
             jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
         };
 
