@@ -985,6 +985,19 @@
             </div>
 
             <div class="field" style="margin-bottom:12px;">
+                <label>Feature/Area</label>
+                <select id="fb-feature">
+                    <option value="">— Select what part you're providing feedback about —</option>
+                    <option value="Prestart Meeting">📋 Today's Prestart Meeting</option>
+                    <option value="Swing Log">📊 Swing Log</option>
+                    <option value="Handover Document">📄 Handover Document</option>
+                    <option value="Toolbox Talks">🎯 Toolbox Talks</option>
+                    <option value="Settings">⚙️ Settings & Configuration</option>
+                    <option value="General">💬 General / Other</option>
+                </select>
+            </div>
+
+            <div class="field" style="margin-bottom:12px;">
                 <label>Your Feedback</label>
                 <textarea id="fb-message" placeholder="Describe what you'd like us to know. Be as specific as possible — what were you trying to do? What happened? What did you expect?"></textarea>
             </div>
@@ -2391,16 +2404,18 @@ async function submitFeedback() {
     const name = document.getElementById('fb-name').value.trim();
     const role = document.getElementById('fb-role').value.trim();
     const type = document.getElementById('fb-type').value;
+    const feature = document.getElementById('fb-feature').value;
     const message = document.getElementById('fb-message').value.trim();
 
     if (!name) { toast('Please enter your name'); return; }
     if (!type) { toast('Please select a feedback type'); return; }
+    if (!feature) { toast('Please select which area you\'re providing feedback about'); return; }
     if (!message) { toast('Please enter your feedback'); return; }
 
     const feedback = {
         id: uid(),
         timestamp: new Date().toISOString(),
-        name, role, type, message
+        name, role, type, feature, message
     };
 
     const all = getFeedback();
@@ -2425,8 +2440,8 @@ async function submitFeedback() {
                     fields: [
                         { type: 'mrkdwn', text: `*Name:*\n${name}` },
                         { type: 'mrkdwn', text: `*Role:*\n${role || '(not specified)'}` },
-                        { type: 'mrkdwn', text: `*Type:*\n${type}` },
-                        { type: 'mrkdwn', text: `*Time:*\n${new Date(feedback.timestamp).toLocaleString()}` }
+                        { type: 'mrkdwn', text: `*Area:*\n${feature}` },
+                        { type: 'mrkdwn', text: `*Type:*\n${type}` }
                     ]
                 },
                 {
@@ -2459,6 +2474,7 @@ function clearFeedbackForm() {
     document.getElementById('fb-name').value = '';
     document.getElementById('fb-role').value = '';
     document.getElementById('fb-type').value = '';
+    document.getElementById('fb-feature').value = '';
     document.getElementById('fb-message').value = '';
 }
 
