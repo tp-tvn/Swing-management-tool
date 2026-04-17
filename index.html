@@ -582,12 +582,6 @@
                     <input type="text" id="f-supervisor" placeholder="Name">
                 </div>
             </div>
-            <div class="row">
-                <div class="field">
-                    <label>Company</label>
-                    <input type="text" id="f-company" placeholder="Company name">
-                </div>
-            </div>
         </div>
 
         <div class="card">
@@ -595,11 +589,12 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width:36%">Name</th>
+                        <th style="width:28%">Name</th>
+                        <th style="width:20%">Company</th>
                         <th style="width:15%">Result</th>
-                        <th style="width:14%">Initials</th>
+                        <th style="width:12%">Initials</th>
                         <th style="width:12%;text-align:center;">Signed</th>
-                        <th style="width:10%;" class="no-print"></th>
+                        <th style="width:13%;" class="no-print"></th>
                     </tr>
                 </thead>
                 <tbody id="att-body"></tbody>
@@ -1223,8 +1218,8 @@ function loadToolbox(id) {
 // ══════════════════════════════════════════════════
 let attRows = [];
 
-function addAttRow(name='', result='Pass', initials='', signed=false) {
-    attRows.push({ id: uid(), name, result, initials, signed });
+function addAttRow(name='', company='', result='Pass', initials='', signed=false) {
+    attRows.push({ id: uid(), name, company, result, initials, signed });
     renderAtt();
 }
 
@@ -1233,6 +1228,8 @@ function renderAtt() {
         <tr data-id="${r.id}">
             <td><input type="text" value="${esc(r.name)}" placeholder="Full name"
                 oninput="attSet('${r.id}','name',this.value)"></td>
+            <td><input type="text" value="${esc(r.company || '')}" placeholder="Company"
+                oninput="attSet('${r.id}','company',this.value)"></td>
             <td><select class="${resultClass(r.result)}"
                 onchange="attSet('${r.id}','result',this.value);this.className=resultClass(this.value)">
                 <option ${r.result==='Pass'?'selected':''}>Pass</option>
@@ -1405,7 +1402,6 @@ function readForm() {
         shift:           document.getElementById('f-shift').value,
         project:         document.getElementById('f-project').value,
         supervisor:      document.getElementById('f-supervisor').value,
-        company:         document.getElementById('f-company').value,
         attendance:      attRows.filter(r => r.name.trim()),
         prev24:          document.getElementById('f-prev24').value,
         earthworks: {
@@ -1769,9 +1765,10 @@ function viewMeeting(id) {
 
     if (m.attendance && m.attendance.length) {
         html += `<div style="margin-bottom:16px;"><div class="card-title">Attendance</div>
-            <table><thead><tr><th>Name</th><th>Result</th><th>Initials</th><th style="text-align:center;">Signed</th></tr></thead>
+            <table><thead><tr><th>Name</th><th>Company</th><th>Result</th><th>Initials</th><th style="text-align:center;">Signed</th></tr></thead>
             <tbody>${m.attendance.map(a=>`<tr>
                 <td>${esc(a.name)}</td>
+                <td>${esc(a.company||'')}</td>
                 <td style="color:${a.result==='Pass'?'var(--green)':a.result==='Fail'?'var(--red)':'var(--muted)'};font-weight:600;">${a.result}</td>
                 <td>${esc(a.initials||'')}</td>
                 <td style="text-align:center;">${a.signed?'✓':'—'}</td>
@@ -1824,7 +1821,6 @@ function editMeeting() {
     document.getElementById('f-shift').value      = m.shift;
     document.getElementById('f-project').value    = m.project    || 'Speewah';
     document.getElementById('f-supervisor').value = m.supervisor || '';
-    document.getElementById('f-company').value    = m.company    || '';
     document.getElementById('f-prev24').value     = m.prev24     || '';
     const ew = m.earthworks || {};
     document.getElementById('f-ew-signedoff').value = ew.padsSignedOff     || '';
@@ -2229,9 +2225,10 @@ function generateMeetingHTML() {
     const attHTML = attRows.length ? `
         <h2>Attendance &amp; Breathalyser</h2>
         <table>
-            <thead><tr><th>Name</th><th>Result</th><th>Initials</th><th>Signed</th></tr></thead>
+            <thead><tr><th>Name</th><th>Company</th><th>Result</th><th>Initials</th><th>Signed</th></tr></thead>
             <tbody>${attRows.map(r => `<tr>
                 <td>${esc(r.name)}</td>
+                <td>${esc(r.company || '')}</td>
                 <td style="color:${r.result==='Pass'?'#276749':r.result==='Fail'?'#c53030':'#b7791f'};font-weight:600;">${esc(r.result)}</td>
                 <td>${esc(r.initials)}</td>
                 <td style="text-align:center;">${r.signed ? '✓' : '—'}</td>
@@ -2622,7 +2619,7 @@ document.addEventListener('DOMContentLoaded', () => {
     newMeeting();
     newToolbox();
     renderToolboxLog();
-    ['f-date','f-shift','f-project','f-supervisor','f-company'].forEach(id => {
+    ['f-date','f-shift','f-project','f-supervisor'].forEach(id => {
         document.getElementById(id).addEventListener('change', updateHeader);
     });
 });
