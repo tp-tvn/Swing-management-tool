@@ -2191,8 +2191,10 @@ async function sendToTeam() {
     const mailto  = buildMailto(points);
 
     try {
-        const element = document.createElement('div');
-        element.innerHTML = generateMeetingHTML();
+        const htmlStr = generateMeetingHTML();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlStr, 'text/html');
+        const element = doc.body;
 
         const opt = {
             margin: 10,
