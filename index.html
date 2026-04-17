@@ -4,44 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Prestart Meeting</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        html.blocked { display: none; }
+    </style>
     <script>
-        // ── Password Protection ──
+        // Block page rendering until authentication succeeds
+        document.documentElement.classList.add('blocked');
+
         (function() {
             const CORRECT_PASSWORD = "Tivan0923@";
             const PASSWORD_KEY = "swing_tool_authenticated";
 
-            // Check if user is already authenticated in this session
-            if (sessionStorage.getItem(PASSWORD_KEY) !== "true") {
-                let attempts = 0;
-                let authenticated = false;
+            if (sessionStorage.getItem(PASSWORD_KEY) === "true") {
+                // Already authenticated, show page
+                document.documentElement.classList.remove('blocked');
+                return;
+            }
 
-                while (!authenticated && attempts < 3) {
-                    const password = prompt("🔐 Enter password to access Swing Management Tool:", "");
+            let attempts = 0;
+            let authenticated = false;
 
-                    if (password === null) {
-                        // User clicked Cancel - deny access
-                        document.documentElement.innerHTML = "<html><head><title>Access Denied</title></head><body style='font-family:sans-serif;padding:40px;'><h1>Access Denied</h1><p>⚠️ This tool is for Tivan Limited employees only.</p></body></html>";
-                        return;
-                    }
+            while (!authenticated && attempts < 3) {
+                const password = prompt("🔐 Enter password to access Swing Management Tool:", "");
 
-                    if (password === CORRECT_PASSWORD) {
-                        sessionStorage.setItem(PASSWORD_KEY, "true");
-                        authenticated = true;
+                if (password === null) {
+                    alert("❌ Access denied.\n⚠️ This tool is for Tivan Limited employees only.");
+                    return;
+                }
+
+                if (password === CORRECT_PASSWORD) {
+                    sessionStorage.setItem(PASSWORD_KEY, "true");
+                    authenticated = true;
+                    document.documentElement.classList.remove('blocked');
+                } else {
+                    attempts++;
+                    if (attempts < 3) {
+                        alert("❌ Incorrect password. Try again.\n⚠️ This tool is for Tivan Limited employees only.");
                     } else {
-                        attempts++;
-                        if (attempts < 3) {
-                            alert("❌ Incorrect password. Try again.\n⚠️ This tool is for Tivan Limited employees only.");
-                        } else {
-                            alert("❌ Access denied. Too many incorrect attempts.\n⚠️ This tool is for Tivan Limited employees only.");
-                            document.documentElement.innerHTML = "<html><head><title>Access Denied</title></head><body style='font-family:sans-serif;padding:40px;'><h1>Access Denied</h1><p>⚠️ This tool is for Tivan Limited employees only.</p></body></html>";
-                            return;
-                        }
+                        alert("❌ Access denied. Too many incorrect attempts.\n⚠️ This tool is for Tivan Limited employees only.");
+                        return;
                     }
                 }
             }
         })();
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --blue:       #1e3a5f;
