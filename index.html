@@ -2048,7 +2048,7 @@ function buildMailto(summaryPoints) {
     const shift     = document.getElementById('f-shift').value   || '';
     const folderUrl = getSwingSettings().folderUrl || 'https://tngltd.sharepoint.com/:f:/s/SpeewahFluorite/IgDafJGerqIJSbXo1P7HdlBFAXJJeSSYaq0AvZlUDF17GE0?e=6tnWBf';
 
-    const subject = `${project} Prestart — ${fmtDate(date)} ${shift}`;
+    const subject = `${project} Prestart — ${fmtDateLong(date)} ${shift}`;
 
     // Build quick stats block
     const ewS = document.getElementById('f-ew-signedoff').value;
@@ -2080,7 +2080,7 @@ function buildMailto(summaryPoints) {
         statsBlock += '\n';
     }
 
-    let body = `Hi Team,\n\nPlease find the morning prestart notes for ${fmtDate(date)} in the records folder below.\n\n`;
+    let body = `Hi Team,\n\nPlease find the morning prestart notes for ${fmtDateLong(date)} in the records folder below.\n\n`;
     if (summaryPoints) {
         body += `Main points from today:\n\n${summaryPoints}\n\n`;
     }
@@ -2368,6 +2368,12 @@ function fmtDate(s) {
     if (!s) return '—';
     const d = new Date(s + 'T00:00:00');
     return d.toLocaleDateString('en-AU', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+}
+
+function fmtDateLong(s) {
+    if (!s) return '—';
+    const d = new Date(s + 'T00:00:00');
+    return d.toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 }
 
 function esc(s) {
