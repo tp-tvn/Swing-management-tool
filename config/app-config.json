@@ -1,0 +1,27 @@
+{
+  "app": {
+    "name": "Swing Management Tool",
+    "version": "1.0.0",
+    "description": "Daily Prestart Safety Meeting Management Dashboard",
+    "organization": "Tivan Limited"
+  },
+  "settings": {
+    "theme": "light",
+    "timezone": "Australia/Perth",
+    "dateFormat": "YYYY-MM-DD",
+    "syncInterval": "hourly"
+  },
+  "sharepoint": {
+    "syncEnabled": true,
+    "syncSchedule": "0 * * * *",
+    "library": "Swing Management Tool",
+    "folders": ["data", "attachments", "docs"]
+  },
+  "features": {
+    "darkMode": true,
+    "exportCSV": true,
+    "exportPDF": true,
+    "comments": true
+  },
+  "lastUpdated": "2026-04-17T09:30:00Z"
+}

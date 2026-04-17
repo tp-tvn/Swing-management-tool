@@ -1,0 +1,2526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Prestart Meeting</title>
+    <style>
+        :root {
+            --blue:       #1e3a5f;
+            --blue-light: #2c5282;
+            --red:        #c53030;
+            --amber:      #b7791f;
+            --green:      #276749;
+            --purple:     #553c9a;
+            --bg:         #f7fafc;
+            --white:      #ffffff;
+            --border:     #e2e8f0;
+            --text:       #2d3748;
+            --muted:      #718096;
+        }
+
+        /* ── Dark mode ── */
+        body[data-theme="dark"] {
+            --bg:     #0f1923;
+            --white:  #1a2635;
+            --border: #2d3f52;
+            --text:   #e2e8f0;
+            --muted:  #7a95b0;
+        }
+        body[data-theme="dark"] .header       { background: #0d1520; }
+        body[data-theme="dark"] .tabs         { background: #162030; }
+        body[data-theme="dark"] .tab-btn.active { border-bottom-color: #f6ad55; }
+        body[data-theme="dark"] .swing-banner { background: #162030; }
+        body[data-theme="dark"] thead th      { background: #162030; }
+        body[data-theme="dark"] tbody tr:hover td { background: #1f2f3f; }
+        body[data-theme="dark"] .ctx-box      { background: #162030; border-color: #2c5282; color: #90cdf4; }
+        body[data-theme="dark"] .log-item     { background: var(--white); }
+        body[data-theme="dark"] .log-item:hover { border-color: #4a90d9; }
+        body[data-theme="dark"] input[type=text],
+        body[data-theme="dark"] input[type=date],
+        body[data-theme="dark"] input[type=email],
+        body[data-theme="dark"] input[type=password],
+        body[data-theme="dark"] select,
+        body[data-theme="dark"] textarea      { background: #0f1923; color: var(--text); border-color: var(--border); }
+        body[data-theme="dark"] .btn-ghost    { border-color: var(--border); color: var(--text); }
+        body[data-theme="dark"] .card.safety  { border-left-color: #fc8181; }
+        body[data-theme="dark"] .card.safety .card-title { color: #fc8181; border-color: #fc8181; }
+        body[data-theme="dark"] .card.highrisk { border-left-color: #f6ad55; }
+        body[data-theme="dark"] .card.highrisk .card-title { color: #f6ad55; border-color: #f6ad55; }
+        body[data-theme="dark"] .card.actions-card { border-left-color: #68d391; }
+        body[data-theme="dark"] .card.actions-card .card-title { color: #68d391; border-color: #68d391; }
+        body[data-theme="dark"] .card-title { color: #90cdf4; border-color: #90cdf4; }
+        body[data-theme="dark"] select.pass   { color: #68d391; }
+        body[data-theme="dark"] select.fail   { color: #fc8181; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: var(--blue);
+            color: white;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .header-title { font-size: 1.15rem; font-weight: 700; }
+        .header-meta  { font-size: 0.78rem; opacity: 0.7; margin-top: 2px; }
+        .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+        /* ── Tabs ── */
+        .tabs { background: var(--blue-light); display: flex; }
+        .tab-btn {
+            padding: 10px 22px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: color 0.15s;
+        }
+        .tab-btn:hover { color: white; }
+        .tab-btn.active { color: white; border-bottom-color: #f6ad55; }
+
+        /* ── Layout ── */
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+        }
+        .card-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            color: var(--blue);
+            border-bottom: 2px solid var(--blue);
+            padding-bottom: 6px;
+            margin-bottom: 14px;
+        }
+        .card.safety    { border-left: 4px solid var(--red); }
+        .card.safety    .card-title { color: var(--red);    border-color: var(--red); }
+        .card.highrisk  { border-left: 4px solid var(--amber); }
+        .card.highrisk  .card-title { color: var(--amber);  border-color: var(--amber); }
+        .card.actions-card { border-left: 4px solid var(--green); }
+        .card.actions-card .card-title { color: var(--green); border-color: var(--green); }
+
+        /* ── Forms ── */
+        .row   { display: flex; gap: 12px; flex-wrap: wrap; }
+        .field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+        label  { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+
+        input[type=text],
+        input[type=date],
+        input[type=email],
+        input[type=password],
+        select,
+        textarea {
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 7px 10px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            color: var(--text);
+            background: white;
+            width: 100%;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+        textarea { resize: vertical; min-height: 90px; }
+
+        /* ── Context carry-forward box ── */
+        .ctx-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--blue);
+            margin-bottom: 4px;
+        }
+        .ctx-box {
+            background: #ebf4ff;
+            border-left: 3px solid #90cdf4;
+            padding: 10px 12px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.83rem;
+            color: #2a4365;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* ── Tables ── */
+        table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+        thead th {
+            background: var(--blue);
+            color: white;
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        tbody td {
+            padding: 5px 8px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background: #f7fafc; }
+        tbody tr.row-done td { opacity: 0.45; }
+
+        select.pass { color: var(--green); font-weight: 600; }
+        select.fail { color: var(--red);   font-weight: 600; }
+        select.na   { color: var(--muted); }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 14px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.15s;
+            white-space: nowrap;
+        }
+        .btn:hover { opacity: 0.82; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-primary     { background: var(--blue);   color: white; }
+        .btn-green       { background: var(--green);  color: white; }
+        .btn-purple      { background: var(--purple); color: white; }
+        .btn-ghost       { background: transparent; border-color: var(--border); color: var(--text); }
+        .btn-ghost-white { background: transparent; border-color: rgba(255,255,255,0.4); color: white; }
+        .btn-danger      { background: var(--red);    color: white; }
+        .btn-sm          { padding: 4px 9px; font-size: 0.78rem; }
+        .btn-group       { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+        /* ── Swing banner ── */
+        .swing-banner {
+            background: var(--blue);
+            color: white;
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+        }
+        .swing-banner-name  { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+        .swing-banner-dates { font-size: 0.8rem; opacity: 0.75; margin-bottom: 6px; }
+        .swing-banner-context {
+            font-size: 0.84rem; opacity: 0.9;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 8px; margin-top: 6px;
+            white-space: pre-wrap;
+        }
+        .swing-stats { display: flex; gap: 18px; margin-top: 8px; font-size: 0.78rem; opacity: 0.8; }
+        .swing-stat  { display: flex; flex-direction: column; }
+        .swing-stat strong { font-size: 1.1rem; line-height: 1.2; }
+
+        /* ── Log list ── */
+        .log-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            margin-bottom: 7px;
+            cursor: pointer;
+            background: white;
+            transition: border-color 0.15s;
+        }
+        .log-item:hover { border-color: var(--blue); }
+        .log-date { font-weight: 600; font-size: 0.92rem; }
+        .log-meta { font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+        .badge {
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .badge-day    { background: #fefcbf; color: #744210; }
+        .badge-night  { background: #ebf4ff; color: #2b6cb0; }
+        .badge-action { background: #c6f6d5; color: #22543d; margin-left: 6px; }
+
+        /* ── Open actions ── */
+        .open-actions-title {
+            font-size: 0.68rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.3px;
+            color: var(--green); border-bottom: 2px solid var(--green);
+            padding-bottom: 6px; margin-bottom: 12px;
+        }
+
+        /* ── Handover / AI summary ── */
+        .ho-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .ho-section-title {
+            font-size: 0.72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            color: var(--blue);
+            border: none; border-bottom: 1px dashed var(--border);
+            background: transparent; width: 100%;
+            padding: 2px 4px; font-family: inherit;
+        }
+        .ho-section-title:focus { outline: none; border-bottom-color: var(--blue); }
+
+        /* AI summary section special styling */
+        .ai-summary-wrap { position: relative; }
+        .ai-summary-wrap textarea { padding-right: 12px; }
+        .ai-meta {
+            font-size: 0.7rem;
+            color: var(--purple);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--purple);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* Spinner */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            width: 14px; height: 14px;
+            border: 2px solid rgba(85,60,154,0.2);
+            border-top-color: var(--purple);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* API key hint */
+        .api-hint {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── Settings panel ── */
+        .settings-panel {
+            background: #edf2f7;
+            border-bottom: 1px solid var(--border);
+            display: none;
+        }
+        .settings-panel.open { display: block; }
+        .settings-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 14px 16px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .settings-group { flex: 1; min-width: 240px; }
+        .settings-group > .settings-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 5px;
+        }
+        .settings-hint {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        body[data-theme="dark"] .settings-panel {
+            background: #162030;
+            border-bottom-color: var(--border);
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 20px; right: 20px;
+            background: #1a202c;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 0.84rem;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: all 0.25s;
+            z-index: 999;
+            pointer-events: none;
+            max-width: 320px;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* ── Print ── */
+        @media print {
+            .header-actions, .tabs, .btn-group, .btn,
+            .no-print, .ai-meta, .ho-head > div,
+            #sw-settings-body, #log-detail,
+            textarea, input, select { display: none !important; }
+            body { background: white; font-size: 12px; }
+            .main { max-width: 100%; padding: 0; }
+            .card {
+                border: 1px solid #ccc;
+                border-radius: 0;
+                page-break-inside: auto;
+                margin-bottom: 10px;
+            }
+            /* Only show the active tab */
+            .tab-pane { display: none !important; }
+            body[data-tab="prestart"] #pane-prestart { display: block !important; }
+            body[data-tab="log"]      #pane-log      { display: block !important; }
+            body[data-tab="handover"] #pane-handover { display: block !important; }
+            body[data-tab="toolbox"]  #pane-toolbox  { display: block !important; }
+            /* Proxy divs that replace textareas/inputs for print */
+            .print-proxy {
+                display: block !important;
+                white-space: pre-wrap;
+                word-break: break-word;
+                font-family: inherit;
+                font-size: inherit;
+                line-height: 1.5;
+                padding: 2px 0;
+                min-height: 1em;
+            }
+            .print-proxy.inline {
+                display: inline !important;
+            }
+            /* Attendance / action tables: show all rows */
+            tbody tr { page-break-inside: avoid; }
+            /* Swing banner */
+            .swing-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        /* ── Quick Stats ── */
+        .stats-section-label {
+            font-weight: 600; font-size: 0.78rem; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.06em;
+            margin-bottom: 8px; margin-top: 4px;
+        }
+        .stats-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+        .stats-field { display: flex; flex-direction: column; gap: 4px; min-width: 110px; flex: 1; max-width: 180px; }
+        .stats-field label { font-size: 0.8rem; color: var(--muted); }
+        .stats-field input[type=number] {
+            width: 100%; padding: 6px 8px; text-align: center;
+            border: 1px solid var(--border); border-radius: 4px;
+            background: var(--white); color: var(--text); font-size: 1rem;
+        }
+        #drill-stats-body input[type=text],
+        #drill-stats-body input[type=number] {
+            width: 100%; border: none; background: transparent;
+            color: var(--text); font-size: 0.88rem; padding: 2px 4px;
+        }
+        #drill-stats-body input[type=number] { text-align: center; }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════ HEADER -->
+<div class="header">
+    <div>
+        <div class="header-title">Safety Meetings</div>
+        <div class="header-meta" id="headerMeta">—</div>
+    </div>
+    <div class="header-actions">
+        <button class="btn btn-ghost-white btn-sm" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">☀</button>
+        <button class="btn btn-ghost-white btn-sm" id="settings-toggle" onclick="toggleSettings()" title="Settings">⚙</button>
+        <button class="btn btn-ghost-white btn-sm" onclick="exportData()">Export</button>
+        <button class="btn btn-ghost-white btn-sm" onclick="document.getElementById('importInput').click()">Import</button>
+        <input type="file" id="importInput" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+</div>
+
+<!-- ══════════════════════════════════ TABS -->
+<div class="tabs">
+    <button class="tab-btn active" data-tab="prestart" onclick="showTab('prestart')">Today's Prestart Meeting</button>
+    <button class="tab-btn" data-tab="log"      onclick="showTab('log')">Swing Log</button>
+    <button class="tab-btn" data-tab="handover" onclick="showTab('handover')">Handover Document</button>
+    <button class="tab-btn" data-tab="toolbox" onclick="showTab('toolbox')">Toolbox Talks</button>
+    <button class="tab-btn" data-tab="guide"   onclick="showTab('guide')">Tool Guide</button>
+    <button class="tab-btn" data-tab="feedback" onclick="showTab('feedback')">📝 Feedback</button>
+</div>
+
+<!-- ══════════════════════════════════ SETTINGS PANEL -->
+<div class="settings-panel no-print" id="settings-panel">
+    <div class="settings-inner">
+        <div class="settings-group">
+            <div class="settings-label">Prestart Recipients</div>
+            <textarea id="recipients-input" placeholder="john.smith@company.com.au&#10;jane.doe@company.com.au"
+                style="min-height:64px;font-size:0.85rem;width:100%;"
+                oninput="setRecipients(this.value)"></textarea>
+            <div class="settings-hint">One address per line — saved on this device, not exported</div>
+        </div>
+        <div class="settings-group">
+            <div class="settings-label">Handover Recipients</div>
+            <textarea id="ho-recipients-input" placeholder="manager@company.com.au&#10;incoming.super@company.com.au"
+                style="min-height:64px;font-size:0.85rem;width:100%;"
+                oninput="setHandoverRecipients(this.value)"></textarea>
+            <div class="settings-hint">One address per line — saved on this device, not exported</div>
+        </div>
+        <div class="settings-group">
+            <div class="settings-label">Records Folder URL</div>
+            <input type="url" id="settings-folder-url" placeholder="https://…"
+                style="width:100%;font-size:0.85rem;"
+                oninput="saveFolderUrl(this.value)">
+            <div class="settings-hint">Included as a link in team emails</div>
+        </div>
+        <div class="settings-group" style="display:none;">
+            <div class="settings-label">Anthropic API Key</div>
+            <div style="display:flex;gap:6px;align-items:flex-start;">
+                <input type="password" id="settings-apikey" placeholder="sk-ant-api03-…" autocomplete="off"
+                    style="flex:1;font-size:0.85rem;">
+                <button class="btn btn-primary btn-sm" onclick="saveApiKey()" style="flex-shrink:0;">Save Key</button>
+            </div>
+            <div class="api-hint" id="settings-apikey-hint" style="margin-top:4px;"></div>
+            <div class="settings-hint">Enables AI executive summaries — stored locally, never exported</div>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- ══════════════════════════════════ PRESTART -->
+    <div class="tab-pane" id="pane-prestart">
+
+        <div class="card">
+            <div class="card-title">Shift Details</div>
+            <div class="row">
+                <div class="field">
+                    <label>Project</label>
+                    <input type="text" id="f-project" value="Speewah">
+                </div>
+                <div class="field">
+                    <label>Date</label>
+                    <input type="date" id="f-date">
+                </div>
+                <div class="field" style="max-width:150px;">
+                    <label>Shift</label>
+                    <select id="f-shift">
+                        <option value="Dayshift">Dayshift</option>
+                        <option value="Nightshift">Nightshift</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Supervisor</label>
+                    <input type="text" id="f-supervisor" placeholder="Name">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Attendance &amp; Breathalyser Record</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:36%">Name</th>
+                        <th style="width:15%">Result</th>
+                        <th style="width:14%">Initials</th>
+                        <th style="width:12%;text-align:center;">Signed</th>
+                        <th style="width:10%;" class="no-print"></th>
+                    </tr>
+                </thead>
+                <tbody id="att-body"></tbody>
+            </table>
+            <div style="margin-top:10px;" class="no-print">
+                <button class="btn btn-ghost btn-sm" onclick="addAttRow()">+ Add Person</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Previous 24hrs Performance</div>
+            <div id="ctx-prev24"></div>
+            <textarea id="f-prev24" placeholder="Summary of work completed in the previous 24 hours..."></textarea>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Quick Stats — Last 24hrs</div>
+            <div class="stats-section-label">Earthworks</div>
+            <div class="stats-row">
+                <div class="stats-field">
+                    <label>Pads Signed Off</label>
+                    <input type="number" id="f-ew-signedoff" min="0" placeholder="0">
+                </div>
+                <div class="stats-field">
+                    <label>Pads Cleared</label>
+                    <input type="number" id="f-ew-cleared" min="0" placeholder="0">
+                </div>
+                <div class="stats-field">
+                    <label>Pads Rehabilitated</label>
+                    <input type="number" id="f-ew-rehab" min="0" placeholder="0">
+                </div>
+            </div>
+            <div class="stats-section-label" style="margin-top:14px;">Drilling</div>
+            <table id="drill-stats-table">
+                <thead>
+                    <tr>
+                        <th style="width:38%">Rig</th>
+                        <th style="width:24%">Holes Drilled</th>
+                        <th style="width:24%">Metres Drilled</th>
+                        <th style="width:14%;" class="no-print"></th>
+                    </tr>
+                </thead>
+                <tbody id="drill-stats-body"></tbody>
+            </table>
+            <div style="margin-top:8px;" class="no-print">
+                <button class="btn btn-ghost btn-sm" onclick="addDrillRow()">+ Add Rig</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Daily Tasks</div>
+            <textarea id="f-tasks" placeholder="Tasks to be completed today..."></textarea>
+        </div>
+
+        <div class="card safety">
+            <div class="card-title">Safety Focus</div>
+            <textarea id="f-safety" placeholder="Today's safety focus, toolbox talk topics, hazards to highlight..."></textarea>
+        </div>
+
+        <div class="card highrisk">
+            <div class="card-title">High Risk Work</div>
+            <textarea id="f-highrisk" placeholder="High risk activities, permits required, controls in place..."></textarea>
+        </div>
+
+        <div class="card">
+            <div class="card-title">General Business</div>
+            <div id="ctx-general"></div>
+            <textarea id="f-general" placeholder="General business, announcements, other items..."></textarea>
+        </div>
+
+        <div class="card actions-card">
+            <div class="card-title">Actions</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:30%">Action</th>
+                        <th style="width:15%">Assigned To</th>
+                        <th style="width:22%">Email Address</th>
+                        <th style="width:12%">Due Date</th>
+                        <th style="width:8%;text-align:center;">Done</th>
+                        <th style="width:13%;" class="no-print"></th>
+                    </tr>
+                </thead>
+                <tbody id="action-body"></tbody>
+            </table>
+            <div style="margin-top:10px;" class="no-print">
+                <button class="btn btn-ghost btn-sm" onclick="addActionRow()">+ Add Action</button>
+            </div>
+        </div>
+
+        <div class="btn-group no-print">
+            <button class="btn btn-primary" onclick="saveMeeting()">Save</button>
+            <button class="btn btn-ghost"   onclick="window.print()">Print / PDF</button>
+            <button class="btn btn-green"   onclick="sendToTeam()">✉ Send to Team</button>
+            <button class="btn btn-ghost"   onclick="newMeeting()">New Meeting</button>
+        </div>
+
+    </div><!-- /prestart -->
+
+    <!-- ══════════════════════════════════ LOG -->
+    <div class="tab-pane" id="pane-log" style="display:none;">
+
+        <div class="card">
+            <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0;border-bottom:none;padding-bottom:0;">
+                <span>Swing Settings</span>
+                <button class="btn btn-ghost btn-sm no-print" id="sw-toggle-btn" onclick="toggleSwingSettings()" style="font-size:0.8rem;">▲ Collapse</button>
+            </div>
+            <div id="sw-settings-body" style="margin-top:14px;border-top:2px solid var(--blue);padding-top:14px;">
+                <div class="row" style="margin-bottom:10px;">
+                    <div class="field" style="flex:2;min-width:200px;">
+                        <label>Swing Name</label>
+                        <input type="text" id="sw-name" placeholder="e.g. Swing 3 — Nov 2025 Speewah">
+                    </div>
+                    <div class="field">
+                        <label>Start Date</label>
+                        <input type="date" id="sw-start">
+                    </div>
+                    <div class="field">
+                        <label>End Date</label>
+                        <input type="date" id="sw-end">
+                    </div>
+                </div>
+                <div class="field" style="margin-bottom:12px;">
+                    <label>Swing Summary so Far...</label>
+                    <textarea id="sw-context" placeholder="Brief description of the swing — e.g. End-of-program demob swing. Diamond drilling complete, focus on sample dispatch, rig extraction and site clean-up before wet season." style="min-height:64px;"></textarea>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="saveSwing()">Save Swing Settings</button>
+            </div>
+        </div>
+
+        <div id="swing-banner-container"></div>
+
+        <div class="card">
+            <div class="card-title" id="log-list-title">Meeting Log</div>
+            <div id="log-list"></div>
+        </div>
+
+        <div class="card" id="open-actions-card" style="display:none;">
+            <div class="open-actions-title">Open Actions This Swing</div>
+            <div id="open-actions-list"></div>
+        </div>
+
+        <div class="btn-group no-print">
+            <button class="btn btn-ghost"        onclick="window.print()">Print / PDF</button>
+            <button class="btn btn-danger btn-sm" onclick="clearSwingLog()">Clear Swing Log</button>
+        </div>
+
+        <div class="card" id="log-detail" style="display:none;">
+            <div id="log-detail-body"></div>
+            <div class="btn-group no-print">
+                <button class="btn btn-ghost"        onclick="closeDetail()">← Back</button>
+                <button class="btn btn-primary"       onclick="editMeeting()">Edit This Meeting</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteMeeting()">Delete</button>
+            </div>
+        </div>
+
+    </div><!-- /log -->
+
+    <!-- ══════════════════════════════════ HANDOVER -->
+    <div class="tab-pane" id="pane-handover" style="display:none;">
+
+        <div class="card">
+            <div class="card-title">Team</div>
+            <div class="row">
+                <div class="field">
+                    <label>Incoming</label>
+                    <input type="text" id="ho-incoming" placeholder="e.g. TP, AS">
+                </div>
+                <div class="field">
+                    <label>Outgoing</label>
+                    <input type="text" id="ho-outgoing" placeholder="e.g. MD, FM">
+                </div>
+                <div class="field">
+                    <label>Staying On</label>
+                    <input type="text" id="ho-staying" placeholder="e.g. —">
+                </div>
+            </div>
+        </div>
+
+        <div id="ho-sections"></div>
+
+        <div class="btn-group no-print">
+            <button class="btn btn-primary" onclick="saveHandover()">Save Handover</button>
+            <button class="btn btn-ghost"   onclick="addHandoverSection()">+ Add Section</button>
+            <button class="btn btn-ghost"   onclick="window.print()">Print / PDF</button>
+            <button class="btn btn-green"   onclick="sendHandover()">✉ Send to Team</button>
+            <button class="btn btn-danger btn-sm" onclick="clearHandover()">Clear Handover</button>
+        </div>
+
+    </div><!-- /handover -->
+
+    <!-- ══════════════════════════════════ TOOLBOX -->
+    <div class="tab-pane" id="pane-toolbox" style="display:none;">
+
+        <div class="card">
+            <div class="card-title">Toolbox Talk Details</div>
+            <div class="row">
+                <div class="field">
+                    <label>Project</label>
+                    <input type="text" id="tb-project">
+                </div>
+                <div class="field">
+                    <label>Date</label>
+                    <input type="date" id="tb-date">
+                </div>
+                <div class="field">
+                    <label>Presenter</label>
+                    <input type="text" id="tb-presenter" placeholder="Name of presenter">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Topic</div>
+            <textarea id="tb-topic" placeholder="Toolbox talk topic…" style="min-height:60px;"></textarea>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Attendees</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:55%">Name</th>
+                        <th style="width:20%">Initials</th>
+                        <th style="width:12%;text-align:center;">Signed</th>
+                        <th style="width:13%;" class="no-print"></th>
+                    </tr>
+                </thead>
+                <tbody id="tb-att-body"></tbody>
+            </table>
+            <div style="margin-top:10px;" class="no-print">
+                <button class="btn btn-ghost btn-sm" onclick="addTbRow()">+ Add Person</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Summary</div>
+            <textarea id="tb-summary" placeholder="Summary of the toolbox talk discussion…" style="min-height:100px;"></textarea>
+        </div>
+
+        <div class="btn-group no-print">
+            <button class="btn btn-primary" onclick="saveToolbox()">Save</button>
+            <button class="btn btn-ghost"   onclick="window.print()">Print / PDF</button>
+            <button class="btn btn-ghost"   onclick="newToolbox()">New Toolbox Talk</button>
+        </div>
+
+        <div class="card" style="margin-top:24px;">
+            <div class="card-title">Toolbox Talk Log</div>
+            <div id="tb-log-list"></div>
+        </div>
+
+    </div><!-- /toolbox -->
+
+    <!-- ══════════════════════════════════ GUIDE -->
+    <div class="tab-pane" id="pane-guide" style="display:none;">
+
+        <div class="card">
+            <div class="card-title">Introduction</div>
+            <p style="margin-bottom:10px;">As a mining exploration company operating under the WHS (Mines) Regulations 2022 (WA), we are required to conduct and record daily prestart meetings, toolbox talks, and shift handovers. This tool was developed to address several consistency issues that arose from our morning prestart routine and related documents used across the swing — specifically around:</p>
+            <ul style="margin-left:18px;line-height:2;">
+                <li>The preservation of context between daily meetings,</li>
+                <li>The continuity of records across the full span of a swing, and</li>
+                <li>The complete capture of safety and technical information within the end-of-swing handover document.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Purpose</div>
+            <p style="margin-bottom:10px;">This tool is a single-file web application for running and recording daily safety prestart meetings, managing swing-end handovers, and logging toolbox talks across our various projects in a uniform and standardised way. It runs entirely in your browser with no internet connection required (unless using the optional summary feature). All data is saved automatically to your device — no server, no login, no installation.</p>
+            <p style="margin-bottom:10px;">The goal is to replace word document records and disconnected email chains with one consistent, searchable record structure that allows our crews to preserve context across the span of a swing and produce a handover that is complete, saves time, and is easily exportable and presentable to the incoming team.</p>
+            <p>To start using the tool, open the <strong>Meetings.html</strong> file in your browser by pasting the file path into your address bar.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Layout</div>
+            <p style="margin-bottom:12px;">The tool is organised into six tabs across the top:</p>
+            <table>
+                <thead><tr><th style="width:30%">Tab</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>Today's Prestart Meeting</td><td>The main daily meeting form. Filled in at each shift prestart and saved to the swing log.</td></tr>
+                    <tr><td>Swing Log</td><td>A full archive of every saved meeting for the current swing. Meetings are listed by date and shift. Open any entry to review it in full. Open actions from across the swing are surfaced here as well.</td></tr>
+                    <tr><td>Handover Document</td><td>A structured end-of-swing handover covering safety, site access, earthworks, drilling, sampling, assay, survey, fuel, vehicles, and general business. Includes an executive summary generator to provide broader context.</td></tr>
+                    <tr><td>Toolbox Talks</td><td>A separate form for recording toolbox talks, including topic, presenter, attendees, and a discussion summary. Past toolbox talks are listed below the form.</td></tr>
+                    <tr><td>Tool Guide</td><td>This page — help and documentation.</td></tr>
+                    <tr><td>📝 Feedback</td><td>Share suggestions, bug reports, or feature requests to help us improve the tool. Your input helps shape the future of this application.</td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:14px;margin-bottom:8px;">At the top right of the page there are three utility buttons:</p>
+            <ul style="margin-left:18px;line-height:2;">
+                <li><strong>Sun/Moon icon</strong> — toggles light/dark mode.</li>
+                <li><strong>Gear icon</strong> — opens the settings panel (see below).</li>
+                <li><strong>Export / Import</strong> — backs up or restores all meeting data as a JSON file that preserves the contents of each tab.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Settings Panel</div>
+            <p style="margin-bottom:12px;">Click the gear icon to expand the settings panel. Configure this once on each device you use the tool from:</p>
+            <ul style="margin-left:18px;line-height:2;">
+                <li><strong>Prestart Recipients</strong> — email addresses (one per line) that receive the Send to Team prestart email each shift.</li>
+                <li><strong>Handover Recipients</strong> — email addresses for the swing-end handover email.</li>
+                <li><strong>Records Folder URL</strong> — a link to your shared drive folder.</li>
+            </ul>
+            <p style="margin-top:10px;color:var(--muted);font-size:0.88rem;">Recipient lists are saved locally to your device only. If you use the tool on multiple devices, enter these settings on each one separately.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Main Features — Daily Prestart Meeting</div>
+            <p style="margin-bottom:14px;">The Daily Prestart Meeting tab is the main one you will use at the start of every shift. The layout logic is broadly consistent across all tabs.</p>
+
+            <div style="margin-bottom:16px;">
+                <div style="font-weight:700;margin-bottom:4px;">Step 1 — Shift Details</div>
+                <p>Fill in the project name, date, shift (Dayshift/Nightshift), and the supervisor's name.</p>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <div style="font-weight:700;margin-bottom:4px;">Step 2 — Attendance and Breathalyser</div>
+                <p style="margin-bottom:8px;">The attendance list carries over automatically from the previous meeting, so crew names will already be populated each day. For each person, confirm or update their breathalyser result (Pass/Fail), record their initials, and tick the Signed checkbox once they have physically signed the register. Rows with a Pass result display in green; Fail in red.</p>
+                <p>To add someone new, click <strong>+ Add Person</strong> — they will be included in the roster from the next meeting onwards. Removing a row and saving will likewise drop that person from future lists.</p>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <div style="font-weight:700;margin-bottom:8px;">Step 3 — Meeting Content</div>
+                <ul style="margin-left:18px;line-height:2.2;">
+                    <li><strong>Previous 24hrs Performance</strong> — summary of what was achieved on the last shift. The previous meeting's daily tasks will appear as a blue carry-forward box above this field as a quick reference.</li>
+                    <li><strong>Daily Tasks</strong> — the planned work scope for this shift.</li>
+                    <li><strong>Safety Focus</strong> — today's safety focus, hazards to highlight, or toolbox talk topics covered.</li>
+                    <li><strong>High Risk Work</strong> — high-risk activities planned for the shift, permits required, and controls in place.</li>
+                    <li><strong>General Business</strong> — announcements, logistics, or any other items raised in the meeting.</li>
+                </ul>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <div style="font-weight:700;margin-bottom:4px;">Step 4 — Actions</div>
+                <p>Click <strong>+ Add Action</strong> to log any follow-up items raised during the meeting. Assign each action to a person with their email address and a due date. Once complete, tick the Done checkbox — completed actions will grey out in the list.</p>
+            </div>
+
+            <div>
+                <div style="font-weight:700;margin-bottom:8px;">Step 5 — Save and Send</div>
+                <ul style="margin-left:18px;line-height:2.2;">
+                    <li><strong>Save</strong> — saves the current meeting to the swing log. Do this before leaving the prestart tab.</li>
+                    <li><strong>Print / PDF</strong> — opens the browser print dialog. Use this to save a PDF copy for your records folder.</li>
+                    <li><strong>Send to Team</strong> — opens a pre-addressed email in your default mail client with the full prestart content in the body, ready to send to your recipient list. Recipients must be configured in Settings first.</li>
+                    <li><strong>New Meeting</strong> — clears the form ready for the next meeting. Always save first before clicking this.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Data and Backup</div>
+            <p style="margin-bottom:10px;">All data is stored in your browser's local storage. It will persist between sessions on the same device but will be lost if you clear your browser data. It is recommended to use the Export button at the end of each swing to save a JSON backup to your records folder.</p>
+            <p>To restore data on a new device or after a browser reset, use the Import button and load the most recent backup file.</p>
+        </div>
+
+        <div class="card" style="border-left:4px solid var(--blue);color:var(--muted);font-size:0.88rem;">
+            If you have questions about the tool or encounter any issues, email thomas.pilote@tivan.com.au.
+
+    </div><!-- /guide -->
+
+    <!-- ══════════════════════════════════ FEEDBACK -->
+    <div class="tab-pane" id="pane-feedback" style="display:none;">
+
+        <div class="card">
+            <div class="card-title">Share Your Feedback</div>
+            <p style="margin-bottom:14px;color:var(--muted);">Help us improve the Safety Meetings Tool with your suggestions, bugs, or observations. Your feedback is valuable and helps shape the future of this tool.</p>
+
+            <div class="row" style="margin-bottom:12px;">
+                <div class="field">
+                    <label>Your Name</label>
+                    <input type="text" id="fb-name" placeholder="Your name">
+                </div>
+                <div class="field">
+                    <label>Your Role</label>
+                    <input type="text" id="fb-role" placeholder="e.g. Geologist, Supervisor, Driller">
+                </div>
+            </div>
+
+            <div class="field" style="margin-bottom:12px;">
+                <label>Feedback Type</label>
+                <select id="fb-type">
+                    <option value="">— Select a type —</option>
+                    <option value="Bug Report">🐛 Bug Report (something isn't working)</option>
+                    <option value="Feature Request">✨ Feature Request (new capability)</option>
+                    <option value="Improvement">💡 Improvement (enhance existing feature)</option>
+                    <option value="Documentation">📖 Documentation (help/guide feedback)</option>
+                    <option value="Other">💬 Other comment</option>
+                </select>
+            </div>
+
+            <div class="field" style="margin-bottom:12px;">
+                <label>Your Feedback</label>
+                <textarea id="fb-message" placeholder="Describe what you'd like us to know. Be as specific as possible — what were you trying to do? What happened? What did you expect?"></textarea>
+            </div>
+
+            <div class="btn-group no-print" style="margin-top:0;">
+                <button class="btn btn-primary" onclick="submitFeedback()">✓ Submit Feedback</button>
+                <button class="btn btn-ghost" onclick="clearFeedbackForm()">Clear</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Recent Feedback (This Device)</div>
+            <p style="margin-bottom:12px;color:var(--muted);font-size:0.88rem;">Feedback submitted from this device. This list is stored locally and not shared.</p>
+            <div id="fb-list-container">
+                <p style="color:var(--muted);font-style:italic;">No feedback submitted yet. Share your thoughts above!</p>
+            </div>
+        </div>
+
+        <div class="card" style="background:var(--blue);color:white;border:none;">
+            <div class="card-title" style="color:white;border-color:rgba(255,255,255,0.3);">How to Send Feedback to the Team</div>
+            <p style="margin-bottom:10px;color:rgba(255,255,255,0.9);">Your feedback is saved locally on this device. To share it with the team:</p>
+            <ol style="margin-left:20px;line-height:2;color:rgba(255,255,255,0.9);">
+                <li><strong>Email your feedback</strong> to your Site Geologist or Site Supervision</li>
+                <li><strong>Or click "Export Feedback"</strong> below to download all feedback as a file and share it</li>
+                <li>Include your name, role, and the type of feedback to help us prioritize</li>
+            </ol>
+            <div class="btn-group no-print" style="margin-top:14px;">
+                <button class="btn btn-ghost-white" onclick="exportFeedback()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);">⬇ Export Feedback</button>
+                <button class="btn btn-ghost-white" onclick="clearAllFeedback()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);">🗑 Clear All Feedback</button>
+            </div>
+        </div>
+
+    </div><!-- /feedback -->
+
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════════════
+const MEETINGS_KEY    = 'prestart_v1_meetings';
+const HANDOVER_KEY    = 'prestart_v1_handover';
+const SWING_KEY       = 'prestart_v1_swing';
+const APIKEY_KEY      = 'prestart_v1_apikey';      // never included in exports
+const RECIPIENTS_KEY           = 'prestart_v1_recipients';          // device-local, never exported or wiped
+const HANDOVER_RECIPIENTS_KEY  = 'prestart_v1_handover_recipients'; // device-local, never exported or wiped
+const TOOLBOXES_KEY = 'prestart_v1_toolboxes';
+const ROSTER_KEY    = 'prestart_v1_roster';
+
+function getRoster() {
+    try { return JSON.parse(localStorage.getItem(ROSTER_KEY)) || []; }
+    catch { return []; }
+}
+function setRoster(names) { localStorage.setItem(ROSTER_KEY, JSON.stringify(names)); }
+
+function getToolboxes() {
+    try { return JSON.parse(localStorage.getItem(TOOLBOXES_KEY)) || []; }
+    catch { return []; }
+}
+function setToolboxes(d) { localStorage.setItem(TOOLBOXES_KEY, JSON.stringify(d)); }
+
+function getMeetings() {
+    try { return JSON.parse(localStorage.getItem(MEETINGS_KEY)) || []; }
+    catch { return []; }
+}
+function setMeetings(d) { localStorage.setItem(MEETINGS_KEY, JSON.stringify(d)); }
+
+function getHandover() {
+    try { return JSON.parse(localStorage.getItem(HANDOVER_KEY)) || defaultHandover(); }
+    catch { return defaultHandover(); }
+}
+function setHandover(d) { localStorage.setItem(HANDOVER_KEY, JSON.stringify(d)); }
+
+function getSwingSettings() {
+    try { return JSON.parse(localStorage.getItem(SWING_KEY)) || {}; }
+    catch { return {}; }
+}
+function setSwingSettings(d) { localStorage.setItem(SWING_KEY, JSON.stringify(d)); }
+
+function getApiKey()        { return localStorage.getItem(APIKEY_KEY) || ''; }
+function setApiKey(k)       { localStorage.setItem(APIKEY_KEY, k); }
+
+function getRecipients()           { return localStorage.getItem(RECIPIENTS_KEY) || ''; }
+function setRecipients(v)          { localStorage.setItem(RECIPIENTS_KEY, v); }
+
+function getHandoverRecipients()   { return localStorage.getItem(HANDOVER_RECIPIENTS_KEY) || ''; }
+function setHandoverRecipients(v)  { localStorage.setItem(HANDOVER_RECIPIENTS_KEY, v); }
+
+function defaultHandover() {
+    return {
+        incoming: '', outgoing: '', staying: '',
+        summaryGeneratedAt: null,
+        sections: [
+            { id: 'ho-exec',     title: 'Executive Summary',   content: '', autoGenerate: true },
+            { id: 'ho-safety',   title: 'Safety',              content: '' },
+            { id: 'ho-access',   title: 'Site Access',         content: '' },
+            { id: 'ho-earth',    title: 'Earthworks',          content: '' },
+            { id: 'ho-ddh',      title: 'Drilling',            content: '' },
+            { id: 'ho-sample',   title: 'Sampling / Dispatch', content: '' },
+            { id: 'ho-assay',    title: 'Assay / QAQC',        content: '' },
+            { id: 'ho-survey',   title: 'Survey',              content: '' },
+            { id: 'ho-cgl',      title: 'Fuel',                content: '' },
+            { id: 'ho-vehicles', title: 'Vehicles',            content: '' },
+            { id: 'ho-general',  title: 'General Business',    content: '' },
+        ]
+    };
+}
+
+// ══════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════
+function showTab(name) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('pane-' + name).style.display = 'block';
+    document.querySelector(`.tab-btn[data-tab="${name}"]`).classList.add('active');
+    document.body.dataset.tab = name;
+    if (name === 'log')      renderLog();
+    if (name === 'handover') renderHandover();
+    if (name === 'feedback') renderFeedbackList();
+}
+
+// ══════════════════════════════════════════════════
+// TOOLBOX TALKS
+// ══════════════════════════════════════════════════
+function getSiteTitle() {
+    const el = document.getElementById('f-project');
+    return el ? el.value : 'Speewah';
+}
+
+let tbRows = [];
+let tbCurrentId = null;
+
+function addTbRow(name='', initials='', signed=false) {
+    tbRows.push({ id: uid(), name, initials, signed });
+    renderTbAtt();
+}
+
+function renderTbAtt() {
+    document.getElementById('tb-att-body').innerHTML = tbRows.map(r => `
+        <tr data-id="${r.id}">
+            <td><input type="text" value="${esc(r.name)}" placeholder="Full name"
+                oninput="tbAttSet('${r.id}','name',this.value)"></td>
+            <td><input type="text" value="${esc(r.initials)}" placeholder="e.g. JD" maxlength="6"
+                oninput="tbAttSet('${r.id}','initials',this.value)"></td>
+            <td style="text-align:center;">
+                <input type="checkbox" ${r.signed?'checked':''}
+                    onchange="tbAttSet('${r.id}','signed',this.checked)">
+            </td>
+            <td class="no-print" style="text-align:center;">
+                <button class="btn btn-ghost btn-sm" onclick="tbAttRemove('${r.id}')">✕</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function tbAttSet(id, field, val) { const r = tbRows.find(r => r.id === id); if (r) r[field] = val; }
+function tbAttRemove(id) { tbRows = tbRows.filter(r => r.id !== id); renderTbAtt(); }
+
+function newToolbox() {
+    tbCurrentId = null;
+    document.getElementById('tb-date').value      = today();
+    document.getElementById('tb-project').value   = getSiteTitle();
+    document.getElementById('tb-presenter').value = '';
+    document.getElementById('tb-topic').value     = '';
+    document.getElementById('tb-summary').value   = '';
+    tbRows = [];
+    for (let i = 0; i < 10; i++) addTbRow();
+}
+
+function saveToolbox() {
+    const date = document.getElementById('tb-date').value;
+    if (!date) { toast('Set a date first.'); return; }
+    const record = {
+        id:        tbCurrentId || uid(),
+        date,
+        project:   document.getElementById('tb-project').value,
+        presenter: document.getElementById('tb-presenter').value,
+        topic:     document.getElementById('tb-topic').value,
+        summary:   document.getElementById('tb-summary').value,
+        attendees: tbRows.filter(r => r.name.trim()),
+        savedAt:   new Date().toISOString(),
+    };
+    tbCurrentId = record.id;
+    const list = getToolboxes();
+    const idx  = list.findIndex(x => x.id === record.id);
+    if (idx >= 0) list[idx] = record; else list.push(record);
+    setToolboxes(list);
+    toast('Toolbox talk saved!');
+    renderToolboxLog();
+}
+
+function renderToolboxLog() {
+    const list = getToolboxes().slice().reverse();
+    const el   = document.getElementById('tb-log-list');
+    if (!el) return;
+    if (!list.length) { el.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;">No toolbox talks saved yet.</div>'; return; }
+    el.innerHTML = list.map(t => {
+        const topic = t.topic ? t.topic.split('\n')[0].slice(0, 60) + (t.topic.length > 60 ? '…' : '') : '—';
+        return `<div class="log-item" onclick="loadToolbox('${t.id}')">
+            <div>
+                <div class="log-date">${fmtDate(t.date)}${t.presenter ? ' · ' + esc(t.presenter) : ''}</div>
+                <div class="log-meta">${esc(topic)}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span class="badge badge-day">${t.attendees?.length || 0} attendees</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function loadToolbox(id) {
+    const t = getToolboxes().find(x => x.id === id);
+    if (!t) return;
+    tbCurrentId = t.id;
+    document.getElementById('tb-date').value      = t.date;
+    document.getElementById('tb-project').value   = t.project   || getSiteTitle();
+    document.getElementById('tb-presenter').value = t.presenter || '';
+    document.getElementById('tb-topic').value     = t.topic     || '';
+    document.getElementById('tb-summary').value   = t.summary   || '';
+    tbRows = (t.attendees || []).map(a => ({ ...a, id: a.id || uid() }));
+    renderTbAtt();
+    window.scrollTo(0, 0);
+    toast('Loaded for editing');
+}
+
+// ══════════════════════════════════════════════════
+// ATTENDANCE
+// ══════════════════════════════════════════════════
+let attRows = [];
+
+function addAttRow(name='', result='Pass', initials='', signed=false) {
+    attRows.push({ id: uid(), name, result, initials, signed });
+    renderAtt();
+}
+
+function renderAtt() {
+    document.getElementById('att-body').innerHTML = attRows.map(r => `
+        <tr data-id="${r.id}">
+            <td><input type="text" value="${esc(r.name)}" placeholder="Full name"
+                oninput="attSet('${r.id}','name',this.value)"></td>
+            <td><select class="${resultClass(r.result)}"
+                onchange="attSet('${r.id}','result',this.value);this.className=resultClass(this.value)">
+                <option ${r.result==='Pass'?'selected':''}>Pass</option>
+                <option ${r.result==='Fail'?'selected':''}>Fail</option>
+                <option ${r.result==='N/A' ?'selected':''}>N/A</option>
+            </select></td>
+            <td><input type="text" value="${esc(r.initials)}" placeholder="e.g. JD" maxlength="6"
+                oninput="attSet('${r.id}','initials',this.value)"></td>
+            <td style="text-align:center;">
+                <input type="checkbox" ${r.signed?'checked':''}
+                    onchange="attSet('${r.id}','signed',this.checked)">
+            </td>
+            <td class="no-print" style="text-align:center;">
+                <button class="btn btn-ghost btn-sm" onclick="attRemove('${r.id}')">✕</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function resultClass(v) { return v === 'Pass' ? 'pass' : v === 'Fail' ? 'fail' : 'na'; }
+function attSet(id, field, val) { const r = attRows.find(r => r.id === id); if (r) r[field] = val; }
+function attRemove(id) { attRows = attRows.filter(r => r.id !== id); renderAtt(); }
+
+// ══════════════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════════════
+let actionRows = [];
+
+function addActionRow(desc='', assignee='', email='', dueDate='', done=false) {
+    actionRows.push({ id: uid(), desc, assignee, email, dueDate, done });
+    renderActions();
+}
+
+function renderActions() {
+    document.getElementById('action-body').innerHTML = actionRows.map(a => `
+        <tr data-id="${a.id}" class="${a.done?'row-done':''}">
+            <td><input type="text" value="${esc(a.desc)}" placeholder="Description"
+                oninput="actionSet('${a.id}','desc',this.value)"></td>
+            <td><input type="text" value="${esc(a.assignee)}" placeholder="Name"
+                oninput="actionSet('${a.id}','assignee',this.value)"></td>
+            <td><input type="email" value="${esc(a.email)}" placeholder="email@example.com"
+                oninput="actionSet('${a.id}','email',this.value)"></td>
+            <td><input type="date" value="${esc(a.dueDate)}"
+                oninput="actionSet('${a.id}','dueDate',this.value)"></td>
+            <td style="text-align:center;">
+                <input type="checkbox" ${a.done?'checked':''}
+                    onchange="actionSet('${a.id}','done',this.checked);renderActions()">
+            </td>
+            <td class="no-print" style="text-align:right;">
+                <button class="btn btn-green btn-sm" onclick="sendEmail('${a.id}',null)">✉ Email</button>
+                <button class="btn btn-ghost btn-sm" onclick="actionRemove('${a.id}')" style="margin-left:3px;">✕</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function actionSet(id, field, val) { const a = actionRows.find(a => a.id === id); if (a) a[field] = val; }
+function actionRemove(id) { actionRows = actionRows.filter(a => a.id !== id); renderActions(); }
+
+// ══════════════════════════════════════════════════
+// DRILL STATS
+// ══════════════════════════════════════════════════
+let drillRows = [];
+
+function addDrillRow(rig='', holes='', meters='') {
+    drillRows.push({ id: uid(), rig, holes, meters });
+    renderDrillStats();
+}
+
+function drillSet(id, field, val) { const r = drillRows.find(r => r.id === id); if (r) r[field] = val; }
+function drillRemove(id) { drillRows = drillRows.filter(r => r.id !== id); renderDrillStats(); }
+
+function renderDrillStats() {
+    document.getElementById('drill-stats-body').innerHTML = drillRows.map(r => `
+        <tr>
+            <td><input type="text" value="${esc(r.rig)}" placeholder="e.g. RC-01"
+                oninput="drillSet('${r.id}','rig',this.value)"></td>
+            <td><input type="number" value="${esc(r.holes)}" placeholder="0" min="0"
+                oninput="drillSet('${r.id}','holes',this.value)"></td>
+            <td><input type="number" value="${esc(r.meters)}" placeholder="0" min="0" step="0.1"
+                oninput="drillSet('${r.id}','meters',this.value)"></td>
+            <td class="no-print" style="text-align:center;">
+                <button class="btn btn-ghost btn-sm" onclick="drillRemove('${r.id}')"
+                    style="color:var(--red);padding:2px 8px;">✕</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function sendEmail(actionId, meetingId) {
+    let action, project, date, supervisor;
+    if (meetingId) {
+        const m = getMeetings().find(x => x.id === meetingId);
+        if (!m) return;
+        action = (m.actions || []).find(a => a.id === actionId);
+        project = m.project; date = m.date; supervisor = m.supervisor;
+    } else {
+        action = actionRows.find(a => a.id === actionId);
+        project    = document.getElementById('f-project').value;
+        date       = document.getElementById('f-date').value;
+        supervisor = document.getElementById('f-supervisor').value;
+    }
+    if (!action) return;
+    if (!action.email) { toast('Add an email address first.'); return; }
+
+    const subject = encodeURIComponent(`Action Item — ${project || 'Prestart'} ${fmtDate(date)}`);
+    const body    = encodeURIComponent(
+        `Hi ${action.assignee || 'Team'},\n\n` +
+        `This is a follow-up from the ${project || 'site'} prestart meeting on ${fmtDate(date)}.\n\n` +
+        `Action:   ${action.desc || '(see above)'}\n` +
+        `Assigned: ${action.assignee || 'You'}\n` +
+        `Due:      ${action.dueDate ? fmtDate(action.dueDate) : 'As discussed'}\n\n` +
+        `Please confirm receipt.\n\nRegards,\n${supervisor || 'Site Supervisor'}`
+    );
+    window.location.href = `mailto:${action.email}?subject=${subject}&body=${body}`;
+}
+
+// ══════════════════════════════════════════════════
+// PRESTART
+// ══════════════════════════════════════════════════
+let currentId = null;
+
+function newMeeting() {
+    currentId = null;
+    document.getElementById('f-date').value     = today();
+    document.getElementById('f-prev24').value   = '';
+    document.getElementById('f-tasks').value    = '';
+    document.getElementById('f-safety').value   = '';
+    document.getElementById('f-highrisk').value = '';
+    document.getElementById('f-general').value  = '';
+    attRows = []; actionRows = []; drillRows = [];
+    document.getElementById('f-ew-signedoff').value = '';
+    document.getElementById('f-ew-cleared').value   = '';
+    document.getElementById('f-ew-rehab').value     = '';
+    addDrillRow();
+    const roster = getRoster();
+    if (roster.length) {
+        roster.forEach(name => addAttRow(name, 'Pass', '', false));
+    } else {
+        for (let i = 0; i < 3; i++) addAttRow();
+    }
+    renderActions();
+    loadContext();
+    updateHeader();
+}
+
+function loadContext() {
+    const meetings = getMeetings();
+    const prev = meetings.length ? meetings[meetings.length - 1] : null;
+    const el24  = document.getElementById('ctx-prev24');
+    const elGen = document.getElementById('ctx-general');
+
+    if (prev && prev.dailyTasks) {
+        el24.innerHTML =
+            `<div class="ctx-label">Yesterday's Tasks — ${fmtDate(prev.date)} ${prev.shift}</div>` +
+            `<div class="ctx-box">${esc(prev.dailyTasks)}</div>`;
+    } else { el24.innerHTML = ''; }
+
+    if (prev && prev.generalBusiness) {
+        elGen.innerHTML =
+            `<div class="ctx-label">Previous General Business — ${fmtDate(prev.date)} ${prev.shift}</div>` +
+            `<div class="ctx-box">${esc(prev.generalBusiness)}</div>`;
+    } else { elGen.innerHTML = ''; }
+}
+
+function readForm() {
+    return {
+        id:              currentId || uid(),
+        date:            document.getElementById('f-date').value,
+        shift:           document.getElementById('f-shift').value,
+        project:         document.getElementById('f-project').value,
+        supervisor:      document.getElementById('f-supervisor').value,
+        attendance:      attRows.filter(r => r.name.trim()),
+        prev24:          document.getElementById('f-prev24').value,
+        earthworks: {
+            padsSignedOff:     document.getElementById('f-ew-signedoff').value,
+            padsCleared:       document.getElementById('f-ew-cleared').value,
+            padsRehabilitated: document.getElementById('f-ew-rehab').value,
+        },
+        drilling:        drillRows.map(({ rig, holes, meters }) => ({ rig, holes, meters })),
+        dailyTasks:      document.getElementById('f-tasks').value,
+        safetyFocus:     document.getElementById('f-safety').value,
+        highRisk:        document.getElementById('f-highrisk').value,
+        generalBusiness: document.getElementById('f-general').value,
+        actions:         actionRows.filter(a => a.desc.trim()),
+        savedAt:         new Date().toISOString()
+    };
+}
+
+function saveMeeting() {
+    const m = readForm();
+    if (!m.date) { toast('Set a date first.'); return; }
+    currentId = m.id;
+    const meetings = getMeetings();
+    const idx = meetings.findIndex(x => x.id === m.id);
+    if (idx >= 0) meetings[idx] = m; else meetings.push(m);
+    setMeetings(meetings);
+    const rosterNames = m.attendance.map(r => r.name).filter(Boolean);
+    if (rosterNames.length) setRoster(rosterNames);
+    toast('Saved!');
+    updateHeader();
+
+    // Auto-generate executive summary if API key is present
+    if (getApiKey()) {
+        setTimeout(() => generateExecutiveSummary(true), 300);
+    }
+}
+
+function updateHeader() {
+    const date  = document.getElementById('f-date').value;
+    const shift = document.getElementById('f-shift').value;
+    const proj  = document.getElementById('f-project').value;
+    document.getElementById('headerMeta').textContent =
+        [proj, fmtDate(date), shift].filter(Boolean).join(' · ');
+    document.title = `Pre-Start Meeting ${date || today()}`;
+}
+
+// ══════════════════════════════════════════════════
+// AI EXECUTIVE SUMMARY
+// ══════════════════════════════════════════════════
+let summaryGenerating = false;
+
+async function generateExecutiveSummary(silent = false) {
+    if (summaryGenerating) return;
+
+    const apiKey = getApiKey();
+    if (!apiKey) {
+        if (!silent) toast('Add your Anthropic API key in Swing Settings.');
+        return;
+    }
+
+    const sw       = getSwingSettings();
+    const meetings = filterBySwing(getMeetings()).sort((a, b) => a.date.localeCompare(b.date));
+
+    if (!meetings.length) {
+        if (!silent) toast('No meetings in this swing to summarise.');
+        return;
+    }
+
+    summaryGenerating = true;
+    setSummaryLoading(true);
+    if (!silent) toast('Generating executive summary…');
+
+    // Build a structured digest of the swing for the prompt
+    const digest = meetings.map(m => {
+        const parts = [`── ${m.date} ${m.shift}  |  Supervisor: ${m.supervisor || 'unknown'}`];
+        if (m.safetyFocus)     parts.push(`  SAFETY FOCUS: ${m.safetyFocus}`);
+        if (m.highRisk)        parts.push(`  HIGH RISK WORK: ${m.highRisk}`);
+        if (m.prev24)          parts.push(`  PREVIOUS 24HRS: ${m.prev24}`);
+        const ew = m.earthworks || {};
+        if (ew.padsSignedOff || ew.padsCleared || ew.padsRehabilitated)
+            parts.push(`  EARTHWORKS: Signed off ${ew.padsSignedOff||0}, Cleared ${ew.padsCleared||0}, Rehabilitated ${ew.padsRehabilitated||0}`);
+        const drillLine = (m.drilling || []).filter(r => r.rig||r.holes||r.meters)
+            .map(r => `${r.rig||'Rig'}: ${r.holes||0} holes, ${r.meters||0}m`).join('; ');
+        if (drillLine) parts.push(`  DRILLING: ${drillLine}`);
+        if (m.dailyTasks)      parts.push(`  DAILY TASKS: ${m.dailyTasks}`);
+        if (m.generalBusiness) parts.push(`  GENERAL BUSINESS: ${m.generalBusiness}`);
+        const open = (m.actions || []).filter(a => !a.done);
+        if (open.length) parts.push(`  OPEN ACTIONS: ${open.map(a => `${a.desc}${a.assignee?' ('+a.assignee+')':''}`).join('; ')}`);
+        return parts.join('\n');
+    }).join('\n\n');
+
+    const swingLabel = sw.name
+        ? `"${sw.name}" (${sw.startDate || '?'} to ${sw.endDate || '?'})`
+        : 'the current swing';
+
+    const prompt = `You are writing the Executive Summary section of a site handover document for a remote mining/exploration project.
+
+SWING: ${swingLabel}
+${sw.context ? 'CONTEXT: ' + sw.context + '\n' : ''}
+DAILY PRESTART MEETING RECORDS:
+${digest}
+
+Write a concise Executive Summary using bullet points (•). Rules:
+1. Safety first — lead with any safety incidents, near-misses, hazards, weather risks, or ongoing safety concerns. If nothing notable occurred, state that briefly.
+2. Then cover technically significant events, decisions, achievements, or blockers that the incoming team must understand.
+3. Note any unresolved issues or risks carrying into the next swing.
+4. Do NOT duplicate content that belongs in the detailed sections below (Site Access, Earthworks, Drilling, Sampling, etc.) — this summary should give the reader orientation, not replace those sections.
+5. Be factual and concise. 4–8 bullet points. Plain language.
+6. Do not add a heading — just the bullet points.`;
+
+    try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true'
+            },
+            body: JSON.stringify({
+                model: 'claude-haiku-4-5-20251001',
+                max_tokens: 600,
+                messages: [{ role: 'user', content: prompt }]
+            })
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error?.message || `API error ${res.status}`);
+        }
+
+        const data    = await res.json();
+        const summary = data.content?.[0]?.text?.trim() || '';
+
+        if (!summary) throw new Error('Empty response from API.');
+
+        // Save into handover
+        const ho  = getHandover();
+        const sec = ho.sections.find(s => s.autoGenerate);
+        if (sec) sec.content = summary;
+        ho.summaryGeneratedAt = new Date().toISOString();
+        setHandover(ho);
+
+        // Update UI if handover tab is currently visible
+        const hoPane = document.getElementById('pane-handover');
+        if (hoPane && hoPane.style.display !== 'none') {
+            renderHandover();
+        } else {
+            // Just update the textarea directly if it's in the DOM
+            const ta = document.getElementById('ai-summary-ta');
+            if (ta) ta.value = summary;
+            updateSummaryMeta(ho.summaryGeneratedAt);
+        }
+
+        toast('Executive summary updated.');
+    } catch (e) {
+        toast('Summary failed: ' + e.message);
+    } finally {
+        summaryGenerating = false;
+        setSummaryLoading(false);
+    }
+}
+
+function setSummaryLoading(loading) {
+    const btn = document.getElementById('ai-regen-btn');
+    const meta = document.getElementById('ai-summary-meta');
+    const ta   = document.getElementById('ai-summary-ta');
+    if (btn) {
+        btn.disabled = loading;
+        btn.innerHTML = loading
+            ? '<span class="spinner"></span> Generating…'
+            : '⟳ Regenerate';
+    }
+    if (ta) ta.disabled = loading;
+    if (meta && loading) {
+        meta.innerHTML = '<span class="spinner"></span> <span>Analysing swing data…</span>';
+    }
+}
+
+function updateSummaryMeta(ts) {
+    const meta = document.getElementById('ai-summary-meta');
+    if (!meta || !ts) return;
+    const d = new Date(ts);
+    meta.innerHTML = `<span class="ai-dot"></span> AI-generated · ${d.toLocaleDateString('en-AU', {day:'numeric',month:'short'})} at ${d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})}`;
+}
+
+// ══════════════════════════════════════════════════
+// SWING SETTINGS
+// ══════════════════════════════════════════════════
+let swSettingsOpen = true;
+
+function toggleSwingSettings() {
+    swSettingsOpen = !swSettingsOpen;
+    document.getElementById('sw-settings-body').style.display = swSettingsOpen ? 'block' : 'none';
+    document.getElementById('sw-toggle-btn').textContent = swSettingsOpen ? '▲ Collapse' : '▼ Expand';
+}
+
+function saveSwing() {
+    const sw = {
+        name:      document.getElementById('sw-name').value,
+        startDate: document.getElementById('sw-start').value,
+        endDate:   document.getElementById('sw-end').value,
+        context:   document.getElementById('sw-context').value,
+        folderUrl: document.getElementById('settings-folder-url').value,
+    };
+    setSwingSettings(sw);
+    toast('Swing settings saved!');
+    renderLog();
+}
+
+function loadSwingSettingsUI() {
+    const sw = getSwingSettings();
+    document.getElementById('sw-name').value       = sw.name      || '';
+    document.getElementById('sw-start').value      = sw.startDate || '';
+    document.getElementById('sw-end').value        = sw.endDate   || '';
+    document.getElementById('sw-context').value    = sw.context   || '';
+    document.getElementById('settings-folder-url').value = sw.folderUrl || 'https://tngltd.sharepoint.com/:f:/s/SpeewahFluorite/IgDafJGerqIJSbXo1P7HdlBFAXJJeSSYaq0AvZlUDF17GE0?e=6tnWBf';
+    updateApikeyHint();
+}
+
+function updateApikeyHint() {
+    const hint = document.getElementById('settings-apikey-hint');
+    if (!hint) return;
+    const k = getApiKey();
+    hint.textContent = k
+        ? `API key saved (ends …${k.slice(-4)}). Enter a new key to replace.`
+        : 'No API key saved. Add one to enable AI-generated executive summaries.';
+}
+
+function filterBySwing(meetings) {
+    const sw = getSwingSettings();
+    if (!sw.startDate && !sw.endDate) return meetings;
+    return meetings.filter(m => {
+        if (sw.startDate && m.date < sw.startDate) return false;
+        if (sw.endDate   && m.date > sw.endDate)   return false;
+        return true;
+    });
+}
+
+function renderSwingBanner(filtered) {
+    const sw = getSwingSettings();
+    const container = document.getElementById('swing-banner-container');
+    if (!sw.name && !sw.startDate) { container.innerHTML = ''; return; }
+
+    const openActions  = filtered.flatMap(m => (m.actions || []).filter(a => !a.done)).length;
+    const supervisors  = [...new Set(filtered.map(m => m.supervisor).filter(Boolean))];
+
+    container.innerHTML = `
+        <div class="swing-banner">
+            <div class="swing-banner-name">${esc(sw.name || 'Current Swing')}</div>
+            <div class="swing-banner-dates">
+                ${sw.startDate ? fmtDate(sw.startDate) : '—'} &nbsp;→&nbsp; ${sw.endDate ? fmtDate(sw.endDate) : '—'}
+            </div>
+            <div class="swing-stats">
+                <div class="swing-stat"><strong>${filtered.length}</strong> meetings</div>
+                ${openActions ? `<div class="swing-stat"><strong>${openActions}</strong> open action${openActions>1?'s':''}</div>` : ''}
+                ${supervisors.length ? `<div class="swing-stat" style="flex:1;"><strong>Supervisors:</strong> ${esc(supervisors.join(', '))}</div>` : ''}
+            </div>
+            ${sw.context ? `<div class="swing-banner-context">${esc(sw.context)}</div>` : ''}
+        </div>`;
+}
+
+// ══════════════════════════════════════════════════
+// LOG
+// ══════════════════════════════════════════════════
+let viewingId = null;
+
+function renderLog() {
+    closeDetail();
+    loadSwingSettingsUI();
+
+    const allMeetings = getMeetings();
+    const filtered    = filterBySwing(allMeetings).sort((a, b) => b.date.localeCompare(a.date));
+
+    renderSwingBanner(filtered);
+
+    const isFiltered = !!(getSwingSettings().startDate || getSwingSettings().endDate);
+    document.getElementById('log-list-title').textContent = isFiltered
+        ? `Meeting Log (${filtered.length} of ${allMeetings.length} meetings)`
+        : 'Meeting Log';
+
+    const list = document.getElementById('log-list');
+    if (!filtered.length) {
+        list.innerHTML = isFiltered
+            ? '<p style="color:var(--muted);font-size:0.88rem;">No meetings in this swing date range. Adjust the dates above.</p>'
+            : '<p style="color:var(--muted);font-size:0.88rem;">No meetings saved yet.</p>';
+    } else {
+        list.innerHTML = filtered.map(m => {
+            const openCount = (m.actions || []).filter(a => !a.done).length;
+            return `
+            <div class="log-item" onclick="viewMeeting('${m.id}')">
+                <div>
+                    <div class="log-date">${fmtDate(m.date)} — ${m.shift}</div>
+                    <div class="log-meta">
+                        ${m.supervisor ? 'Supervisor: ' + esc(m.supervisor) + ' · ' : ''}
+                        ${m.attendance ? m.attendance.length + ' attendees' : ''}
+                        ${openCount ? ' · ' + openCount + ' open action' + (openCount > 1 ? 's' : '') : ''}
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    ${openCount ? `<span class="badge badge-action">${openCount} action${openCount>1?'s':''}</span>` : ''}
+                    <span class="badge ${m.shift==='Dayshift'?'badge-day':'badge-night'}">${m.shift}</span>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    renderOpenActions(filtered);
+}
+
+function renderOpenActions(meetings) {
+    const card = document.getElementById('open-actions-card');
+    const list = document.getElementById('open-actions-list');
+
+    const open = meetings.flatMap(m =>
+        (m.actions || [])
+            .filter(a => !a.done)
+            .map(a => ({ ...a, meetingDate: m.date, meetingShift: m.shift, meetingId: m.id }))
+    ).sort((a, b) => {
+        if (a.dueDate && b.dueDate) return a.dueDate.localeCompare(b.dueDate);
+        if (a.dueDate) return -1;
+        if (b.dueDate) return 1;
+        return a.meetingDate.localeCompare(b.meetingDate);
+    });
+
+    if (!open.length) { card.style.display = 'none'; return; }
+
+    card.style.display = 'block';
+    list.innerHTML = `
+        <table>
+            <thead><tr>
+                <th style="width:32%">Action</th>
+                <th style="width:16%">Assigned To</th>
+                <th style="width:14%">Due</th>
+                <th style="width:26%">From Meeting</th>
+                <th style="width:12%;" class="no-print"></th>
+            </tr></thead>
+            <tbody>
+            ${open.map(a => `<tr>
+                <td>${esc(a.desc)}</td>
+                <td>${esc(a.assignee||'—')}</td>
+                <td>${a.dueDate?fmtDate(a.dueDate):'—'}</td>
+                <td style="font-size:0.8rem;color:var(--muted);">${fmtDate(a.meetingDate)} ${a.meetingShift}</td>
+                <td class="no-print">
+                    ${a.email?`<button class="btn btn-green btn-sm" onclick="sendEmail('${a.id}','${a.meetingId}')">✉ Email</button>`:''}
+                </td>
+            </tr>`).join('')}
+            </tbody>
+        </table>`;
+}
+
+function viewMeeting(id) {
+    viewingId = id;
+    const m = getMeetings().find(x => x.id === id);
+    if (!m) return;
+
+    let html = `
+        <h3 style="font-size:1rem;margin-bottom:4px;">${fmtDate(m.date)} — ${m.shift}</h3>
+        <p style="font-size:0.76rem;color:var(--muted);margin-bottom:16px;">
+            Project: ${esc(m.project||'—')} · Supervisor: ${esc(m.supervisor||'—')}
+        </p>`;
+
+    if (m.attendance && m.attendance.length) {
+        html += `<div style="margin-bottom:16px;"><div class="card-title">Attendance</div>
+            <table><thead><tr><th>Name</th><th>Result</th><th>Initials</th><th style="text-align:center;">Signed</th></tr></thead>
+            <tbody>${m.attendance.map(a=>`<tr>
+                <td>${esc(a.name)}</td>
+                <td style="color:${a.result==='Pass'?'var(--green)':a.result==='Fail'?'var(--red)':'var(--muted)'};font-weight:600;">${a.result}</td>
+                <td>${esc(a.initials||'')}</td>
+                <td style="text-align:center;">${a.signed?'✓':'—'}</td>
+            </tr>`).join('')}</tbody></table></div>`;
+    }
+
+    [
+        ['Previous 24hrs Performance', m.prev24],
+        ['Daily Tasks',                m.dailyTasks],
+        ['Safety Focus',               m.safetyFocus],
+        ['High Risk Work',             m.highRisk],
+        ['General Business',           m.generalBusiness],
+    ].forEach(([title, val]) => {
+        if (val) html += `<div style="margin-bottom:14px;">
+            <div class="card-title">${title}</div>
+            <div style="white-space:pre-wrap;font-size:0.88rem;padding-top:6px;">${esc(val)}</div>
+        </div>`;
+    });
+
+    if (m.actions && m.actions.length) {
+        html += `<div style="margin-bottom:14px;">
+            <div class="card-title" style="color:var(--green);border-color:var(--green);">Actions</div>
+            <table><thead><tr><th>Action</th><th>Assigned To</th><th>Due</th><th style="text-align:center;">Done</th><th class="no-print"></th></tr></thead>
+            <tbody>${m.actions.map(a=>`<tr class="${a.done?'row-done':''}">
+                <td>${esc(a.desc)}</td>
+                <td>${esc(a.assignee||'—')}</td>
+                <td>${a.dueDate?fmtDate(a.dueDate):'—'}</td>
+                <td style="text-align:center;">${a.done?'✓':'○'}</td>
+                <td class="no-print">${a.email?`<button class="btn btn-green btn-sm" onclick="sendEmail('${a.id}','${m.id}')">✉ Email</button>`:''}</td>
+            </tr>`).join('')}</tbody></table></div>`;
+    }
+
+    document.getElementById('log-detail-body').innerHTML = html;
+    document.getElementById('log-detail').style.display = 'block';
+    document.getElementById('log-detail').scrollIntoView({ behavior: 'smooth' });
+}
+
+function closeDetail() {
+    document.getElementById('log-detail').style.display = 'none';
+    viewingId = null;
+}
+
+function editMeeting() {
+    if (!viewingId) return;
+    const m = getMeetings().find(x => x.id === viewingId);
+    if (!m) return;
+
+    currentId = m.id;
+    document.getElementById('f-date').value       = m.date;
+    document.getElementById('f-shift').value      = m.shift;
+    document.getElementById('f-project').value    = m.project    || 'Speewah';
+    document.getElementById('f-supervisor').value = m.supervisor || '';
+    document.getElementById('f-prev24').value     = m.prev24     || '';
+    const ew = m.earthworks || {};
+    document.getElementById('f-ew-signedoff').value = ew.padsSignedOff     || '';
+    document.getElementById('f-ew-cleared').value   = ew.padsCleared       || '';
+    document.getElementById('f-ew-rehab').value     = ew.padsRehabilitated || '';
+    drillRows = (m.drilling || []).map(r => ({ ...r, id: r.id || uid() }));
+    if (!drillRows.length) addDrillRow(); else renderDrillStats();
+    document.getElementById('f-tasks').value      = m.dailyTasks || '';
+    document.getElementById('f-safety').value     = m.safetyFocus|| '';
+    document.getElementById('f-highrisk').value   = m.highRisk   || '';
+    document.getElementById('f-general').value    = m.generalBusiness || '';
+
+    attRows    = (m.attendance || []).map(r => ({ ...r, id: r.id || uid() }));
+    actionRows = (m.actions    || []).map(a => ({ ...a, id: a.id || uid() }));
+    renderAtt();
+    renderActions();
+    loadContext();
+
+    showTab('prestart');
+    toast('Loaded for editing');
+}
+
+function deleteMeeting() {
+    if (!viewingId || !confirm('Delete this meeting record?')) return;
+    setMeetings(getMeetings().filter(m => m.id !== viewingId));
+    viewingId = null;
+    renderLog();
+    toast('Deleted.');
+}
+
+// ══════════════════════════════════════════════════
+// HANDOVER
+// ══════════════════════════════════════════════════
+let ho = null;
+
+function renderHandover() {
+    ho = getHandover();
+    document.getElementById('ho-incoming').value = ho.incoming || '';
+    document.getElementById('ho-outgoing').value = ho.outgoing || '';
+    document.getElementById('ho-staying').value  = ho.staying  || '';
+
+    document.getElementById('ho-sections').innerHTML = ho.sections.map((s, i) => {
+        const isAI    = s.autoGenerate === true;
+        const hasKey  = !!getApiKey();
+
+        const titleRow = `
+            <div class="ho-head">
+                <input class="ho-section-title" type="text" value="${esc(s.title)}"
+                    oninput="hoSetTitle('${s.id}', this.value)">
+                <div class="no-print" style="display:flex;gap:4px;flex-shrink:0;">
+                    ${i > 0 ? `<button class="btn btn-ghost btn-sm" onclick="hoMove('${s.id}',-1)">↑</button>` : ''}
+                    ${i < ho.sections.length - 1 ? `<button class="btn btn-ghost btn-sm" onclick="hoMove('${s.id}',1)">↓</button>` : ''}
+                    <button class="btn btn-danger btn-sm" onclick="hoRemove('${s.id}')">✕</button>
+                </div>
+            </div>`;
+
+        if (isAI) {
+            const metaHtml = ho.summaryGeneratedAt
+                ? `<span class="ai-dot"></span> AI-generated · ${fmtTs(ho.summaryGeneratedAt)}`
+                : hasKey
+                    ? '<span class="ai-dot"></span> Will generate automatically when meetings are saved.'
+                    : '<span style="color:var(--amber);">⚠ Add API key in Swing Settings to enable AI generation.</span>';
+
+            return `
+            <div class="card" data-id="${s.id}" style="border-left:4px solid var(--purple);">
+                ${titleRow}
+                <div class="ai-meta no-print" id="ai-summary-meta">${metaHtml}</div>
+                <div class="ai-summary-wrap">
+                    <textarea id="ai-summary-ta" placeholder="Executive summary will be generated automatically from your swing meetings…"
+                        oninput="hoSetContent('${s.id}', this.value)"
+                    >${esc(s.content)}</textarea>
+                </div>
+                ${hasKey ? `<div class="no-print" style="margin-top:8px;">
+                    <button id="ai-regen-btn" class="btn btn-purple btn-sm" onclick="generateExecutiveSummary(false)">
+                        ⟳ Regenerate
+                    </button>
+                    <span style="font-size:0.72rem;color:var(--muted);margin-left:8px;">Runs automatically on every save</span>
+                </div>` : ''}
+            </div>`;
+        }
+
+        return `
+        <div class="card" data-id="${s.id}">
+            ${titleRow}
+            <textarea placeholder="${esc(s.title)} notes..."
+                oninput="hoSetContent('${s.id}', this.value)"
+            >${esc(s.content)}</textarea>
+        </div>`;
+    }).join('');
+}
+
+function fmtTs(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-AU', { day:'numeric', month:'short' }) + ' at ' +
+           d.toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit' });
+}
+
+function collectHo() {
+    ho.incoming = document.getElementById('ho-incoming').value;
+    ho.outgoing = document.getElementById('ho-outgoing').value;
+    ho.staying  = document.getElementById('ho-staying').value;
+    document.querySelectorAll('#ho-sections .card').forEach(el => {
+        const id = el.dataset.id;
+        const s  = ho.sections.find(x => x.id === id);
+        if (s) {
+            const ta = el.querySelector('textarea');
+            if (ta) s.content = ta.value;
+        }
+    });
+}
+
+function hoSetTitle(id, val)   { const s = ho.sections.find(x => x.id === id); if (s) s.title   = val; }
+function hoSetContent(id, val) { const s = ho.sections.find(x => x.id === id); if (s) s.content = val; }
+
+function hoMove(id, dir) {
+    collectHo();
+    const i = ho.sections.findIndex(s => s.id === id);
+    const j = i + dir;
+    if (j < 0 || j >= ho.sections.length) return;
+    [ho.sections[i], ho.sections[j]] = [ho.sections[j], ho.sections[i]];
+    setHandover(ho);
+    renderHandover();
+}
+
+function hoRemove(id) {
+    if (!confirm('Remove this section?')) return;
+    collectHo();
+    ho.sections = ho.sections.filter(s => s.id !== id);
+    setHandover(ho);
+    renderHandover();
+}
+
+function addHandoverSection() {
+    const title = prompt('Section title:');
+    if (!title) return;
+    collectHo();
+    ho.sections.push({ id: uid(), title: title.trim(), content: '' });
+    setHandover(ho);
+    renderHandover();
+}
+
+function saveHandover() {
+    collectHo();
+    setHandover(ho);
+    toast('Handover saved!');
+}
+
+// ══════════════════════════════════════════════════
+// SEND HANDOVER
+// ══════════════════════════════════════════════════
+function sendHandover() {
+    const raw = getHandoverRecipients().trim();
+    if (!raw) {
+        alert('No handover recipients saved. Add addresses in the Recipients field above.');
+        return;
+    }
+
+    const to = raw.split('\n').map(s => s.trim()).filter(Boolean).join(',');
+
+    const sw = getSwingSettings();
+    let period = '';
+    if (sw.name && sw.startDate && sw.endDate) {
+        period = `${sw.name} (${fmtDate(sw.startDate)} – ${fmtDate(sw.endDate)})`;
+    } else if (sw.startDate && sw.endDate) {
+        period = `${fmtDate(sw.startDate)} – ${fmtDate(sw.endDate)}`;
+    } else if (sw.name) {
+        period = sw.name;
+    } else {
+        const h = getHandover();
+        const parts = [];
+        if (h.outgoing) parts.push(`${h.outgoing} out`);
+        if (h.incoming) parts.push(`${h.incoming} in`);
+        period = parts.join(' / ') || 'current swing';
+    }
+
+    const subject = `Site Handover – ${period}`;
+    const body    = `The handover for ${period} has been saved and is available for review.`;
+
+    window.location.href = 'mailto:' + to
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body='    + encodeURIComponent(body);
+}
+
+// ══════════════════════════════════════════════════
+// CLEAR HANDOVER
+// ══════════════════════════════════════════════════
+function clearHandover() {
+    if (!confirm('Are you sure you want to clear the handover? This cannot be undone.')) return;
+    setHandover(defaultHandover());
+    renderHandover();
+    toast('Handover cleared.');
+}
+
+// ══════════════════════════════════════════════════
+// CLEAR SWING LOG
+// ══════════════════════════════════════════════════
+function clearSwingLog() {
+    const meetings    = getMeetings();
+    const openActions = meetings.flatMap(m => (m.actions || []).filter(a => !a.done));
+    const meetingWord = meetings.length === 1 ? 'meeting record' : 'meeting records';
+    const actionNote  = openActions.length
+        ? `\n\n${openActions.length} open action${openActions.length > 1 ? 's' : ''} will be carried into the current meeting. Completed actions will be lost.`
+        : '\n\nNo open actions to carry forward.';
+
+    if (!confirm(`This will delete all ${meetings.length} ${meetingWord}.${actionNote}\n\nAre you sure?`)) return;
+
+    setMeetings([]);
+
+    // Carry open actions into the current form
+    if (openActions.length) {
+        actionRows = [...actionRows, ...openActions.map(a => ({ ...a, id: uid() }))];
+        renderActions();
+    }
+
+    renderLog();
+    showTab('prestart');
+    toast(openActions.length
+        ? `Log cleared. ${openActions.length} open action${openActions.length > 1 ? 's' : ''} carried forward.`
+        : 'Swing log cleared.');
+}
+
+// ══════════════════════════════════════════════════
+// SEND TO TEAM
+// ══════════════════════════════════════════════════
+function buildMailto(summaryPoints) {
+    const teamEmail = getRecipients().split('\n').map(e => e.trim()).filter(Boolean).join(';');
+    const project   = document.getElementById('f-project').value || 'Site';
+    const date      = document.getElementById('f-date').value;
+    const shift     = document.getElementById('f-shift').value   || '';
+    const folderUrl = getSwingSettings().folderUrl || 'https://tngltd.sharepoint.com/:f:/s/SpeewahFluorite/IgDafJGerqIJSbXo1P7HdlBFAXJJeSSYaq0AvZlUDF17GE0?e=6tnWBf';
+
+    const subject = `${project} Prestart — ${fmtDate(date)} ${shift}`;
+
+    // Build quick stats block
+    const ewS = document.getElementById('f-ew-signedoff').value;
+    const ewC = document.getElementById('f-ew-cleared').value;
+    const ewR = document.getElementById('f-ew-rehab').value;
+    const hasEW    = ewS || ewC || ewR;
+    const drillFilled = drillRows.filter(r => r.rig || r.holes || r.meters);
+    let statsBlock = '';
+    if (hasEW || drillFilled.length) {
+        statsBlock += `Quick Stats — Last 24hrs\n${'─'.repeat(28)}\n`;
+        statsBlock += `Earthworks\n`;
+        if (hasEW) {
+            statsBlock += `  Pads Signed Off:    ${ewS || 0}\n`;
+            statsBlock += `  Pads Cleared:       ${ewC || 0}\n`;
+            statsBlock += `  Pads Rehabilitated: ${ewR || 0}\n`;
+        } else {
+            statsBlock += `  No earthworks recorded this shift.\n`;
+        }
+        statsBlock += `\nDrilling\n`;
+        if (drillFilled.length) {
+            const rigW = Math.max(8, ...drillFilled.map(r => (r.rig||'').length));
+            statsBlock += `  ${'Rig'.padEnd(rigW)}  Holes  Metres\n`;
+            drillFilled.forEach(r => {
+                statsBlock += `  ${(r.rig||'—').padEnd(rigW)}  ${String(r.holes||0).padStart(5)}  ${String(r.meters||0).padStart(6)}\n`;
+            });
+        } else {
+            statsBlock += `  No drilling recorded this shift.\n`;
+        }
+        statsBlock += '\n';
+    }
+
+    let body = `Hi Team,\n\nPlease find the morning prestart notes for ${fmtDate(date)} in the records folder below.\n\n`;
+    if (summaryPoints) {
+        body += `Main points from today:\n\n${summaryPoints}\n\n`;
+    }
+    if (statsBlock) {
+        body += statsBlock;
+    }
+    body += `Meeting notes have been saved to the Pre-Start Meeting Records folder.\n\n`;
+
+    return `mailto:${encodeURIComponent(teamEmail)}`
+        + `?subject=${encodeURIComponent(subject)}`
+        + `&body=${encodeURIComponent(body)}`;
+}
+
+async function synthesisePoints() {
+    const apiKey  = getApiKey();
+    const safety  = document.getElementById('f-safety').value.trim();
+    const highrisk= document.getElementById('f-highrisk').value.trim();
+    const prev24  = document.getElementById('f-prev24').value.trim();
+    const tasks   = document.getElementById('f-tasks').value.trim();
+    const general = document.getElementById('f-general').value.trim();
+
+    if (!apiKey) {
+        // Fallback — first sentence of each relevant field, safety first
+        const fallback = [safety, highrisk, prev24, tasks, general]
+            .filter(Boolean)
+            .slice(0, 3)
+            .map(s => '• ' + s.split(/[.\n]/)[0].trim());
+        return fallback.join('\n') || null;
+    }
+
+    const ewS = document.getElementById('f-ew-signedoff').value;
+    const ewC = document.getElementById('f-ew-cleared').value;
+    const ewR = document.getElementById('f-ew-rehab').value;
+    const drillSummary = drillRows.filter(r => r.rig||r.holes||r.meters)
+        .map(r => `${r.rig||'Rig'}: ${r.holes||0} holes, ${r.meters||0}m`).join('; ');
+    const statsText = [
+        (ewS||ewC||ewR) ? `Earthworks — Signed off: ${ewS||0}, Cleared: ${ewC||0}, Rehabilitated: ${ewR||0}` : '',
+        drillSummary    ? `Drilling — ${drillSummary}` : '',
+    ].filter(Boolean).join('\n');
+
+    const prompt = `You are summarising a daily mining site prestart meeting into exactly 3 concise bullet points for a team email.
+
+MEETING DATA:
+Safety Focus: ${safety || '(none recorded)'}
+High Risk Work: ${highrisk || '(none recorded)'}
+Previous 24hrs Performance: ${prev24 || '(none recorded)'}
+Quick Stats — Last 24hrs: ${statsText || '(none recorded)'}
+Daily Tasks: ${tasks || '(none recorded)'}
+General Business: ${general || '(none recorded)'}
+
+Write exactly 3 bullet points using • as the bullet character. No intro, no heading, just the 3 bullets.
+Priority order:
+1. Safety (incidents, hazards, near-misses, or confirmation all clear)
+2. Drilling performance
+3. Earthworks progress
+
+Be factual, concise, plain language. Each bullet one sentence.`;
+
+    try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true'
+            },
+            body: JSON.stringify({
+                model: 'claude-haiku-4-5-20251001',
+                max_tokens: 200,
+                messages: [{ role: 'user', content: prompt }]
+            })
+        });
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        const data = await res.json();
+        return data.content?.[0]?.text?.trim() || null;
+    } catch {
+        return null;
+    }
+}
+
+async function sendToTeam() {
+    const date    = document.getElementById('f-date').value;
+    const sugName = `Pre-Start Meeting ${date || today()}.html`;
+
+    toast('Preparing…');
+    const points  = await synthesisePoints();
+    const mailto  = buildMailto(points);
+
+    if ('showSaveFilePicker' in window) {
+        try {
+            const handle = await window.showSaveFilePicker({
+                suggestedName: sugName,
+                types: [{ description: 'Web Page', accept: { 'text/html': ['.html'] } }]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(generateMeetingHTML());
+            await writable.close();
+            toast('Saved! Opening folder and email…');
+            const folderUrl = getSwingSettings().folderUrl || '';
+            if (folderUrl) window.open(folderUrl, '_blank');
+            setTimeout(() => { window.location.href = mailto; }, 400);
+        } catch (err) {
+            if (err.name === 'AbortError') return; // user cancelled — do nothing
+            // API failed for another reason — fall back to print
+            fallbackPrintAndEmail(mailto);
+        }
+    } else {
+        fallbackPrintAndEmail(mailto);
+    }
+}
+
+function fallbackPrintAndEmail(mailto) {
+    const handler = () => {
+        window.removeEventListener('afterprint', handler);
+        setTimeout(() => { window.location.href = mailto; }, 300);
+    };
+    window.addEventListener('afterprint', handler);
+    toast('Save as PDF, then your email will open automatically.');
+    window.print();
+}
+
+function generateMeetingHTML() {
+    const project    = esc(document.getElementById('f-project').value    || 'Site');
+    const date       = document.getElementById('f-date').value;
+    const shift      = esc(document.getElementById('f-shift').value      || '');
+    const supervisor = esc(document.getElementById('f-supervisor').value || '');
+    const prev24     = esc(document.getElementById('f-prev24').value.trim());
+    const ewSignedOff = document.getElementById('f-ew-signedoff').value;
+    const ewCleared   = document.getElementById('f-ew-cleared').value;
+    const ewRehab     = document.getElementById('f-ew-rehab').value;
+    const tasks      = esc(document.getElementById('f-tasks').value.trim());
+    const safety     = esc(document.getElementById('f-safety').value.trim());
+    const highrisk   = esc(document.getElementById('f-highrisk').value.trim());
+    const general    = esc(document.getElementById('f-general').value.trim());
+
+    const attHTML = attRows.length ? `
+        <h2>Attendance &amp; Breathalyser</h2>
+        <table>
+            <thead><tr><th>Name</th><th>Result</th><th>Initials</th><th>Signed</th></tr></thead>
+            <tbody>${attRows.map(r => `<tr>
+                <td>${esc(r.name)}</td>
+                <td style="color:${r.result==='Pass'?'#276749':r.result==='Fail'?'#c53030':'#b7791f'};font-weight:600;">${esc(r.result)}</td>
+                <td>${esc(r.initials)}</td>
+                <td style="text-align:center;">${r.signed ? '✓' : '—'}</td>
+            </tr>`).join('')}</tbody>
+        </table>` : '';
+
+    const hasEW = ewSignedOff || ewCleared || ewRehab;
+    const hasDrill = drillRows.some(r => r.rig || r.holes || r.meters);
+    const statsHTML = (hasEW || hasDrill) ? `
+        <h2>Quick Stats — Last 24hrs</h2>
+        ${hasEW ? `<p style="margin-bottom:6px;"><strong>Earthworks:</strong>
+            Pads Signed Off: <strong>${ewSignedOff||0}</strong> &nbsp;|&nbsp;
+            Pads Cleared: <strong>${ewCleared||0}</strong> &nbsp;|&nbsp;
+            Pads Rehabilitated: <strong>${ewRehab||0}</strong></p>` : ''}
+        ${hasDrill ? `<table style="margin-top:6px;">
+            <thead><tr><th>Rig</th><th>Holes Drilled</th><th>Metres Drilled</th></tr></thead>
+            <tbody>${drillRows.filter(r => r.rig||r.holes||r.meters).map(r => `<tr>
+                <td>${esc(r.rig||'—')}</td>
+                <td style="text-align:center;">${r.holes||'—'}</td>
+                <td style="text-align:center;">${r.meters||'—'}</td>
+            </tr>`).join('')}</tbody>
+        </table>` : ''}` : '';
+
+    const sections = [
+        ['Previous 24hrs Performance', prev24],
+        ['Daily Tasks',                tasks],
+        ['Safety Focus',               safety],
+        ['High Risk Work',             highrisk],
+        ['General Business',           general],
+    ].filter(([, v]) => v).map(([title, val]) =>
+        `<h2>${title}</h2><p style="white-space:pre-wrap;">${val}</p>`
+    ).join('');
+
+    const actHTML = actionRows.length ? `
+        <h2>Actions</h2>
+        <table>
+            <thead><tr><th>Action</th><th>Assigned To</th><th>Due</th><th>Done</th></tr></thead>
+            <tbody>${actionRows.map(a => `<tr style="${a.done?'opacity:0.5;text-decoration:line-through;':''}">
+                <td>${esc(a.desc)}</td>
+                <td>${esc(a.assignee||'—')}</td>
+                <td>${a.dueDate ? fmtDate(a.dueDate) : '—'}</td>
+                <td style="text-align:center;">${a.done ? '✓' : '○'}</td>
+            </tr>`).join('')}</tbody>
+        </table>` : '';
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pre-Start Meeting ${date || today()}</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 12pt; color: #2d3748; margin: 20mm 18mm; }
+  h1   { font-size: 16pt; color: #1e3a5f; border-bottom: 2px solid #1e3a5f; padding-bottom: 6px; margin-bottom: 4px; }
+  .meta { font-size: 10pt; color: #718096; margin-bottom: 18px; }
+  h2   { font-size: 11pt; color: #1e3a5f; border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; margin: 18px 0 6px; }
+  p    { margin: 0 0 10px; line-height: 1.5; }
+  table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 10px; }
+  th   { background: #1e3a5f; color: #fff; text-align: left; padding: 5px 8px; }
+  td   { border: 1px solid #e2e8f0; padding: 4px 8px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f7fafc; }
+  @media print { body { margin: 15mm; } }
+</style>
+</head>
+<body>
+<h1>Daily Prestart Meeting — ${esc(project)}</h1>
+<div class="meta">${fmtDate(date)} &nbsp;|&nbsp; ${shift}${supervisor ? ' &nbsp;|&nbsp; Supervisor: ' + supervisor : ''}</div>
+${attHTML}
+${statsHTML}
+${sections}
+${actHTML}
+</body>
+</html>`;
+}
+
+// ══════════════════════════════════════════════════
+// EXPORT / IMPORT
+// ══════════════════════════════════════════════════
+function exportData() {
+    const payload = JSON.stringify({
+        meetings: getMeetings(),
+        handover: getHandover(),
+        swing:    getSwingSettings(),
+        exported: new Date().toISOString()
+        // API key intentionally excluded
+    }, null, 2);
+    const a = Object.assign(document.createElement('a'), {
+        href:     URL.createObjectURL(new Blob([payload], { type: 'application/json' })),
+        download: `prestart_${today()}.json`
+    });
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Exported!');
+}
+
+function importData(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        try {
+            const d = JSON.parse(ev.target.result);
+            if (d.meetings) setMeetings(d.meetings);
+            if (d.handover) setHandover(d.handover);
+            if (d.swing)    setSwingSettings(d.swing);
+            newMeeting();
+            toast('Imported successfully!');
+        } catch { toast('Invalid file format.'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+}
+
+// ══════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════
+function uid()   { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+function today() { return new Date().toISOString().split('T')[0]; }
+
+function fmtDate(s) {
+    if (!s) return '—';
+    const d = new Date(s + 'T00:00:00');
+    return d.toLocaleDateString('en-AU', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+}
+
+function esc(s) {
+    return String(s || '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════════════════
+// FEEDBACK
+// ══════════════════════════════════════════════════
+const FEEDBACK_KEY = 'prestart_v1_feedback';
+
+function getFeedback() {
+    try { return JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || []; }
+    catch { return []; }
+}
+
+function setFeedback(d) { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(d)); }
+
+function submitFeedback() {
+    const name = document.getElementById('fb-name').value.trim();
+    const role = document.getElementById('fb-role').value.trim();
+    const type = document.getElementById('fb-type').value;
+    const message = document.getElementById('fb-message').value.trim();
+
+    if (!name) { toast('Please enter your name'); return; }
+    if (!type) { toast('Please select a feedback type'); return; }
+    if (!message) { toast('Please enter your feedback'); return; }
+
+    const feedback = {
+        id: uid(),
+        timestamp: new Date().toISOString(),
+        name, role, type, message
+    };
+
+    const all = getFeedback();
+    all.push(feedback);
+    setFeedback(all);
+
+    clearFeedbackForm();
+    renderFeedbackList();
+    toast('Thank you! Feedback submitted.');
+}
+
+function clearFeedbackForm() {
+    document.getElementById('fb-name').value = '';
+    document.getElementById('fb-role').value = '';
+    document.getElementById('fb-type').value = '';
+    document.getElementById('fb-message').value = '';
+}
+
+function renderFeedbackList() {
+    const feedback = getFeedback();
+    const container = document.getElementById('fb-list-container');
+
+    if (!feedback.length) {
+        container.innerHTML = '<p style="color:var(--muted);font-style:italic;">No feedback submitted yet. Share your thoughts above!</p>';
+        return;
+    }
+
+    container.innerHTML = feedback.reverse().map(fb => `
+        <div style="border:1px solid var(--border);border-radius:5px;padding:12px;margin-bottom:10px;background:var(--white);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+                <div>
+                    <div style="font-weight:600;color:var(--text);">${esc(fb.name)}</div>
+                    <div style="font-size:0.8rem;color:var(--muted);">${fb.role ? esc(fb.role) : '(no role specified)'} — ${fb.type}</div>
+                </div>
+                <div style="font-size:0.75rem;color:var(--muted);">${fmtDate(fb.timestamp.split('T')[0])}</div>
+            </div>
+            <div style="white-space:pre-wrap;word-break:break-word;color:var(--text);font-size:0.9rem;line-height:1.5;">
+                ${esc(fb.message)}
+            </div>
+        </div>
+    `).join('');
+}
+
+function exportFeedback() {
+    const feedback = getFeedback();
+    if (!feedback.length) {
+        toast('No feedback to export.');
+        return;
+    }
+
+    const csv = [
+        ['Date', 'Name', 'Role', 'Type', 'Feedback'].join(','),
+        ...feedback.map(fb => [
+            fmtDate(fb.timestamp.split('T')[0]),
+            `"${(fb.name || '').replace(/"/g, '""')}"`,
+            `"${(fb.role || '').replace(/"/g, '""')}"`,
+            fb.type,
+            `"${(fb.message || '').replace(/"/g, '""')}"`
+        ].join(','))
+    ].join('\n');
+
+    const a = Object.assign(document.createElement('a'), {
+        href:     URL.createObjectURL(new Blob([csv], { type: 'text/csv' })),
+        download: `feedback_${today()}.csv`
+    });
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Feedback exported!');
+}
+
+function clearAllFeedback() {
+    if (!confirm('Delete all feedback from this device? This cannot be undone.')) return;
+    setFeedback([]);
+    renderFeedbackList();
+    toast('Feedback cleared.');
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+// ══════════════════════════════════════════════════
+// SETTINGS PANEL
+// ══════════════════════════════════════════════════
+function toggleSettings() {
+    const panel = document.getElementById('settings-panel');
+    panel.classList.toggle('open');
+}
+
+function saveFolderUrl(v) {
+    const sw = getSwingSettings();
+    sw.folderUrl = v;
+    setSwingSettings(sw);
+}
+
+function saveApiKey() {
+    const input = document.getElementById('settings-apikey');
+    const v = input.value;
+    if (v && !v.startsWith('•')) {
+        setApiKey(v);
+        input.value = '';
+    }
+    updateApikeyHint();
+    toast('API key saved!');
+}
+
+// ══════════════════════════════════════════════════
+// DARK MODE
+// ══════════════════════════════════════════════════
+function toggleTheme() {
+    const dark = document.body.dataset.theme !== 'dark';
+    applyTheme(dark);
+    localStorage.setItem('prestart_v1_theme', dark ? 'dark' : 'light');
+}
+
+function applyTheme(dark) {
+    document.body.dataset.theme = dark ? 'dark' : 'light';
+    document.getElementById('theme-toggle').textContent = dark ? '☀' : '☾';
+    document.getElementById('theme-toggle').title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+}
+
+// ══════════════════════════════════════════════════
+// PRINT HELPERS — swap form elements for readable divs
+// ══════════════════════════════════════════════════
+window.addEventListener('beforeprint', () => {
+    // Textareas → pre-wrap divs
+    document.querySelectorAll('textarea:not([hidden])').forEach(ta => {
+        const div = document.createElement('div');
+        div.className = 'print-proxy';
+        div.textContent = ta.value;
+        ta.after(div);
+        ta.dataset.printHidden = '1';
+        ta.hidden = true;
+    });
+    // Text / date / email inputs → inline spans (inside table cells mainly)
+    document.querySelectorAll(
+        'input[type=text]:not([hidden]), input[type=date]:not([hidden]), input[type=email]:not([hidden])'
+    ).forEach(inp => {
+        const span = document.createElement('span');
+        span.className = 'print-proxy inline';
+        span.textContent = inp.value;
+        inp.after(span);
+        inp.dataset.printHidden = '1';
+        inp.hidden = true;
+    });
+    // Selects → inline spans
+    document.querySelectorAll('select:not([hidden])').forEach(sel => {
+        const span = document.createElement('span');
+        span.className = 'print-proxy inline ' + resultClass(sel.value);
+        span.textContent = sel.value;
+        sel.after(span);
+        sel.dataset.printHidden = '1';
+        sel.hidden = true;
+    });
+});
+
+window.addEventListener('afterprint', () => {
+    document.querySelectorAll('.print-proxy').forEach(el => el.remove());
+    document.querySelectorAll('[data-print-hidden]').forEach(el => {
+        el.hidden = false;
+        delete el.dataset.printHidden;
+    });
+});
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.dataset.tab = 'prestart';
+    applyTheme(localStorage.getItem('prestart_v1_theme') === 'dark');
+    document.getElementById('recipients-input').value          = getRecipients();
+    document.getElementById('ho-recipients-input').value       = getHandoverRecipients();
+    newMeeting();
+    newToolbox();
+    renderToolboxLog();
+    ['f-date','f-shift','f-project','f-supervisor'].forEach(id => {
+        document.getElementById(id).addEventListener('change', updateHeader);
+    });
+});
+</script>
+</body>
+</html>
