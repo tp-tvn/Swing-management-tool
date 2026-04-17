@@ -421,6 +421,12 @@
         }
         .toast.show { opacity: 1; transform: translateY(0); }
 
+        /* ── Modal ── */
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); }
+        .modal-content { position: relative; background: var(--white); border-radius: 8px; padding: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .modal-content h2 { color: var(--text); }
+
         /* ── Print ── */
         @media print {
             .header-actions, .tabs, .btn-group, .btn,
@@ -495,6 +501,7 @@
     </div>
     <div class="header-actions">
         <button class="btn btn-ghost-white btn-sm" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">☀</button>
+        <button class="btn btn-ghost-white btn-sm" id="feedback-toggle" onclick="toggleFeedbackModal()" title="Feedback">💬</button>
         <button class="btn btn-ghost-white btn-sm" id="settings-toggle" onclick="toggleSettings()" title="Settings">⚙</button>
         <button class="btn btn-ghost-white btn-sm" onclick="exportData()">Export</button>
         <button class="btn btn-ghost-white btn-sm" onclick="document.getElementById('importInput').click()">Import</button>
@@ -1012,6 +1019,57 @@
 </div><!-- /main -->
 
 <div class="toast" id="toast"></div>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal" id="feedback-modal" style="display:none;">
+    <div class="modal-overlay" onclick="closeFeedbackModal()"></div>
+    <div class="modal-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h2 style="margin:0;font-size:1.1rem;">💬 Feedback</h2>
+            <button class="btn btn-ghost btn-sm" onclick="closeFeedbackModal()" style="font-size:1.2rem;padding:0;width:30px;height:30px;">✕</button>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+            <label>Your Name</label>
+            <input type="text" id="modal-fb-name" placeholder="Your name">
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+            <label>Feedback Type</label>
+            <select id="modal-fb-type">
+                <option value="">— Select a type —</option>
+                <option value="Bug Report">🐛 Bug Report</option>
+                <option value="Feature Request">✨ Feature Request</option>
+                <option value="Improvement">💡 Improvement</option>
+                <option value="Documentation">📖 Documentation</option>
+                <option value="Other">💬 Other</option>
+            </select>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+            <label>Feature/Area</label>
+            <select id="modal-fb-feature">
+                <option value="">— Select area —</option>
+                <option value="Prestart Meeting">📋 Prestart Meeting</option>
+                <option value="Swing Log">📊 Swing Log</option>
+                <option value="Handover Document">📄 Handover</option>
+                <option value="Toolbox Talks">🎯 Toolbox Talks</option>
+                <option value="Settings">⚙️ Settings</option>
+                <option value="General">💬 General</option>
+            </select>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+            <label>Your Feedback</label>
+            <textarea id="modal-fb-message" placeholder="Describe your feedback…" style="min-height:100px;"></textarea>
+        </div>
+
+        <div class="btn-group" style="gap:8px;">
+            <button class="btn btn-primary" onclick="submitModalFeedback()">✓ Submit</button>
+            <button class="btn btn-ghost" onclick="closeFeedbackModal()">Cancel</button>
+        </div>
+    </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════════════
@@ -2520,6 +2578,86 @@ function clearAllFeedback() {
 function toggleSettings() {
     const panel = document.getElementById('settings-panel');
     panel.classList.toggle('open');
+}
+
+function toggleFeedbackModal() {
+    const modal = document.getElementById('feedback-modal');
+    modal.style.display = modal.style.display === 'none' ? 'flex' : 'none';
+}
+
+function closeFeedbackModal() {
+    document.getElementById('feedback-modal').style.display = 'none';
+}
+
+async function submitModalFeedback() {
+    const name = document.getElementById('modal-fb-name').value.trim();
+    const type = document.getElementById('modal-fb-type').value;
+    const feature = document.getElementById('modal-fb-feature').value;
+    const message = document.getElementById('modal-fb-message').value.trim();
+
+    if (!name) { toast('Please enter your name'); return; }
+    if (!type) { toast('Please select a feedback type'); return; }
+    if (!feature) { toast('Please select which area you\'re providing feedback about'); return; }
+    if (!message) { toast('Please enter your feedback'); return; }
+
+    const feedback = {
+        id: uid(),
+        timestamp: new Date().toISOString(),
+        name, type, feature, message
+    };
+
+    const all = getFeedback();
+    all.push(feedback);
+    setFeedback(all);
+
+    // Send to Slack if webhook is configured
+    const webhookUrl = getSlackWebhook();
+    if (webhookUrl) {
+        const slackMessage = {
+            text: `📝 New Feedback Submitted`,
+            blocks: [
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: `*New Feedback from ${name}*\n_${type}_`
+                    }
+                },
+                {
+                    type: 'section',
+                    fields: [
+                        { type: 'mrkdwn', text: `*Name:*\n${name}` },
+                        { type: 'mrkdwn', text: `*Area:*\n${feature}` },
+                        { type: 'mrkdwn', text: `*Type:*\n${type}` }
+                    ]
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: `*Feedback:*\n${message}`
+                    }
+                }
+            ]
+        };
+
+        try {
+            await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(slackMessage)
+            });
+        } catch (e) {
+            console.error('Slack notification failed:', e);
+        }
+    }
+
+    document.getElementById('modal-fb-name').value = '';
+    document.getElementById('modal-fb-type').value = '';
+    document.getElementById('modal-fb-feature').value = '';
+    document.getElementById('modal-fb-message').value = '';
+    closeFeedbackModal();
+    toast('Thank you! Feedback submitted.' + (webhookUrl ? ' ✓ Sent to Slack' : ''));
 }
 
 function saveFolderUrl(v) {
