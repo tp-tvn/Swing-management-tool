@@ -548,7 +548,7 @@
                 oninput="saveSlackWebhook(this.value)">
             <div class="settings-hint">Feedback will be sent to Slack. Stored locally, never exported.</div>
         </div>
-        <div class="settings-group" style="display:none;">
+        <div class="settings-group">
             <div class="settings-label">Anthropic API Key</div>
             <div style="display:flex;gap:6px;align-items:flex-start;">
                 <input type="password" id="settings-apikey" placeholder="sk-ant-api03-…" autocomplete="off"
@@ -556,7 +556,7 @@
                 <button class="btn btn-primary btn-sm" onclick="saveApiKey()" style="flex-shrink:0;">Save Key</button>
             </div>
             <div class="api-hint" id="settings-apikey-hint" style="margin-top:4px;"></div>
-            <div class="settings-hint">Enables AI executive summaries — stored locally, never exported</div>
+            <div class="settings-hint">Enables AI handover summaries — stored locally, never exported</div>
         </div>
     </div>
 </div>
@@ -786,6 +786,7 @@
         <div class="btn-group no-print">
             <button class="btn btn-primary" onclick="saveHandover()">Save Handover</button>
             <button class="btn btn-ghost"   onclick="addHandoverSection()">+ Add Section</button>
+            <button class="btn btn-purple"  onclick="generateHandoverSummary()">✨ Generate AI Summary</button>
             <button class="btn btn-ghost"   onclick="window.print()">Print / PDF</button>
             <button class="btn btn-green"   onclick="sendHandover()">✉ Send to Team</button>
             <button class="btn btn-danger btn-sm" onclick="clearHandover()">Clear Handover</button>
@@ -2360,10 +2361,11 @@ function toast(msg) {
 }
 
 // ══════════════════════════════════════════════════
-// FEEDBACK
+// FEEDBACK & API
 // ══════════════════════════════════════════════════
 const FEEDBACK_KEY = 'prestart_v1_feedback';
 const SLACK_WEBHOOK_KEY = 'prestart_v1_slack_webhook';
+const API_KEY = 'prestart_v1_api_key';
 
 function getFeedback() {
     try { return JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || []; }
@@ -2611,6 +2613,22 @@ function saveFolderUrl(v) {
     setSwingSettings(sw);
 }
 
+function getApiKey() {
+    const key = localStorage.getItem(API_KEY) || '';
+    return key;
+}
+
+function setApiKey(key) {
+    localStorage.setItem(API_KEY, key);
+}
+
+function updateApikeyHint() {
+    const hasKey = !!getApiKey();
+    const hint = document.getElementById('settings-apikey-hint');
+    hint.textContent = hasKey ? '✓ API key saved' : '';
+    hint.style.color = hasKey ? 'var(--green)' : '';
+}
+
 function saveApiKey() {
     const input = document.getElementById('settings-apikey');
     const v = input.value;
@@ -2620,6 +2638,93 @@ function saveApiKey() {
     }
     updateApikeyHint();
     toast('API key saved!');
+}
+
+async function generateHandoverSummary() {
+    const apiKey = getApiKey();
+    if (!apiKey) {
+        toast('⚠️ Please configure your Claude API key in Settings first');
+        document.getElementById('settings-panel').classList.add('open');
+        return;
+    }
+
+    const incoming = document.getElementById('ho-incoming').value.trim();
+    const outgoing = document.getElementById('ho-outgoing').value.trim();
+    const staying = document.getElementById('ho-staying').value.trim();
+    const sections = document.querySelectorAll('[data-ho-section-id]');
+
+    if (sections.length === 0) {
+        toast('⚠️ Please add some handover sections first');
+        return;
+    }
+
+    const summaryBtn = event?.target;
+    if (summaryBtn) summaryBtn.disabled = true;
+
+    try {
+        const sectionContent = Array.from(sections).map(sec => {
+            const title = sec.querySelector('.ho-section-title')?.value || '';
+            const content = sec.querySelector('textarea')?.value || '';
+            return `${title}:\n${content}`;
+        }).join('\n\n');
+
+        const prompt = `You are an expert shift manager. Create a brief, professional executive summary of this handover document. Focus on key points, critical issues, and action items. Keep it concise and actionable.
+
+Incoming Team: ${incoming || 'Not specified'}
+Outgoing Team: ${outgoing || 'Not specified'}
+Staying On: ${staying || 'Not specified'}
+
+Handover Details:
+${sectionContent}
+
+Provide a clear, structured summary suitable for briefing the incoming shift.`;
+
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01'
+            },
+            body: JSON.stringify({
+                model: 'claude-3-5-sonnet-20241022',
+                max_tokens: 500,
+                messages: [
+                    { role: 'user', content: prompt }
+                ]
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error?.message || 'API error');
+        }
+
+        const data = await response.json();
+        const summary = data.content[0].text;
+
+        const summaryDiv = document.getElementById('ho-summary-generated') || (() => {
+            const div = document.createElement('div');
+            div.id = 'ho-summary-generated';
+            div.className = 'card';
+            document.getElementById('ho-sections').insertAdjacentElement('beforebegin', div);
+            return div;
+        })();
+
+        summaryDiv.innerHTML = `
+            <div class="card-title">AI Generated Summary</div>
+            <div style="white-space:pre-wrap;word-break:break-word;color:var(--text);line-height:1.6;">
+                ${esc(summary)}
+            </div>
+        `;
+
+        toast('✓ Summary generated!');
+    } catch (err) {
+        toast('❌ Error: ' + (err.message || 'Failed to generate summary'));
+        console.error(err);
+    } finally {
+        if (summaryBtn) summaryBtn.disabled = false;
+    }
 }
 
 // ══════════════════════════════════════════════════
@@ -2689,6 +2794,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('recipients-input').value          = getRecipients();
     document.getElementById('ho-recipients-input').value       = getHandoverRecipients();
     document.getElementById('settings-slack-webhook').value    = getSlackWebhook();
+    updateApikeyHint();
     newMeeting();
     newToolbox();
     renderToolboxLog();
