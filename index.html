@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Prestart Meeting</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
         // ── Password Protection ──
         (function() {
@@ -2102,12 +2103,32 @@ async function synthesisePoints() {
     const general = document.getElementById('f-general').value.trim();
 
     if (!apiKey) {
-        // Fallback — first sentence of each relevant field, safety first
-        const fallback = [safety, highrisk, prev24, tasks, general]
-            .filter(Boolean)
-            .slice(0, 3)
-            .map(s => '• ' + s.split(/[.\n]/)[0].trim());
-        return fallback.join('\n') || null;
+        // Fallback — extract first sentence from each field, prioritize safety
+        const points = [];
+
+        // Safety (highest priority)
+        if (safety) {
+            const safetyPoint = safety.split(/[.\n]/)[0].trim();
+            if (safetyPoint) points.push('• ' + safetyPoint);
+        }
+
+        // High risk work
+        if (highrisk) {
+            const riskPoint = highrisk.split(/[.\n]/)[0].trim();
+            if (riskPoint && riskPoint !== safetyPoint) points.push('• ' + riskPoint);
+        }
+
+        // Other key points (prev24, tasks, general)
+        const otherFields = [prev24, tasks, general].filter(Boolean);
+        for (const field of otherFields) {
+            if (points.length >= 3) break;
+            const point = field.split(/[.\n]/)[0].trim();
+            if (point && !points.some(p => p.includes(point))) {
+                points.push('• ' + point);
+            }
+        }
+
+        return points.length > 0 ? points.join('\n') : null;
     }
 
     const ewS = document.getElementById('f-ew-signedoff').value;
@@ -2163,32 +2184,34 @@ Be factual, concise, plain language. Each bullet one sentence.`;
 
 async function sendToTeam() {
     const date    = document.getElementById('f-date').value;
-    const sugName = `Pre-Start Meeting ${date || today()}.html`;
+    const sugName = `Pre-Start Meeting ${date || today()}.pdf`;
 
-    toast('Preparing…');
+    toast('Preparing PDF…');
     const points  = await synthesisePoints();
     const mailto  = buildMailto(points);
 
-    if ('showSaveFilePicker' in window) {
-        try {
-            const handle = await window.showSaveFilePicker({
-                suggestedName: sugName,
-                types: [{ description: 'Web Page', accept: { 'text/html': ['.html'] } }]
-            });
-            const writable = await handle.createWritable();
-            await writable.write(generateMeetingHTML());
-            await writable.close();
-            toast('Saved! Opening folder and email…');
-            const folderUrl = getSwingSettings().folderUrl || '';
-            if (folderUrl) window.open(folderUrl, '_blank');
-            setTimeout(() => { window.location.href = mailto; }, 400);
-        } catch (err) {
-            if (err.name === 'AbortError') return; // user cancelled — do nothing
-            // API failed for another reason — fall back to print
-            fallbackPrintAndEmail(mailto);
-        }
-    } else {
-        fallbackPrintAndEmail(mailto);
+    try {
+        const element = document.createElement('div');
+        element.innerHTML = generateMeetingHTML();
+
+        const opt = {
+            margin: 10,
+            filename: sugName,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+        };
+
+        await html2pdf().set(opt).from(element).save();
+        toast('PDF saved! Opening email…');
+
+        const folderUrl = getSwingSettings().folderUrl || '';
+        if (folderUrl) window.open(folderUrl, '_blank');
+        setTimeout(() => { window.location.href = mailto; }, 400);
+    } catch (err) {
+        console.error('PDF generation failed:', err);
+        toast('Could not generate PDF. Opening email instead.');
+        window.location.href = mailto;
     }
 }
 
@@ -2198,7 +2221,7 @@ function fallbackPrintAndEmail(mailto) {
         setTimeout(() => { window.location.href = mailto; }, 300);
     };
     window.addEventListener('afterprint', handler);
-    toast('Save as PDF, then your email will open automatically.');
+    toast('Save as PDF in the print dialog, then your email will open automatically.');
     window.print();
 }
 
