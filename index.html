@@ -961,15 +961,9 @@
             <div class="card-title">Share Your Feedback</div>
             <p style="margin-bottom:14px;color:var(--muted);">Help us improve the Safety Meetings Tool with your suggestions, bugs, or observations. Your feedback is valuable and helps shape the future of this tool.</p>
 
-            <div class="row" style="margin-bottom:12px;">
-                <div class="field">
-                    <label>Your Name</label>
-                    <input type="text" id="fb-name" placeholder="Your name">
-                </div>
-                <div class="field">
-                    <label>Your Role</label>
-                    <input type="text" id="fb-role" placeholder="e.g. Geologist, Supervisor, Driller">
-                </div>
+            <div class="field" style="margin-bottom:12px;">
+                <label>Your Name</label>
+                <input type="text" id="fb-name" placeholder="Your name">
             </div>
 
             <div class="field" style="margin-bottom:12px;">
@@ -2402,7 +2396,6 @@ function saveSlackWebhook(url) {
 
 async function submitFeedback() {
     const name = document.getElementById('fb-name').value.trim();
-    const role = document.getElementById('fb-role').value.trim();
     const type = document.getElementById('fb-type').value;
     const feature = document.getElementById('fb-feature').value;
     const message = document.getElementById('fb-message').value.trim();
@@ -2415,7 +2408,7 @@ async function submitFeedback() {
     const feedback = {
         id: uid(),
         timestamp: new Date().toISOString(),
-        name, role, type, feature, message
+        name, type, feature, message
     };
 
     const all = getFeedback();
@@ -2439,7 +2432,6 @@ async function submitFeedback() {
                     type: 'section',
                     fields: [
                         { type: 'mrkdwn', text: `*Name:*\n${name}` },
-                        { type: 'mrkdwn', text: `*Role:*\n${role || '(not specified)'}` },
                         { type: 'mrkdwn', text: `*Area:*\n${feature}` },
                         { type: 'mrkdwn', text: `*Type:*\n${type}` }
                     ]
@@ -2472,7 +2464,6 @@ async function submitFeedback() {
 
 function clearFeedbackForm() {
     document.getElementById('fb-name').value = '';
-    document.getElementById('fb-role').value = '';
     document.getElementById('fb-type').value = '';
     document.getElementById('fb-feature').value = '';
     document.getElementById('fb-message').value = '';
