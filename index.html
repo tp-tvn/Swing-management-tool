@@ -534,6 +534,13 @@
                 oninput="saveFolderUrl(this.value)">
             <div class="settings-hint">Included as a link in team emails</div>
         </div>
+        <div class="settings-group">
+            <div class="settings-label">Slack Webhook URL (for Feedback)</div>
+            <input type="password" id="settings-slack-webhook" placeholder="https://hooks.slack.com/services/…" autocomplete="off"
+                style="width:100%;font-size:0.85rem;"
+                oninput="saveSlackWebhook(this.value)">
+            <div class="settings-hint">Feedback will be sent to Slack. Stored locally, never exported.</div>
+        </div>
         <div class="settings-group" style="display:none;">
             <div class="settings-label">Anthropic API Key</div>
             <div style="display:flex;gap:6px;align-items:flex-start;">
@@ -573,6 +580,12 @@
                 <div class="field">
                     <label>Supervisor</label>
                     <input type="text" id="f-supervisor" placeholder="Name">
+                </div>
+            </div>
+            <div class="row">
+                <div class="field">
+                    <label>Company</label>
+                    <input type="text" id="f-company" placeholder="Company name">
                 </div>
             </div>
         </div>
@@ -996,13 +1009,13 @@
         </div>
 
         <div class="card" style="background:var(--blue);color:white;border:none;">
-            <div class="card-title" style="color:white;border-color:rgba(255,255,255,0.3);">How to Send Feedback to the Team</div>
-            <p style="margin-bottom:10px;color:rgba(255,255,255,0.9);">Your feedback is saved locally on this device. To share it with the team:</p>
+            <div class="card-title" style="color:white;border-color:rgba(255,255,255,0.3);">Feedback Submission</div>
+            <p style="margin-bottom:10px;color:rgba(255,255,255,0.9);">When you submit feedback above, it will be:</p>
             <ol style="margin-left:20px;line-height:2;color:rgba(255,255,255,0.9);">
-                <li><strong>Email your feedback</strong> to your Site Geologist or Site Supervision</li>
-                <li><strong>Or click "Export Feedback"</strong> below to download all feedback as a file and share it</li>
-                <li>Include your name, role, and the type of feedback to help us prioritize</li>
+                <li><strong>Saved locally</strong> on this device for your records</li>
+                <li><strong>Sent to Slack</strong> instantly (if webhook is configured in Settings)</li>
             </ol>
+            <p style="margin-top:10px;color:rgba(255,255,255,0.8);font-size:0.9rem;">💡 <strong>To enable Slack notifications:</strong> Go to Settings at the top and paste your Slack webhook URL.</p>
             <div class="btn-group no-print" style="margin-top:14px;">
                 <button class="btn btn-ghost-white" onclick="exportFeedback()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);">⬇ Export Feedback</button>
                 <button class="btn btn-ghost-white" onclick="clearAllFeedback()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);">🗑 Clear All Feedback</button>
@@ -1392,6 +1405,7 @@ function readForm() {
         shift:           document.getElementById('f-shift').value,
         project:         document.getElementById('f-project').value,
         supervisor:      document.getElementById('f-supervisor').value,
+        company:         document.getElementById('f-company').value,
         attendance:      attRows.filter(r => r.name.trim()),
         prev24:          document.getElementById('f-prev24').value,
         earthworks: {
@@ -1810,6 +1824,7 @@ function editMeeting() {
     document.getElementById('f-shift').value      = m.shift;
     document.getElementById('f-project').value    = m.project    || 'Speewah';
     document.getElementById('f-supervisor').value = m.supervisor || '';
+    document.getElementById('f-company').value    = m.company    || '';
     document.getElementById('f-prev24').value     = m.prev24     || '';
     const ew = m.earthworks || {};
     document.getElementById('f-ew-signedoff').value = ew.padsSignedOff     || '';
@@ -2358,6 +2373,7 @@ function toast(msg) {
 // FEEDBACK
 // ══════════════════════════════════════════════════
 const FEEDBACK_KEY = 'prestart_v1_feedback';
+const SLACK_WEBHOOK_KEY = 'prestart_v1_slack_webhook';
 
 function getFeedback() {
     try { return JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || []; }
@@ -2366,7 +2382,15 @@ function getFeedback() {
 
 function setFeedback(d) { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(d)); }
 
-function submitFeedback() {
+function getSlackWebhook() {
+    return localStorage.getItem(SLACK_WEBHOOK_KEY) || '';
+}
+
+function saveSlackWebhook(url) {
+    localStorage.setItem(SLACK_WEBHOOK_KEY, url);
+}
+
+async function submitFeedback() {
     const name = document.getElementById('fb-name').value.trim();
     const role = document.getElementById('fb-role').value.trim();
     const type = document.getElementById('fb-type').value;
@@ -2386,9 +2410,52 @@ function submitFeedback() {
     all.push(feedback);
     setFeedback(all);
 
+    // Send to Slack if webhook is configured
+    const webhookUrl = getSlackWebhook();
+    if (webhookUrl) {
+        const slackMessage = {
+            text: `📝 New Feedback Submitted`,
+            blocks: [
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: `*New Feedback from ${name}*\n_${type}_`
+                    }
+                },
+                {
+                    type: 'section',
+                    fields: [
+                        { type: 'mrkdwn', text: `*Name:*\n${name}` },
+                        { type: 'mrkdwn', text: `*Role:*\n${role || '(not specified)'}` },
+                        { type: 'mrkdwn', text: `*Type:*\n${type}` },
+                        { type: 'mrkdwn', text: `*Time:*\n${new Date(feedback.timestamp).toLocaleString()}` }
+                    ]
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: `*Feedback:*\n${message}`
+                    }
+                }
+            ]
+        };
+
+        try {
+            await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(slackMessage)
+            });
+        } catch (e) {
+            console.error('Slack notification failed:', e);
+        }
+    }
+
     clearFeedbackForm();
     renderFeedbackList();
-    toast('Thank you! Feedback submitted.');
+    toast('Thank you! Feedback submitted.' + (webhookUrl ? ' ✓ Sent to Slack' : ''));
 }
 
 function clearFeedbackForm() {
@@ -2551,10 +2618,11 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTheme(localStorage.getItem('prestart_v1_theme') === 'dark');
     document.getElementById('recipients-input').value          = getRecipients();
     document.getElementById('ho-recipients-input').value       = getHandoverRecipients();
+    document.getElementById('settings-slack-webhook').value    = getSlackWebhook();
     newMeeting();
     newToolbox();
     renderToolboxLog();
-    ['f-date','f-shift','f-project','f-supervisor'].forEach(id => {
+    ['f-date','f-shift','f-project','f-supervisor','f-company'].forEach(id => {
         document.getElementById(id).addEventListener('change', updateHeader);
     });
 });
