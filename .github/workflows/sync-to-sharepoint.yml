@@ -72,10 +72,12 @@ jobs:
               print("No files matched for sync.")
               sys.exit(0)
 
+          # Target folder in SharePoint
+          sp_folder = "General/07 - Geology/14.  Scripts/6. GitHub Repo Clone"
+
           uploaded, failed = [], []
           for filepath in files_to_sync:
-              # Preserve folder structure inside SharePoint: SwingManagementTool/<filepath>
-              remote_path = f"SwingManagementTool/{filepath}"
+              remote_path = f"{sp_folder}/{filepath}"
               upload_url = f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:/{remote_path}:/content"
               with open(filepath, 'rb') as f:
                   resp = requests.put(
