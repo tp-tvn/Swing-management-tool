@@ -2,7 +2,6 @@ name: Sync to SharePoint
 
 on:
   schedule:
-    # Run hourly at :15 minutes past the hour
     - cron: '15 * * * *'
   workflow_dispatch:
 
@@ -12,24 +11,98 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Microsoft Graph CLI
-        run: npm install -g @microsoft/pxt-cli
-
-      - name: Sync to SharePoint
+      - name: Sync files to SharePoint
         env:
           SHAREPOINT_TENANT: ${{ secrets.SHAREPOINT_TENANT }}
           SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
           SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
+          SHAREPOINT_SITE: ${{ secrets.SHAREPOINT_SITE }}
           SHAREPOINT_LIBRARY: ${{ secrets.SHAREPOINT_LIBRARY }}
         run: |
-          echo "📤 Starting SharePoint sync..."
-          echo "Syncing data/, docs/, and attachments/ folders"
-          echo "✅ Sync complete (configure credentials in GitHub Secrets)"
+          python3 << 'EOF'
+          import os, sys, glob, requests
 
-      - name: Update metadata
+          tenant        = os.environ['SHAREPOINT_TENANT']
+          client_id     = os.environ['SHAREPOINT_CLIENT_ID']
+          client_secret = os.environ['SHAREPOINT_CLIENT_SECRET']
+          site_path     = os.environ['SHAREPOINT_SITE']      # e.g. contoso.sharepoint.com:/sites/MySite
+          library       = os.environ.get('SHAREPOINT_LIBRARY', 'Documents')
+
+          # 1. Get access token
+          token_resp = requests.post(
+              f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token",
+              data={
+                  'grant_type':    'client_credentials',
+                  'client_id':     client_id,
+                  'client_secret': client_secret,
+                  'scope':         'https://graph.microsoft.com/.default',
+              }
+          )
+          token_resp.raise_for_status()
+          headers = {'Authorization': f"Bearer {token_resp.json()['access_token']}"}
+
+          # 2. Get site ID
+          site_resp = requests.get(
+              f"https://graph.microsoft.com/v1.0/sites/{site_path}",
+              headers=headers
+          )
+          site_resp.raise_for_status()
+          site_id = site_resp.json()['id']
+
+          # 3. Resolve document library drive
+          drives_resp = requests.get(
+              f"https://graph.microsoft.com/v1.0/sites/{site_id}/drives",
+              headers=headers
+          )
+          drives_resp.raise_for_status()
+          drives = drives_resp.json()['value']
+          drive = next((d for d in drives if d['name'] == library), drives[0])
+          drive_id = drive['id']
+
+          # 4. Collect JSON and PDF files to sync
+          files_to_sync = sorted(set(
+              glob.glob('config/*.json') +
+              glob.glob('data/*.json') +
+              glob.glob('docs/*.pdf') +
+              glob.glob('attachments/*.pdf') +
+              glob.glob('**/*.pdf', recursive=True)
+          ))
+
+          if not files_to_sync:
+              print("No files matched for sync.")
+              sys.exit(0)
+
+          uploaded, failed = [], []
+          for filepath in files_to_sync:
+              # Preserve folder structure inside SharePoint: SwingManagementTool/<filepath>
+              remote_path = f"SwingManagementTool/{filepath}"
+              upload_url = f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root:/{remote_path}:/content"
+              with open(filepath, 'rb') as f:
+                  resp = requests.put(
+                      upload_url,
+                      headers={**headers, 'Content-Type': 'application/octet-stream'},
+                      data=f.read()
+                  )
+              if resp.status_code in (200, 201):
+                  uploaded.append(filepath)
+                  print(f"  uploaded: {filepath}")
+              else:
+                  failed.append(filepath)
+                  print(f"  FAILED:   {filepath} ({resp.status_code}: {resp.text[:120]})")
+
+          print(f"\nDone: {len(uploaded)} uploaded, {len(failed)} failed.")
+          if failed:
+              sys.exit(1)
+          EOF
+
+      - name: Update sync timestamp
         run: |
-          echo "Updating sync timestamp..."
-          node -e "require('fs').writeFileSync('config/app-config.json', JSON.stringify({...JSON.parse(require('fs').readFileSync('config/app-config.json', 'utf8')), lastSyncAt: new Date().toISOString()}, null, 2))"
+          node -e "
+            const fs = require('fs');
+            const cfg = JSON.parse(fs.readFileSync('config/app-config.json', 'utf8'));
+            cfg.lastSyncAt = new Date().toISOString();
+            fs.writeFileSync('config/app-config.json', JSON.stringify(cfg, null, 2));
+          "
 
       - name: Commit changes
         run: |
