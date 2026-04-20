@@ -81,6 +81,56 @@ function startNewSwing() {
     renderLog(); // Refresh the log
 }
 
+
+function renderSwingBanner() {
+    const sw = getSwingSettings();
+    const startDate = sw.startDate || today();
+    const endDate = sw.endDate || today();
+    const container = document.getElementById('swing-banner-container');
+    if (!container) return;
+    
+    const startDisplay = new Date(startDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    const endDisplay = new Date(endDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    
+    container.innerHTML = `
+        <div style="background:linear-gradient(135deg, #2c5282 0%, #2b6cb0 100%);color:white;padding:12px 16px;border-radius:6px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+                <div style="font-size:0.85rem;opacity:0.9;">SWING DATES</div>
+                <div style="font-size:1.2rem;font-weight:600;">${startDisplay} — ${endDisplay}</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="promptChangeSwitchDates()" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:white;">Change Dates</button>
+        </div>
+    `;
+}
+
+function promptChangeSwitchDates() {
+    const sw = getSwingSettings();
+    const startDate = prompt("Swing start date (YYYY-MM-DD):", sw.startDate || today());
+    if (!startDate) return;
+    
+    const endDate = prompt("Swing end date (YYYY-MM-DD):", sw.endDate || today());
+    if (!endDate) return;
+    
+    setSwingSettings({
+        ...sw,
+        startDate: startDate,
+        endDate: endDate
+    });
+    
+    // Update the banner and reload meetings
+    renderSwingBanner();
+    renderLog();
+    toast(`Swing dates updated: ${startDate} to ${endDate}`);
+}
+
+
+// Initialize swing banner on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderSwingBanner);
+} else {
+    renderSwingBanner();
+}
+
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
 // Load GitHub token to UI when page loads
@@ -114,6 +164,56 @@ function startNewSwing() {
     
     toast(`New swing started: ${startDate} to ${endDateStr}`);
     renderLog(); // Refresh the log
+}
+
+
+function renderSwingBanner() {
+    const sw = getSwingSettings();
+    const startDate = sw.startDate || today();
+    const endDate = sw.endDate || today();
+    const container = document.getElementById('swing-banner-container');
+    if (!container) return;
+    
+    const startDisplay = new Date(startDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    const endDisplay = new Date(endDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    
+    container.innerHTML = `
+        <div style="background:linear-gradient(135deg, #2c5282 0%, #2b6cb0 100%);color:white;padding:12px 16px;border-radius:6px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+                <div style="font-size:0.85rem;opacity:0.9;">SWING DATES</div>
+                <div style="font-size:1.2rem;font-weight:600;">${startDisplay} — ${endDisplay}</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="promptChangeSwitchDates()" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:white;">Change Dates</button>
+        </div>
+    `;
+}
+
+function promptChangeSwitchDates() {
+    const sw = getSwingSettings();
+    const startDate = prompt("Swing start date (YYYY-MM-DD):", sw.startDate || today());
+    if (!startDate) return;
+    
+    const endDate = prompt("Swing end date (YYYY-MM-DD):", sw.endDate || today());
+    if (!endDate) return;
+    
+    setSwingSettings({
+        ...sw,
+        startDate: startDate,
+        endDate: endDate
+    });
+    
+    // Update the banner and reload meetings
+    renderSwingBanner();
+    renderLog();
+    toast(`Swing dates updated: ${startDate} to ${endDate}`);
+}
+
+
+// Initialize swing banner on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderSwingBanner);
+} else {
+    renderSwingBanner();
 }
 
 </script>
@@ -3116,6 +3216,56 @@ function startNewSwing() {
     
     toast(`New swing started: ${startDate} to ${endDateStr}`);
     renderLog(); // Refresh the log
+}
+
+
+function renderSwingBanner() {
+    const sw = getSwingSettings();
+    const startDate = sw.startDate || today();
+    const endDate = sw.endDate || today();
+    const container = document.getElementById('swing-banner-container');
+    if (!container) return;
+    
+    const startDisplay = new Date(startDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    const endDisplay = new Date(endDate + 'T00:00:00').toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric', month: 'short' });
+    
+    container.innerHTML = `
+        <div style="background:linear-gradient(135deg, #2c5282 0%, #2b6cb0 100%);color:white;padding:12px 16px;border-radius:6px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+                <div style="font-size:0.85rem;opacity:0.9;">SWING DATES</div>
+                <div style="font-size:1.2rem;font-weight:600;">${startDisplay} — ${endDisplay}</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="promptChangeSwitchDates()" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:white;">Change Dates</button>
+        </div>
+    `;
+}
+
+function promptChangeSwitchDates() {
+    const sw = getSwingSettings();
+    const startDate = prompt("Swing start date (YYYY-MM-DD):", sw.startDate || today());
+    if (!startDate) return;
+    
+    const endDate = prompt("Swing end date (YYYY-MM-DD):", sw.endDate || today());
+    if (!endDate) return;
+    
+    setSwingSettings({
+        ...sw,
+        startDate: startDate,
+        endDate: endDate
+    });
+    
+    // Update the banner and reload meetings
+    renderSwingBanner();
+    renderLog();
+    toast(`Swing dates updated: ${startDate} to ${endDate}`);
+}
+
+
+// Initialize swing banner on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderSwingBanner);
+} else {
+    renderSwingBanner();
 }
 
 </script>
