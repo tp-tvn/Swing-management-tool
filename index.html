@@ -2490,36 +2490,12 @@ Be factual, concise, plain language. Each bullet one sentence.`;
 }
 
 async function sendToTeam() {
-    const date    = document.getElementById('f-date').value;
-    const sugName = `Pre-Start Meeting ${date || today()}.pdf`;
-
-    toast('Preparing PDF…');
-    const points  = await synthesisePoints();
-    const mailto  = buildMailto(points);
-
-    try {
-        const element = document.getElementById('pane-prestart');
-
-        const opt = {
-            margin: 10,
-            filename: sugName,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, logging: false },
-            jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
-        };
-
-        await html2pdf().set(opt).from(element).save();
-        toast('PDF saved! Opening email…');
-
-        const folderUrl = getSwingSettings().folderUrl || '';
-        if (folderUrl) window.open(folderUrl, '_blank');
-        setTimeout(() => { window.location.href = mailto; }, 400);
-    } catch (err) {
-        console.error('PDF generation failed:', err);
-        toast('Could not generate PDF. Opening email instead.');
-        window.location.href = mailto;
-    }
+    const points = await synthesisePoints();
+    const mailto = buildMailto(points);
+    toast('Opening email...');
+    window.location.href = mailto;
 }
+
 
 function fallbackPrintAndEmail(mailto) {
     const handler = () => {
