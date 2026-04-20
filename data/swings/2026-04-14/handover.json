@@ -1,0 +1,23 @@
+{
+  "id": "swing_001_april14-20",
+  "swingStartDate": "2026-04-14",
+  "swingEndDate": "2026-04-20",
+  "handoverText": "Swing completed successfully. Total RC drilling: 1,840 metres across 14 holes. All samples collected and sent for analysis. Two pads fully rehabilitated. No safety incidents. Rig performing well, scheduled maintenance completed on schedule.",
+  "completedActions": [
+    {
+      "id": "action_2026-04-15_2",
+      "desc": "Schedule compressor maintenance",
+      "assignee": "Tom Anderson",
+      "completedDate": "2026-04-16"
+    }
+  ],
+  "openActions": [
+    {
+      "id": "action_2026-04-18_1",
+      "desc": "Follow up on core sample analysis results",
+      "assignee": "John Smith",
+      "dueDate": "2026-04-22"
+    }
+  ],
+  "savedAt": "2026-04-20T18:00:00Z"
+}
