@@ -1038,6 +1038,101 @@ const HANDOVER_RECIPIENTS_KEY  = 'prestart_v1_handover_recipients'; // device-lo
 const TOOLBOXES_KEY = 'prestart_v1_toolboxes';
 const ROSTER_KEY    = 'prestart_v1_roster';
 
+// ══════════════════════════════════════════════════
+// GITHUB SYNC CONFIGURATION
+// ══════════════════════════════════════════════════
+const GITHUB_OWNER = 'tp-tvn';
+const GITHUB_REPO = 'Swing-management-tool';
+const GITHUB_TOKEN = ''; // Set via environment variable or .env.local
+const GITHUB_API_BASE = 'https://api.github.com/repos';
+const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com';
+
+function getSwingDate() {
+    const sw = getSwingSettings();
+    return sw.startDate || today();
+}
+
+function getSwingFilePath() {
+    const date = getSwingDate();
+    return `data/swings/${date}/meetings.json`;
+}
+
+function getHandoverFilePath() {
+    const sw = getSwingSettings();
+    const swingDate = sw.startDate || today();
+    return `data/swings/${swingDate}/handover.json`;
+}
+
+// ══════════════════════════════════════════════════
+// GITHUB SYNC FUNCTIONS
+// ══════════════════════════════════════════════════
+
+async function syncMeetingsToGitHub(meetings) {
+    if (!GITHUB_TOKEN) return;
+    const path = getSwingFilePath();
+    const url = `${GITHUB_API_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+    const content = btoa(JSON.stringify(meetings, null, 2));
+    let sha = null;
+    try {
+        const getResp = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
+        if (getResp.ok) sha = (await getResp.json()).sha;
+    } catch (e) { console.warn('Could not fetch current file SHA:', e); }
+    try {
+        const resp = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Update swing notes for ${getSwingDate()}`, content: content, sha: sha, committer: { name: 'Swing Tool', email: 'swing-tool@tivan.local' } })
+        });
+        if (!resp.ok) console.error(`GitHub API error: ${resp.status}`, await resp.text());
+        else console.log('[OK] Meetings synced to GitHub');
+    } catch (e) { console.warn('GitHub sync failed:', e); }
+}
+
+async function syncHandoverToGitHub(handover) {
+    if (!GITHUB_TOKEN) return;
+    const path = getHandoverFilePath();
+    const url = `${GITHUB_API_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+    const content = btoa(JSON.stringify(handover, null, 2));
+    let sha = null;
+    try {
+        const getResp = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
+        if (getResp.ok) sha = (await getResp.json()).sha;
+    } catch (e) { console.warn('Could not fetch handover SHA:', e); }
+    try {
+        const resp = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Update handover for swing ending ${getSwingDate()}`, content: content, sha: sha, committer: { name: 'Swing Tool', email: 'swing-tool@tivan.local' } })
+        });
+        if (!resp.ok) console.error(`GitHub API error: ${resp.status}`, await resp.text());
+        else console.log('[OK] Handover synced to GitHub');
+    } catch (e) { console.warn('Handover sync failed:', e); }
+}
+
+async function loadMeetingsFromGitHub() {
+    if (!GITHUB_TOKEN) return null;
+    const date = getSwingDate();
+    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${date}/meetings.json`;
+    try {
+        const resp = await fetch(url);
+        if (resp.ok) return await resp.json();
+    } catch (e) { console.warn('Could not fetch meetings from GitHub:', e); }
+    return null;
+}
+
+async function loadHandoverFromGitHub() {
+    if (!GITHUB_TOKEN) return null;
+    const sw = getSwingSettings();
+    const swingDate = sw.startDate || today();
+    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${swingDate}/handover.json`;
+    try {
+        const resp = await fetch(url);
+        if (resp.ok) return await resp.json();
+    } catch (e) { console.warn('Could not fetch handover from GitHub:', e); }
+    return null;
+}
+
+
 function getRoster() {
     try { return JSON.parse(localStorage.getItem(ROSTER_KEY)) || []; }
     catch { return []; }
@@ -1051,16 +1146,23 @@ function getToolboxes() {
 function setToolboxes(d) { localStorage.setItem(TOOLBOXES_KEY, JSON.stringify(d)); }
 
 function getMeetings() {
+    if (GITHUB_TOKEN && window.__githubMeetingsCache) return window.__githubMeetingsCache;
     try { return JSON.parse(localStorage.getItem(MEETINGS_KEY)) || []; }
     catch { return []; }
 }
-function setMeetings(d) { localStorage.setItem(MEETINGS_KEY, JSON.stringify(d)); }
+function setMeetings(d) { 
+    localStorage.setItem(MEETINGS_KEY, JSON.stringify(d)); 
+    if (GITHUB_TOKEN) syncMeetingsToGitHub(d).catch(err => console.warn('GitHub sync failed:', err));
+}
 
 function getHandover() {
     try { return JSON.parse(localStorage.getItem(HANDOVER_KEY)) || defaultHandover(); }
     catch { return defaultHandover(); }
 }
-function setHandover(d) { localStorage.setItem(HANDOVER_KEY, JSON.stringify(d)); }
+function setHandover(d) { 
+    localStorage.setItem(HANDOVER_KEY, JSON.stringify(d)); 
+    if (GITHUB_TOKEN) syncHandoverToGitHub(d).catch(err => console.warn('Handover sync failed:', err));
+}
 
 function getSwingSettings() {
     try { return JSON.parse(localStorage.getItem(SWING_KEY)) || {}; }
