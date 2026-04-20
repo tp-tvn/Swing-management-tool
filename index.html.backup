@@ -47,76 +47,8 @@
                 }
             }
         })();
-    
-// Load GitHub token to UI when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(loadGitHubTokenToUI, 100);
-});
-
-
-function startNewSwing() {
-    const days = prompt("How many days in this swing? (e.g. 7)", "7");
-    if (!days || isNaN(days)) return;
-    
-    const numDays = parseInt(days);
-    const startDate = today();
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + numDays - 1);
-    const endDateStr = endDate.toISOString().split('T')[0];
-    
-    setSwingSettings({
-        name: prompt("Swing name? (e.g. Swing 1 - April)", `Swing - ${startDate}`),
-        startDate: startDate,
-        endDate: endDateStr,
-        context: ""
-    });
-    
-    // Reload the swing settings display
-    document.getElementById('sw-name').value = getSwingSettings().name || "";
-    document.getElementById('sw-start').value = startDate;
-    document.getElementById('sw-end').value = endDateStr;
-    document.getElementById('sw-context').value = "";
-    
-    toast(`New swing started: ${startDate} to ${endDateStr}`);
-    renderLog(); // Refresh the log
-}
-
-</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
-// Load GitHub token to UI when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(loadGitHubTokenToUI, 100);
-});
-
-
-function startNewSwing() {
-    const days = prompt("How many days in this swing? (e.g. 7)", "7");
-    if (!days || isNaN(days)) return;
-    
-    const numDays = parseInt(days);
-    const startDate = today();
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + numDays - 1);
-    const endDateStr = endDate.toISOString().split('T')[0];
-    
-    setSwingSettings({
-        name: prompt("Swing name? (e.g. Swing 1 - April)", `Swing - ${startDate}`),
-        startDate: startDate,
-        endDate: endDateStr,
-        context: ""
-    });
-    
-    // Reload the swing settings display
-    document.getElementById('sw-name').value = getSwingSettings().name || "";
-    document.getElementById('sw-start').value = startDate;
-    document.getElementById('sw-end').value = endDateStr;
-    document.getElementById('sw-context').value = "";
-    
-    toast(`New swing started: ${startDate} to ${endDateStr}`);
-    renderLog(); // Refresh the log
-}
-
-</script>
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --blue:       #1e3a5f;
@@ -635,18 +567,6 @@ function startNewSwing() {
             <div class="settings-hint">Enables AI handover summaries — stored locally, never exported</div>
         </div>
     </div>
-
-        <div class="settings-group">
-            <div class="settings-label">GitHub Token (for Swing Sync)</div>
-            <div style="display:flex;gap:6px;align-items:flex-start;">
-                <input type="password" id="settings-github-token" placeholder="ghp_xxxxxxxxxxxxx" autocomplete="off"
-                    style="flex:1;font-size:0.85rem;">
-                <button class="btn btn-primary btn-sm" onclick="saveGitHubToken()" style="flex-shrink:0;">Save</button>
-            </div>
-            <div id="settings-github-hint" style="margin-top:4px;font-size:0.75rem;color:#666;"></div>
-            <div class="settings-hint">Personal Access Token for syncing swing notes to GitHub — stored locally, never exported</div>
-        </div>
-
 </div>
 
 <div class="main">
@@ -817,7 +737,6 @@ function startNewSwing() {
                     <textarea id="sw-context" placeholder="Brief description of the swing — e.g. End-of-program demob swing. Diamond drilling complete, focus on sample dispatch, rig extraction and site clean-up before wet season." style="min-height:64px;"></textarea>
                 </div>
                 <button class="btn btn-primary btn-sm" onclick="saveSwing()">Save Swing Settings</button>
-                <button class="btn btn-ghost btn-sm" onclick="startNewSwing()" style="margin-left:8px;">+ Start New Swing</button>
             </div>
         </div>
 
@@ -1119,118 +1038,6 @@ const HANDOVER_RECIPIENTS_KEY  = 'prestart_v1_handover_recipients'; // device-lo
 const TOOLBOXES_KEY = 'prestart_v1_toolboxes';
 const ROSTER_KEY    = 'prestart_v1_roster';
 
-// ══════════════════════════════════════════════════
-// GITHUB SYNC CONFIGURATION
-// ══════════════════════════════════════════════════
-const GITHUB_OWNER = 'tp-tvn';
-const GITHUB_REPO = 'Swing-management-tool';
-// Get GitHub token from localStorage or environment
-function getGitHubToken() {
-    return localStorage.getItem('GITHUB_TOKEN') || '';
-}
-// Use getter instead of constant
-Object.defineProperty(window, 'GITHUB_TOKEN', {
-    get: function() { return getGitHubToken(); },
-    enumerable: true,
-    configurable: true
-});
-const GITHUB_API_BASE = 'https://api.github.com/repos';
-const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com';
-
-function getSwingDate() {
-    const sw = getSwingSettings();
-    return sw.startDate || today();
-}
-
-function getSwingFilePath() {
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    const date = getSwingDate();
-    return `data/swings/${startDate}-to-${endDate}/${date}/meetings.json`;
-}
-
-function getHandoverFilePath() {
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    return `data/swings/${startDate}-to-${endDate}/handover.json`;
-}
-
-// ══════════════════════════════════════════════════
-// GITHUB SYNC FUNCTIONS
-// ══════════════════════════════════════════════════
-
-async function syncMeetingsToGitHub(meetings) {
-    if (!GITHUB_TOKEN) return;
-    const path = getSwingFilePath();
-    const url = `${GITHUB_API_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
-    const content = btoa(JSON.stringify(meetings, null, 2));
-    let sha = null;
-    try {
-        const getResp = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-        if (getResp.ok) sha = (await getResp.json()).sha;
-    } catch (e) { console.warn('Could not fetch current file SHA:', e); }
-    try {
-        const resp = await fetch(url, {
-            method: 'PUT',
-            headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: `Update swing notes for ${getSwingDate()}`, content: content, sha: sha, committer: { name: 'Swing Tool', email: 'swing-tool@tivan.local' } })
-        });
-        if (!resp.ok) console.error(`GitHub API error: ${resp.status}`, await resp.text());
-        else console.log('[OK] Meetings synced to GitHub');
-    } catch (e) { console.warn('GitHub sync failed:', e); }
-}
-
-async function syncHandoverToGitHub(handover) {
-    if (!GITHUB_TOKEN) return;
-    const path = getHandoverFilePath();
-    const url = `${GITHUB_API_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
-    const content = btoa(JSON.stringify(handover, null, 2));
-    let sha = null;
-    try {
-        const getResp = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-        if (getResp.ok) sha = (await getResp.json()).sha;
-    } catch (e) { console.warn('Could not fetch handover SHA:', e); }
-    try {
-        const resp = await fetch(url, {
-            method: 'PUT',
-            headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: `Update handover for swing ending ${getSwingDate()}`, content: content, sha: sha, committer: { name: 'Swing Tool', email: 'swing-tool@tivan.local' } })
-        });
-        if (!resp.ok) console.error(`GitHub API error: ${resp.status}`, await resp.text());
-        else console.log('[OK] Handover synced to GitHub');
-    } catch (e) { console.warn('Handover sync failed:', e); }
-}
-
-async function loadMeetingsFromGitHub() {
-    if (!GITHUB_TOKEN) return null;
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    const date = getSwingDate();
-    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/${date}/meetings.json`;
-    try {
-        const resp = await fetch(url);
-        if (resp.ok) return await resp.json();
-    } catch (e) { console.warn('Could not fetch meetings from GitHub:', e); }
-    return null;
-}
-
-async function loadHandoverFromGitHub() {
-    if (!GITHUB_TOKEN) return null;
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/handover.json`;
-    try {
-        const resp = await fetch(url);
-        if (resp.ok) return await resp.json();
-    } catch (e) { console.warn('Could not fetch handover from GitHub:', e); }
-    return null;
-}
-
-
 function getRoster() {
     try { return JSON.parse(localStorage.getItem(ROSTER_KEY)) || []; }
     catch { return []; }
@@ -1244,23 +1051,16 @@ function getToolboxes() {
 function setToolboxes(d) { localStorage.setItem(TOOLBOXES_KEY, JSON.stringify(d)); }
 
 function getMeetings() {
-    if (GITHUB_TOKEN && window.__githubMeetingsCache) return window.__githubMeetingsCache;
     try { return JSON.parse(localStorage.getItem(MEETINGS_KEY)) || []; }
     catch { return []; }
 }
-function setMeetings(d) { 
-    localStorage.setItem(MEETINGS_KEY, JSON.stringify(d)); 
-    if (GITHUB_TOKEN) syncMeetingsToGitHub(d).catch(err => console.warn('GitHub sync failed:', err));
-}
+function setMeetings(d) { localStorage.setItem(MEETINGS_KEY, JSON.stringify(d)); }
 
 function getHandover() {
     try { return JSON.parse(localStorage.getItem(HANDOVER_KEY)) || defaultHandover(); }
     catch { return defaultHandover(); }
 }
-function setHandover(d) { 
-    localStorage.setItem(HANDOVER_KEY, JSON.stringify(d)); 
-    if (GITHUB_TOKEN) syncHandoverToGitHub(d).catch(err => console.warn('Handover sync failed:', err));
-}
+function setHandover(d) { localStorage.setItem(HANDOVER_KEY, JSON.stringify(d)); }
 
 function getSwingSettings() {
     try { return JSON.parse(localStorage.getItem(SWING_KEY)) || {}; }
@@ -2564,53 +2364,6 @@ function importData(e) {
     e.target.value = '';
 }
 
-
-function setGitHubToken(token) {
-    if (token) {
-        localStorage.setItem('GITHUB_TOKEN', token);
-        toast('GitHub token saved');
-    } else {
-        localStorage.removeItem('GITHUB_TOKEN');
-        toast('GitHub token removed');
-    }
-}
-
-function getGitHubTokenStatus() {
-    const token = getGitHubToken();
-    if (!token) return 'Not configured';
-    return 'Configured (token: ' + token.substring(0, 10) + '...)';
-}
-
-
-function saveGitHubToken() {
-    const token = document.getElementById('settings-github-token').value.trim();
-    if (!token) {
-        toast('Please enter a GitHub token');
-        return;
-    }
-    setGitHubToken(token);
-    updateGitHubTokenHint();
-}
-
-function updateGitHubTokenHint() {
-    const hint = document.getElementById('settings-github-hint');
-    if (!hint) return;
-    const status = getGitHubTokenStatus();
-    hint.textContent = status;
-    hint.style.color = getGitHubToken() ? '#28a745' : '#999';
-}
-
-function loadGitHubTokenToUI() {
-    const input = document.getElementById('settings-github-token');
-    if (input) {
-        const token = getGitHubToken();
-        if (token) {
-            input.value = token;
-        }
-        updateGitHubTokenHint();
-    }
-}
-
 // ══════════════════════════════════════════════════
 // UTILS
 // ══════════════════════════════════════════════════
@@ -3084,40 +2837,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(id).addEventListener('change', updateHeader);
     });
 });
-
-// Load GitHub token to UI when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(loadGitHubTokenToUI, 100);
-});
-
-
-function startNewSwing() {
-    const days = prompt("How many days in this swing? (e.g. 7)", "7");
-    if (!days || isNaN(days)) return;
-    
-    const numDays = parseInt(days);
-    const startDate = today();
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + numDays - 1);
-    const endDateStr = endDate.toISOString().split('T')[0];
-    
-    setSwingSettings({
-        name: prompt("Swing name? (e.g. Swing 1 - April)", `Swing - ${startDate}`),
-        startDate: startDate,
-        endDate: endDateStr,
-        context: ""
-    });
-    
-    // Reload the swing settings display
-    document.getElementById('sw-name').value = getSwingSettings().name || "";
-    document.getElementById('sw-start').value = startDate;
-    document.getElementById('sw-end').value = endDateStr;
-    document.getElementById('sw-context').value = "";
-    
-    toast(`New swing started: ${startDate} to ${endDateStr}`);
-    renderLog(); // Refresh the log
-}
-
 </script>
 </body>
 </html>

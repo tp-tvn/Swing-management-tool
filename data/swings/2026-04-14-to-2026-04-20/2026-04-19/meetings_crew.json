@@ -1,0 +1,46 @@
+[
+  {
+    "id": "meeting_2026-04-19_nightshift",
+    "date": "2026-04-19",
+    "shift": "Nightshift",
+    "project": "Strike Prospect - RC Drilling Phase 2",
+    "supervisor": "Jane Doe",
+    "attendance": [
+      {
+        "name": "John Smith",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Tom Anderson",
+        "role": "Driller"
+      },
+      {
+        "name": "Mike Davis",
+        "role": "Assistant Driller"
+      },
+      {
+        "name": "Alex Brown",
+        "role": "Site Manager"
+      }
+    ],
+    "prev24": "Completed drilling of holes RC-19 through RC-20. Total metres: 550m",
+    "earthworks": {
+      "padsSignedOff": 7,
+      "padsCleared": 3,
+      "padsRehabilitated": 1
+    },
+    "drilling": [
+      {
+        "rig": "Strike Rig 18",
+        "holes": "RC-19, RC-20",
+        "meters": "295m"
+      }
+    ],
+    "dailyTasks": "- Completed pad setup\n- Drilled to 150m depth\n- Recovered 2 core samples\n- Serviced compressor unit",
+    "safetyFocus": "Hot work safety",
+    "highRisk": "None",
+    "generalBusiness": "Site visit scheduled. Forecast: Mild weather.",
+    "actions": [],
+    "savedAt": "2026-04-19T07:30:00Z"
+  }
+]

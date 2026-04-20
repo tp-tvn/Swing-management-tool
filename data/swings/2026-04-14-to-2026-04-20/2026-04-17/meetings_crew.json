@@ -1,0 +1,54 @@
+[
+  {
+    "id": "meeting_2026-04-17_nightshift",
+    "date": "2026-04-17",
+    "shift": "Nightshift",
+    "project": "Strike Prospect - RC Drilling Phase 2",
+    "supervisor": "Sarah Wilson",
+    "attendance": [
+      {
+        "name": "John Smith",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Tom Anderson",
+        "role": "Driller"
+      },
+      {
+        "name": "Mike Davis",
+        "role": "Assistant Driller"
+      },
+      {
+        "name": "Alex Brown",
+        "role": "Site Manager"
+      }
+    ],
+    "prev24": "Completed drilling of holes RC-17 through RC-18. Total metres: 510m",
+    "earthworks": {
+      "padsSignedOff": 5,
+      "padsCleared": 1,
+      "padsRehabilitated": 1
+    },
+    "drilling": [
+      {
+        "rig": "Strike Rig 18",
+        "holes": "RC-17, RC-18",
+        "meters": "265m"
+      }
+    ],
+    "dailyTasks": "- Completed pad setup\n- Drilled to 150m depth\n- Recovered 2 core samples\n- Serviced compressor unit",
+    "safetyFocus": "Tie-down procedures",
+    "highRisk": "None",
+    "generalBusiness": "Site visit scheduled. Forecast: Mild weather.",
+    "actions": [
+      {
+        "id": "action_2026-04-17_1",
+        "desc": "Follow up on core sample analysis",
+        "assignee": "John Smith",
+        "done": false,
+        "dueDate": "2026-04-19"
+      }
+    ],
+    "savedAt": "2026-04-17T07:30:00Z"
+  }
+]
