@@ -701,14 +701,14 @@ if (document.readyState === 'loading') {
             <textarea id="recipients-input" placeholder="john.smith@company.com.au&#10;jane.doe@company.com.au"
                 style="min-height:64px;font-size:0.85rem;width:100%;"
                 oninput="setRecipients(this.value)"></textarea>
-            <div class="settings-hint">One address per line — saved on this device, not exported</div>
+            <div class="settings-hint">One address per line — synced to GitHub and shared with your team</div>
         </div>
         <div class="settings-group">
             <div class="settings-label">Handover Recipients</div>
             <textarea id="ho-recipients-input" placeholder="manager@company.com.au&#10;incoming.super@company.com.au"
                 style="min-height:64px;font-size:0.85rem;width:100%;"
                 oninput="setHandoverRecipients(this.value)"></textarea>
-            <div class="settings-hint">One address per line — saved on this device, not exported</div>
+            <div class="settings-hint">One address per line — synced to GitHub and shared with your team</div>
         </div>
         <div class="settings-group">
             <div class="settings-label">Records Folder URL</div>
@@ -722,7 +722,7 @@ if (document.readyState === 'loading') {
             <input type="password" id="settings-slack-webhook" placeholder="https://hooks.slack.com/services/…" autocomplete="off"
                 style="width:100%;font-size:0.85rem;"
                 oninput="saveSlackWebhook(this.value)">
-            <div class="settings-hint">Feedback will be sent to Slack. Stored locally, never exported.</div>
+            <div class="settings-hint">Feedback will be sent to Slack — synced to GitHub and shared with your team</div>
         </div>
         <div class="settings-group">
             <div class="settings-label">Anthropic API Key</div>
@@ -732,7 +732,7 @@ if (document.readyState === 'loading') {
                 <button class="btn btn-primary btn-sm" onclick="saveApiKey()" style="flex-shrink:0;">Save Key</button>
             </div>
             <div class="api-hint" id="settings-apikey-hint" style="margin-top:4px;"></div>
-            <div class="settings-hint">Enables AI handover summaries — stored locally, never exported</div>
+            <div class="settings-hint">Enables AI handover summaries — stored locally in your browser for security (never exported to GitHub)</div>
         </div>
     </div>
 
@@ -1372,10 +1372,16 @@ function getApiKey()        { return localStorage.getItem(APIKEY_KEY) || ''; }
 function setApiKey(k)       { localStorage.setItem(APIKEY_KEY, k); }
 
 function getRecipients()           { return localStorage.getItem(RECIPIENTS_KEY) || ''; }
-function setRecipients(v)          { localStorage.setItem(RECIPIENTS_KEY, v); }
+function setRecipients(v) { 
+    localStorage.setItem(RECIPIENTS_KEY, v); 
+    if (GITHUB_TOKEN) syncSettingsToGitHub().catch(err => console.warn('Settings sync failed:', err));
+}
 
 function getHandoverRecipients()   { return localStorage.getItem(HANDOVER_RECIPIENTS_KEY) || ''; }
-function setHandoverRecipients(v)  { localStorage.setItem(HANDOVER_RECIPIENTS_KEY, v); }
+function setHandoverRecipients(v) { 
+    localStorage.setItem(HANDOVER_RECIPIENTS_KEY, v); 
+    if (GITHUB_TOKEN) syncSettingsToGitHub().catch(err => console.warn('Settings sync failed:', err));
+}
 
 function defaultHandover() {
     return {
@@ -2685,6 +2691,98 @@ function loadGitHubTokenToUI() {
         }
         updateGitHubTokenHint();
     }
+}
+
+
+// ══════════════════════════════════════════════════
+// SETTINGS SYNC TO GITHUB
+// ══════════════════════════════════════════════════
+
+function getSettingsFilePath() {
+    const sw = getSwingSettings();
+    const startDate = sw.startDate || today();
+    const endDate = sw.endDate || today();
+    return `data/swings/${startDate}-to-${endDate}/settings.json`;
+}
+
+async function syncSettingsToGitHub() {
+    if (!GITHUB_TOKEN) {
+        console.warn('GitHub token not configured, settings not synced');
+        return;
+    }
+    
+    const settings = {
+        recipients: getRecipients(),
+        handoverRecipients: getHandoverRecipients(),
+        recordsFolderUrl: document.getElementById('settings-records-url')?.value || '',
+        slackWebhook: getSlackWebhook(),
+        lastUpdated: new Date().toISOString()
+    };
+    
+    const path = getSettingsFilePath();
+    const url = `${GITHUB_API_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+    const content = btoa(JSON.stringify(settings, null, 2));
+    
+    let sha = null;
+    try {
+        const getResp = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
+        if (getResp.ok) sha = (await getResp.json()).sha;
+    } catch (e) {
+        console.warn('Could not fetch current settings SHA:', e);
+    }
+    
+    try {
+        const resp = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `Update team settings`,
+                content: content,
+                sha: sha,
+                committer: { name: 'Swing Tool', email: 'swing-tool@tivan.local' }
+            })
+        });
+        
+        if (!resp.ok) {
+            console.error(`GitHub API error: ${resp.status}`, await resp.text());
+        } else {
+            console.log('[OK] Settings synced to GitHub');
+        }
+    } catch (e) {
+        console.warn('Settings sync failed:', e);
+    }
+}
+
+async function loadSettingsFromGitHub() {
+    if (!GITHUB_TOKEN) return null;
+    
+    const sw = getSwingSettings();
+    const startDate = sw.startDate || today();
+    const endDate = sw.endDate || today();
+    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/settings.json`;
+    
+    try {
+        const resp = await fetch(url);
+        if (resp.ok) {
+            const settings = await resp.json();
+            // Apply loaded settings
+            if (settings.recipients) setRecipients(settings.recipients);
+            if (settings.handoverRecipients) setHandoverRecipients(settings.handoverRecipients);
+            if (settings.recordsFolderUrl) {
+                const elem = document.getElementById('settings-records-url');
+                if (elem) elem.value = settings.recordsFolderUrl;
+            }
+            if (settings.slackWebhook) saveSlackWebhook(settings.slackWebhook);
+            console.log('[OK] Settings loaded from GitHub');
+            return settings;
+        }
+    } catch (e) {
+        console.warn('Could not load settings from GitHub:', e);
+    }
+    return null;
 }
 
 // ══════════════════════════════════════════════════
