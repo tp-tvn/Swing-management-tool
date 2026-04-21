@@ -1669,7 +1669,14 @@ function autofillPrev24() {
     const prevMeeting = meetings.find(m => m.date === prevDateStr);
 
     if (prevMeeting && prevMeeting.dailyTasks) {
+        // Update textarea
         document.getElementById('f-prev24').value = prevMeeting.dailyTasks;
+
+        // Update blue preview box
+        const el24 = document.getElementById('ctx-prev24');
+        el24.innerHTML =
+            `<div class="ctx-label">Yesterday's Tasks — ${fmtDate(prevMeeting.date)} ${prevMeeting.shift}</div>` +
+            `<div class="ctx-box">${esc(prevMeeting.dailyTasks)}</div>`;
     }
 }
 
