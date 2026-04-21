@@ -1,0 +1,54 @@
+[
+  {
+    "id": "m003-20260416",
+    "date": "2026-04-16",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "John Smith",
+    "attendance": [
+      {
+        "name": "John Smith",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Tom Davies",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Core rig operational. Advanced 200m with core. Quality recovery excellent at 98%. Mineralogy visible.",
+    "earthworks": {
+      "status": "Good condition",
+      "comments": "Core shed secured. Waste storage monitored"
+    },
+    "drilling": [
+      {
+        "activity": "Core Drilling",
+        "meters": 200,
+        "status": "In Progress",
+        "notes": "High grade intercept identified"
+      }
+    ],
+    "dailyTasks": "Complete core program target 850m. Geological assessment underway. Prepare assay submission.",
+    "safetyFocus": "Core handling safety refresher completed. Heavy lifting protocols reviewed.",
+    "highRisk": "Core rig stability on slope - additional supports installed.",
+    "generalBusiness": "Geologist confirmed high-grade zone. Assay lab prioritized our samples.",
+    "actions": [
+      {
+        "id": "a5",
+        "text": "Prepare geotechnical report",
+        "owner": "John Smith",
+        "due": "2026-04-18",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-16T08:15:00Z"
+  }
+]

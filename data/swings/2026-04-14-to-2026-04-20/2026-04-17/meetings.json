@@ -1,0 +1,61 @@
+[
+  {
+    "id": "m004-20260417",
+    "date": "2026-04-17",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "Emma Brown",
+    "attendance": [
+      {
+        "name": "Emma Brown",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Tom Davies",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Reached 850m target. Core extraction completed. All samples catalogued and stored. Drill maintained.",
+    "earthworks": {
+      "status": "Site stabilized",
+      "comments": "Slope monitoring complete. No movement detected."
+    },
+    "drilling": [
+      {
+        "activity": "Core Drilling",
+        "meters": 100,
+        "status": "Demobilizing",
+        "notes": "Target depth achieved"
+      }
+    ],
+    "dailyTasks": "Prepare core rig for demob. Clean and inventory all equipment. Final site survey.",
+    "safetyFocus": "Demobilization procedures. Equipment secure during transport.",
+    "highRisk": "None. Site securing and cleanup proceeding as planned.",
+    "generalBusiness": "Final assay results expected tomorrow. Preliminary findings show promising grade.",
+    "actions": [
+      {
+        "id": "a6",
+        "text": "Return core rig to contractor",
+        "owner": "Tom Davies",
+        "due": "2026-04-18",
+        "done": false
+      },
+      {
+        "id": "a7",
+        "text": "Collect final environmental samples",
+        "owner": "Sarah Wilson",
+        "due": "2026-04-17",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-17T09:00:00Z"
+  }
+]

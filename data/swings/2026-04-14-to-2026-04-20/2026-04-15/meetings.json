@@ -1,0 +1,61 @@
+[
+  {
+    "id": "m002-20260415",
+    "date": "2026-04-15",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "John Smith",
+    "attendance": [
+      {
+        "name": "John Smith",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Emma Brown",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Advanced to 600m total. Geological logging complete. All samples packaged and ready for courier.",
+    "earthworks": {
+      "status": "Access maintained",
+      "comments": "Minor erosion on southern slope - filled and compacted"
+    },
+    "drilling": [
+      {
+        "activity": "RC Drilling",
+        "meters": 150,
+        "status": "In Progress",
+        "notes": "Targeting mineralized zone at 650m"
+      }
+    ],
+    "dailyTasks": "Continue RC program. Core rig mobilization if approved. Prepare waste rock pad.",
+    "safetyFocus": "New crew member induction completed. Confined space protocols briefed.",
+    "highRisk": "None identified. All equipment functioning normally.",
+    "generalBusiness": "Core rig operator confirmed for 2pm arrival. Samples couriered successfully.",
+    "actions": [
+      {
+        "id": "a3",
+        "text": "Replace worn drill bit",
+        "owner": "Mike Johnson",
+        "due": "2026-04-16",
+        "done": false
+      },
+      {
+        "id": "a4",
+        "text": "Restock safety equipment",
+        "owner": "Emma Brown",
+        "due": "2026-04-16",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-15T08:45:00Z"
+  }
+]

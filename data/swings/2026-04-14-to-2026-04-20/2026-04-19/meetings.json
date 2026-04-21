@@ -1,0 +1,50 @@
+[
+  {
+    "id": "m006-20260419",
+    "date": "2026-04-19",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "Emma Brown",
+    "attendance": [
+      {
+        "name": "Emma Brown",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      }
+    ],
+    "prev24": "Site handover completed with operations team. All documentation transferred. Equipment audit completed.",
+    "earthworks": {
+      "status": "Fully restored",
+      "comments": "Site ready for next phase development"
+    },
+    "drilling": [
+      {
+        "activity": "Site Decommission",
+        "meters": 0,
+        "status": "Complete",
+        "notes": "All drilling infrastructure removed"
+      }
+    ],
+    "dailyTasks": "Final compliance check. Site closure report preparation. Recover any remaining consumables.",
+    "safetyFocus": "Final safety walk-through completed. No issues identified.",
+    "highRisk": "None. Site in good condition.",
+    "generalBusiness": "Management very pleased with results. Planning follow-up drilling phase.",
+    "actions": [
+      {
+        "id": "a10",
+        "text": "Submit site closure report to regulator",
+        "owner": "Emma Brown",
+        "due": "2026-04-20",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-19T08:45:00Z"
+  }
+]

@@ -1,0 +1,61 @@
+[
+  {
+    "id": "m001-20260414",
+    "date": "2026-04-14",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "John Smith",
+    "attendance": [
+      {
+        "name": "John Smith",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Tom Davies",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Completed 450m RC drilling on prospect zone 1. Geological logging completed. Sample dispatch arranged.",
+    "earthworks": {
+      "status": "Cleared and leveled",
+      "comments": "Access roads prepared for core rig movement"
+    },
+    "drilling": [
+      {
+        "activity": "RC Drilling",
+        "meters": 150,
+        "status": "In Progress",
+        "notes": "Zone A target achieved"
+      }
+    ],
+    "dailyTasks": "Continue RC drilling zone B. Maintain core hole integrity. Prepare core shed for sample storage.",
+    "safetyFocus": "Steep slope awareness. Ensure all personnel wearing harnesses in elevated work areas.",
+    "highRisk": "Weather: potential thunderstorms pm. Drill site on slope requiring continuous slope stability monitoring.",
+    "generalBusiness": "Geological contractor arriving 2pm for rapid logging. Lunch truck scheduled 12:30pm.",
+    "actions": [
+      {
+        "id": "a1",
+        "text": "Order additional RC rods",
+        "owner": "Mike Johnson",
+        "due": "2026-04-15",
+        "done": false
+      },
+      {
+        "id": "a2",
+        "text": "Submit core samples to lab",
+        "owner": "Sarah Wilson",
+        "due": "2026-04-15",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-14T08:30:00Z"
+  }
+]

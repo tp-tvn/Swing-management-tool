@@ -1,0 +1,61 @@
+[
+  {
+    "id": "m005-20260418",
+    "date": "2026-04-18",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "Emma Brown",
+    "attendance": [
+      {
+        "name": "Emma Brown",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Tom Davies",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Core rig fully demobilized. Equipment transported and logged. Site cleaned. Environmental samples submitted.",
+    "earthworks": {
+      "status": "Restoration in progress",
+      "comments": "Waste pad capped. Access roads regraded."
+    },
+    "drilling": [
+      {
+        "activity": "Demobilization",
+        "meters": 0,
+        "status": "Complete",
+        "notes": "All equipment removed safely"
+      }
+    ],
+    "dailyTasks": "Final site inspection. Documentation of all activities. Prepare handover to operations.",
+    "safetyFocus": "Site induction review for handover team. No active hazards remaining.",
+    "highRisk": "None. Site in safe condition.",
+    "generalBusiness": "Final assay results received. Excellent grades confirmed. Presentation scheduled for 2pm.",
+    "actions": [
+      {
+        "id": "a8",
+        "text": "Complete site inspection report",
+        "owner": "Emma Brown",
+        "due": "2026-04-18",
+        "done": true
+      },
+      {
+        "id": "a9",
+        "text": "Present results to management",
+        "owner": "John Smith",
+        "due": "2026-04-18",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-18T08:30:00Z"
+  }
+]

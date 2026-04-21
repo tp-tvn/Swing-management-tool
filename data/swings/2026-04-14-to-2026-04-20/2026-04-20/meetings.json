@@ -1,0 +1,46 @@
+[
+  {
+    "id": "m007-20260420",
+    "date": "2026-04-20",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "Emma Brown",
+    "attendance": [
+      {
+        "name": "Emma Brown",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      }
+    ],
+    "prev24": "All closing activities complete. Site fully decommissioned. Final reports submitted to regulator.",
+    "earthworks": {
+      "status": "Closed",
+      "comments": "Site returned to baseline condition"
+    },
+    "drilling": [
+      {
+        "activity": "Final Close-out",
+        "meters": 0,
+        "status": "Complete",
+        "notes": "Swing operations concluded successfully"
+      }
+    ],
+    "dailyTasks": "Archive all records. Equipment returns verified. Final swing handover documentation.",
+    "safetyFocus": "No active operations. Site secured.",
+    "highRisk": "None.",
+    "generalBusiness": "Excellent results achieved. Next phase approved by management.",
+    "actions": [
+      {
+        "id": "a11",
+        "text": "Complete final swing handover meeting",
+        "owner": "Emma Brown",
+        "due": "2026-04-20",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-20T17:00:00Z"
+  }
+]
