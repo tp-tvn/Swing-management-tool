@@ -84,9 +84,7 @@ function startNewSwing() {
 
 // Initialize swing banner on page load
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderSwingBanner);
-} else {
-    renderSwingBanner();
+    } else {
 }
 
 </script>
@@ -127,9 +125,7 @@ function startNewSwing() {
 
 // Initialize swing banner on page load
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderSwingBanner);
-} else {
-    renderSwingBanner();
+    } else {
 }
 
 </script>
@@ -1863,29 +1859,6 @@ function filterBySwing(meetings) {
     });
 }
 
-function renderSwingBanner(filtered) {
-    const sw = getSwingSettings();
-    const container = document.getElementById('swing-banner-container');
-    if (!sw.name && !sw.startDate) { container.innerHTML = ''; return; }
-
-    const openActions  = filtered.flatMap(m => (m.actions || []).filter(a => !a.done)).length;
-    const supervisors  = [...new Set(filtered.map(m => m.supervisor).filter(Boolean))];
-
-    container.innerHTML = `
-        <div class="swing-banner">
-            <div class="swing-banner-name">${esc(sw.name || 'Current Swing')}</div>
-            <div class="swing-banner-dates">
-                ${sw.startDate ? fmtDate(sw.startDate) : '—'} &nbsp;→&nbsp; ${sw.endDate ? fmtDate(sw.endDate) : '—'}
-            </div>
-            <div class="swing-stats">
-                <div class="swing-stat"><strong>${filtered.length}</strong> meetings</div>
-                ${openActions ? `<div class="swing-stat"><strong>${openActions}</strong> open action${openActions>1?'s':''}</div>` : ''}
-                ${supervisors.length ? `<div class="swing-stat" style="flex:1;"><strong>Supervisors:</strong> ${esc(supervisors.join(', '))}</div>` : ''}
-            </div>
-            ${sw.context ? `<div class="swing-banner-context">${esc(sw.context)}</div>` : ''}
-        </div>`;
-}
-
 // ══════════════════════════════════════════════════
 // LOG
 // ══════════════════════════════════════════════════
@@ -1897,8 +1870,6 @@ function renderLog() {
 
     const allMeetings = getMeetings();
     const filtered    = filterBySwing(allMeetings).sort((a, b) => b.date.localeCompare(a.date));
-
-    renderSwingBanner(filtered);
 
     const isFiltered = !!(getSwingSettings().startDate || getSwingSettings().endDate);
     document.getElementById('log-list-title').textContent = isFiltered
@@ -3210,9 +3181,7 @@ function startNewSwing() {
 
 // Initialize swing banner on page load
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderSwingBanner);
-} else {
-    renderSwingBanner();
+    } else {
 }
 
 </script>
