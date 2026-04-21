@@ -1657,6 +1657,22 @@ function saveMeeting() {
     }
 }
 
+function autofillPrev24() {
+    const dateStr = document.getElementById('f-date').value;
+    if (!dateStr) return;
+
+    const date = new Date(dateStr);
+    date.setDate(date.getDate() - 1);
+    const prevDateStr = date.toISOString().split('T')[0];
+
+    const meetings = getMeetings();
+    const prevMeeting = meetings.find(m => m.date === prevDateStr);
+
+    if (prevMeeting && prevMeeting.dailyTasks) {
+        document.getElementById('f-prev24').value = prevMeeting.dailyTasks;
+    }
+}
+
 function updateHeader() {
     const date  = document.getElementById('f-date').value;
     const shift = document.getElementById('f-shift').value;
@@ -3182,6 +3198,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ['f-date','f-shift','f-project','f-supervisor'].forEach(id => {
         document.getElementById(id).addEventListener('change', updateHeader);
     });
+
+    document.getElementById('f-date').addEventListener('change', autofillPrev24);
 });
 
 // Load GitHub token to UI when page loads
