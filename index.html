@@ -1817,7 +1817,36 @@ function toggleSwingSettings() {
     document.getElementById('sw-toggle-btn').textContent = swSettingsOpen ? '▲ Collapse' : '▼ Expand';
 }
 
-function saveSwing() {
+async function loadSwingMeetingsRange(startDate, endDate) {
+    if (!GITHUB_TOKEN) return [];
+
+    const meetings = [];
+    const current = new Date(startDate);
+    const end = new Date(endDate);
+
+    while (current <= end) {
+        const dateStr = current.toISOString().split('T')[0];
+        const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/${dateStr}/meetings.json`;
+
+        try {
+            const resp = await fetch(url);
+            if (resp.ok) {
+                const dayMeetings = await resp.json();
+                meetings.push(...dayMeetings);
+                console.log(`[OK] Loaded ${dayMeetings.length} meetings for ${dateStr}`);
+            }
+        } catch (e) {
+            console.warn(`Could not fetch meetings for ${dateStr}:`, e);
+        }
+
+        current.setDate(current.getDate() + 1);
+    }
+
+    console.log(`[OK] Loaded ${meetings.length} total meetings from GitHub`);
+    return meetings;
+}
+
+async function saveSwing() {
     const sw = {
         name:      document.getElementById('sw-name').value,
         startDate: document.getElementById('sw-start').value,
@@ -1826,6 +1855,16 @@ function saveSwing() {
         folderUrl: document.getElementById('settings-folder-url').value,
     };
     setSwingSettings(sw);
+
+    // Load meetings from GitHub for this swing date range
+    if (GITHUB_TOKEN && sw.startDate && sw.endDate) {
+        const meetings = await loadSwingMeetingsRange(sw.startDate, sw.endDate);
+        if (meetings.length > 0) {
+            window.__githubMeetingsCache = meetings;
+            setMeetings(meetings); // Update localStorage too
+        }
+    }
+
     toast('Swing settings saved!');
     renderLog();
 }
