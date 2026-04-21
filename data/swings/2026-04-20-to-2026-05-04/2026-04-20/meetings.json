@@ -1,0 +1,338 @@
+[
+  {
+    "id": "m001-20260414",
+    "date": "2026-04-14",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "John Smith",
+    "attendance": [
+      {
+        "name": "John Smith",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Tom Davies",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Completed 450m RC drilling on prospect zone 1. Geological logging completed. Sample dispatch arranged.",
+    "earthworks": {
+      "status": "Cleared and leveled",
+      "comments": "Access roads prepared for core rig movement"
+    },
+    "drilling": [
+      {
+        "activity": "RC Drilling",
+        "meters": 150,
+        "status": "In Progress",
+        "notes": "Zone A target achieved"
+      }
+    ],
+    "dailyTasks": "Continue RC drilling zone B. Maintain core hole integrity. Prepare core shed for sample storage.",
+    "safetyFocus": "Steep slope awareness. Ensure all personnel wearing harnesses in elevated work areas.",
+    "highRisk": "Weather: potential thunderstorms pm. Drill site on slope requiring continuous slope stability monitoring.",
+    "generalBusiness": "Geological contractor arriving 2pm for rapid logging. Lunch truck scheduled 12:30pm.",
+    "actions": [
+      {
+        "id": "a1",
+        "text": "Order additional RC rods",
+        "owner": "Mike Johnson",
+        "due": "2026-04-15",
+        "done": false
+      },
+      {
+        "id": "a2",
+        "text": "Submit core samples to lab",
+        "owner": "Sarah Wilson",
+        "due": "2026-04-15",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-14T08:30:00Z"
+  },
+  {
+    "id": "m002-20260415",
+    "date": "2026-04-15",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "John Smith",
+    "attendance": [
+      {
+        "name": "John Smith",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Emma Brown",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Advanced to 600m total. Geological logging complete. All samples packaged and ready for courier.",
+    "earthworks": {
+      "status": "Access maintained",
+      "comments": "Minor erosion on southern slope - filled and compacted"
+    },
+    "drilling": [
+      {
+        "activity": "RC Drilling",
+        "meters": 150,
+        "status": "In Progress",
+        "notes": "Targeting mineralized zone at 650m"
+      }
+    ],
+    "dailyTasks": "Continue RC program. Core rig mobilization if approved. Prepare waste rock pad.",
+    "safetyFocus": "New crew member induction completed. Confined space protocols briefed.",
+    "highRisk": "None identified. All equipment functioning normally.",
+    "generalBusiness": "Core rig operator confirmed for 2pm arrival. Samples couriered successfully.",
+    "actions": [
+      {
+        "id": "a3",
+        "text": "Replace worn drill bit",
+        "owner": "Mike Johnson",
+        "due": "2026-04-16",
+        "done": false
+      },
+      {
+        "id": "a4",
+        "text": "Restock safety equipment",
+        "owner": "Emma Brown",
+        "due": "2026-04-16",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-15T08:45:00Z"
+  },
+  {
+    "id": "m003-20260416",
+    "date": "2026-04-16",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "John Smith",
+    "attendance": [
+      {
+        "name": "John Smith",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Tom Davies",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Core rig operational. Advanced 200m with core. Quality recovery excellent at 98%. Mineralogy visible.",
+    "earthworks": {
+      "status": "Good condition",
+      "comments": "Core shed secured. Waste storage monitored"
+    },
+    "drilling": [
+      {
+        "activity": "Core Drilling",
+        "meters": 200,
+        "status": "In Progress",
+        "notes": "High grade intercept identified"
+      }
+    ],
+    "dailyTasks": "Complete core program target 850m. Geological assessment underway. Prepare assay submission.",
+    "safetyFocus": "Core handling safety refresher completed. Heavy lifting protocols reviewed.",
+    "highRisk": "Core rig stability on slope - additional supports installed.",
+    "generalBusiness": "Geologist confirmed high-grade zone. Assay lab prioritized our samples.",
+    "actions": [
+      {
+        "id": "a5",
+        "text": "Prepare geotechnical report",
+        "owner": "John Smith",
+        "due": "2026-04-18",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-16T08:15:00Z"
+  },
+  {
+    "id": "m004-20260417",
+    "date": "2026-04-17",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "Emma Brown",
+    "attendance": [
+      {
+        "name": "Emma Brown",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Tom Davies",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Reached 850m target. Core extraction completed. All samples catalogued and stored. Drill maintained.",
+    "earthworks": {
+      "status": "Site stabilized",
+      "comments": "Slope monitoring complete. No movement detected."
+    },
+    "drilling": [
+      {
+        "activity": "Core Drilling",
+        "meters": 100,
+        "status": "Demobilizing",
+        "notes": "Target depth achieved"
+      }
+    ],
+    "dailyTasks": "Prepare core rig for demob. Clean and inventory all equipment. Final site survey.",
+    "safetyFocus": "Demobilization procedures. Equipment secure during transport.",
+    "highRisk": "None. Site securing and cleanup proceeding as planned.",
+    "generalBusiness": "Final assay results expected tomorrow. Preliminary findings show promising grade.",
+    "actions": [
+      {
+        "id": "a6",
+        "text": "Return core rig to contractor",
+        "owner": "Tom Davies",
+        "due": "2026-04-18",
+        "done": false
+      },
+      {
+        "id": "a7",
+        "text": "Collect final environmental samples",
+        "owner": "Sarah Wilson",
+        "due": "2026-04-17",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-17T09:00:00Z"
+  },
+  {
+    "id": "m005-20260418",
+    "date": "2026-04-18",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "Emma Brown",
+    "attendance": [
+      {
+        "name": "Emma Brown",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Tom Davies",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      }
+    ],
+    "prev24": "Core rig fully demobilized. Equipment transported and logged. Site cleaned. Environmental samples submitted.",
+    "earthworks": {
+      "status": "Restoration in progress",
+      "comments": "Waste pad capped. Access roads regraded."
+    },
+    "drilling": [
+      {
+        "activity": "Demobilization",
+        "meters": 0,
+        "status": "Complete",
+        "notes": "All equipment removed safely"
+      }
+    ],
+    "dailyTasks": "Final site inspection. Documentation of all activities. Prepare handover to operations.",
+    "safetyFocus": "Site induction review for handover team. No active hazards remaining.",
+    "highRisk": "None. Site in safe condition.",
+    "generalBusiness": "Final assay results received. Excellent grades confirmed. Presentation scheduled for 2pm.",
+    "actions": [
+      {
+        "id": "a8",
+        "text": "Complete site inspection report",
+        "owner": "Emma Brown",
+        "due": "2026-04-18",
+        "done": true
+      },
+      {
+        "id": "a9",
+        "text": "Present results to management",
+        "owner": "John Smith",
+        "due": "2026-04-18",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-18T08:30:00Z"
+  },
+  {
+    "id": "m006-20260419",
+    "date": "2026-04-19",
+    "shift": "Dayshift",
+    "project": "RC Drilling Site A",
+    "supervisor": "Emma Brown",
+    "attendance": [
+      {
+        "name": "Emma Brown",
+        "role": "Supervisor"
+      },
+      {
+        "name": "Mike Johnson",
+        "role": "Driller"
+      },
+      {
+        "name": "Sarah Wilson",
+        "role": "Offsider"
+      }
+    ],
+    "prev24": "Site handover completed with operations team. All documentation transferred. Equipment audit completed.",
+    "earthworks": {
+      "status": "Fully restored",
+      "comments": "Site ready for next phase development"
+    },
+    "drilling": [
+      {
+        "activity": "Site Decommission",
+        "meters": 0,
+        "status": "Complete",
+        "notes": "All drilling infrastructure removed"
+      }
+    ],
+    "dailyTasks": "Final compliance check. Site closure report preparation. Recover any remaining consumables.",
+    "safetyFocus": "Final safety walk-through completed. No issues identified.",
+    "highRisk": "None. Site in good condition.",
+    "generalBusiness": "Management very pleased with results. Planning follow-up drilling phase.",
+    "actions": [
+      {
+        "id": "a10",
+        "text": "Submit site closure report to regulator",
+        "owner": "Emma Brown",
+        "due": "2026-04-20",
+        "done": false
+      }
+    ],
+    "savedAt": "2026-04-19T08:45:00Z"
+  }
+]
