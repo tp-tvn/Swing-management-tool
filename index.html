@@ -1684,8 +1684,10 @@ function updateHeader() {
     const date  = document.getElementById('f-date').value;
     const shift = document.getElementById('f-shift').value;
     const proj  = document.getElementById('f-project').value;
+    const sw    = getSwingSettings();
+    const swingName = sw.name ? `[${sw.name}]` : '';
     document.getElementById('headerMeta').textContent =
-        [proj, fmtDate(date), shift].filter(Boolean).join(' · ');
+        [proj, fmtDate(date), shift, swingName].filter(Boolean).join(' · ');
     document.title = `Pre-Start Meeting ${date || today()}`;
 }
 
