@@ -629,6 +629,38 @@ if (document.readyState === 'loading') {
                 oninput="saveFolderUrl(this.value)">
             <div class="settings-hint">Included as a link in team emails</div>
         </div>
+        <div class="settings-group">
+            <div class="settings-label">Slack Webhook URL (for Feedback)</div>
+            <input type="password" id="settings-slack-webhook" placeholder="https://hooks.slack.com/services/…" autocomplete="off"
+                style="width:100%;font-size:0.85rem;"
+                oninput="saveSlackWebhook(this.value)">
+            <div class="settings-hint">Feedback will be sent to Slack — synced to GitHub and shared with your team</div>
+        </div>
+        <div class="settings-group">
+            <div class="settings-label">Anthropic API Key</div>
+            <div style="display:flex;gap:6px;align-items:flex-start;">
+                <input type="password" id="settings-apikey" placeholder="sk-ant-api03-…" autocomplete="off"
+                    style="flex:1;font-size:0.85rem;">
+                <button class="btn btn-primary btn-sm" onclick="saveApiKey()" style="flex-shrink:0;">Save Key</button>
+            </div>
+            <div class="api-hint" id="settings-apikey-hint" style="margin-top:4px;"></div>
+            <div class="settings-hint">Enables AI handover summaries — stored locally in your browser for security (never exported to GitHub)</div>
+        </div>
+    </div>
+
+        <div class="settings-group">
+            <div class="settings-label">GitHub Token (for Swing Sync)</div>
+            <div style="display:flex;gap:6px;align-items:flex-start;">
+                <input type="password" id="settings-github-token" placeholder="ghp_xxxxxxxxxxxxx" autocomplete="off"
+                    style="flex:1;font-size:0.85rem;">
+                <button class="btn btn-primary btn-sm" onclick="saveGitHubToken()" style="flex-shrink:0;">Save</button>
+            </div>
+            <div id="settings-github-hint" style="margin-top:4px;font-size:0.75rem;color:#666;"></div>
+            <div class="settings-hint">Personal Access Token for syncing swing notes to GitHub — stored locally in your browser for security (never exported). Meetings are synced to GitHub and shared with your team.</div>
+        </div>
+
+</div>
+
 <div class="main">
 
     <!-- ══════════════════════════════════ PRESTART -->
@@ -2618,7 +2650,7 @@ function getSettingsFilePath() {
     const sw = getSwingSettings();
     const startDate = sw.startDate || today();
     const endDate = sw.endDate || today();
-    return `data/settings.json`;
+    return `data/swings/${startDate}-to-${endDate}/settings.json`;
 }
 
 async function syncSettingsToGitHub() {
@@ -2678,7 +2710,7 @@ async function loadSettingsFromGitHub() {
     const sw = getSwingSettings();
     const startDate = sw.startDate || today();
     const endDate = sw.endDate || today();
-    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/settings.json`;
+    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/settings.json`;
     
     try {
         const resp = await fetch(url);
@@ -2691,6 +2723,7 @@ async function loadSettingsFromGitHub() {
                 const elem = document.getElementById('settings-records-url');
                 if (elem) elem.value = settings.recordsFolderUrl;
             }
+            if (settings.slackWebhook) saveSlackWebhook(settings.slackWebhook);
             console.log('[OK] Settings loaded from GitHub');
             return settings;
         }
