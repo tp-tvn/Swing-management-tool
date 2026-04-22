@@ -334,5 +334,58 @@
       }
     ],
     "savedAt": "2026-04-19T08:45:00Z"
+  },
+  {
+    "id": "xyss3vm7cbpmo9eqiki",
+    "date": "2026-04-22",
+    "shift": "Dayshift",
+    "project": "Speewah",
+    "supervisor": "Matt Draddy",
+    "attendance": [
+      {
+        "id": "gv8nw31f15gmo9dj8a0",
+        "name": "Matt Draddy",
+        "company": "TVN",
+        "result": "",
+        "initials": false,
+        "signed": true
+      },
+      {
+        "id": "9zu5wav5oxtmo9dj8a0",
+        "name": "Aaron Stowe ",
+        "company": "TVN",
+        "result": "",
+        "initials": false,
+        "signed": true
+      }
+    ],
+    "prev24": "Collected consumables from Kununurra, replaced battery on TVN04 (cruiser), changed tyre on TVN01 (cruiser).\nStarted process of opening account with Bridgestone Kununurra.\nStuck Tivan sticker on new office in town. Mobilized to Doon Doon with TVN03 (Prado) and TVN04.",
+    "earthworks": {
+      "padsSignedOff": "",
+      "padsCleared": "",
+      "padsRehabilitated": ""
+    },
+    "drilling": [
+      {
+        "rig": "",
+        "holes": "",
+        "meters": ""
+      }
+    ],
+    "dailyTasks": "Reccie track to site in the morning, meet grader and operator at Doon Doon @ 1300. Monitoring nearby backburning\noperations.",
+    "safetyFocus": "Engage 4wd, take recovery gear. Spot tracker turned on and communicating and Starlink connected to cars. Drive in convoy.",
+    "highRisk": "",
+    "generalBusiness": "Collect SRK river monitor at the Dunham crossing.",
+    "actions": [
+      {
+        "id": "00lbwodkh56mqmo9eq1u9",
+        "desc": "Complete pre-start on TVN04",
+        "assignee": "Aaron Stowe",
+        "email": "aaron.stowe@tivan.com.au",
+        "dueDate": "2026-04-22",
+        "done": true
+      }
+    ],
+    "savedAt": "2026-04-22T02:15:27.863Z"
   }
 ]
