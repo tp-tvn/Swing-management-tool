@@ -2723,7 +2723,6 @@ async function loadSettingsFromGitHub() {
                 const elem = document.getElementById('settings-records-url');
                 if (elem) elem.value = settings.recordsFolderUrl;
             }
-            if (settings.slackWebhook) saveSlackWebhook(settings.slackWebhook);
             console.log('[OK] Settings loaded from GitHub');
             return settings;
         }
