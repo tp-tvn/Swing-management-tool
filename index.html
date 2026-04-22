@@ -1872,6 +1872,7 @@ async function loadSwingMeetingsRange(startDate, endDate) {
 }
 
 async function saveSwing() {
+    const oldSw = getSwingSettings();
     const sw = {
         name:      document.getElementById('sw-name').value,
         startDate: document.getElementById('sw-start').value,
@@ -1881,19 +1882,19 @@ async function saveSwing() {
     };
     setSwingSettings(sw);
 
-    // Load meetings from GitHub for this swing date range
-    if (GITHUB_TOKEN && sw.startDate && sw.endDate) {
+    // Only load from GitHub if dates actually changed
+    const datesChanged = oldSw.startDate !== sw.startDate || oldSw.endDate !== sw.endDate;
+    if (datesChanged && GITHUB_TOKEN && sw.startDate && sw.endDate) {
         const meetings = await loadSwingMeetingsRange(sw.startDate, sw.endDate);
         if (meetings.length > 0) {
             window.__githubMeetingsCache = meetings;
-            setMeetings(meetings); // Update localStorage too
+            setMeetings(meetings);
         }
     }
 
     toast('Swing settings saved!');
     renderLog();
 }
-
 function loadSwingSettingsUI() {
     const sw = getSwingSettings();
     document.getElementById('sw-name').value       = sw.name      || '';
