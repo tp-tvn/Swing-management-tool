@@ -2650,7 +2650,7 @@ function getSettingsFilePath() {
     const sw = getSwingSettings();
     const startDate = sw.startDate || today();
     const endDate = sw.endDate || today();
-    return `data/swings/${startDate}-to-${endDate}/settings.json`;
+    return `data/settings.json`;
 }
 
 async function syncSettingsToGitHub() {
@@ -2710,7 +2710,7 @@ async function loadSettingsFromGitHub() {
     const sw = getSwingSettings();
     const startDate = sw.startDate || today();
     const endDate = sw.endDate || today();
-    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/settings.json`;
+    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/settings.json`;
     
     try {
         const resp = await fetch(url);
