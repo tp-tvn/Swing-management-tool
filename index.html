@@ -28,107 +28,76 @@
                 const password = prompt("🔐 Enter password to access Swing Management Tool:", "");
 
                 if (password === null) {
-                    alert("❌ Access denied.\n⚠️ This tool is for Tivan Limited employees only.");
+                    alert("❌ Access denied.
+⚠️ This tool is for Tivan Limited employees only.");
                     return;
                 }
 
-                if (password === CORRECT_PASSWORD) {
+                if (password === "Tivan0923@") {
                     sessionStorage.setItem(PASSWORD_KEY, "true");
                     authenticated = true;
                     document.documentElement.classList.remove('blocked');
                 } else {
                     attempts++;
                     if (attempts < 3) {
-                        alert("❌ Incorrect password. Try again.\n⚠️ This tool is for Tivan Limited employees only.");
+                        alert("❌ Incorrect password. Try again.
+⚠️ This tool is for Tivan Limited employees only.");
                     } else {
-                        alert("❌ Access denied. Too many incorrect attempts.\n⚠️ This tool is for Tivan Limited employees only.");
+                        alert("❌ Access denied. Too many incorrect attempts.
+⚠️ This tool is for Tivan Limited employees only.");
                         return;
                     }
                 }
             }
         })();
-    
-// Load GitHub token to UI when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(loadGitHubTokenToUI, 100);
-});
+    </script>
+    <style>
+        html.blocked { display: none; }
+    </style>
+    <script>
+        // Block page rendering until authentication succeeds
+        document.documentElement.classList.add('blocked');
 
+        (function() {
+            const CORRECT_PASSWORD = "Tivan0923@";
+            const PASSWORD_KEY = "swing_tool_authenticated";
 
-function startNewSwing() {
-    const days = prompt("How many days in this swing? (e.g. 7)", "7");
-    if (!days || isNaN(days)) return;
-    
-    const numDays = parseInt(days);
-    const startDate = today();
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + numDays - 1);
-    const endDateStr = endDate.toISOString().split('T')[0];
-    
-    setSwingSettings({
-        name: prompt("Swing name? (e.g. Swing 1 - April)", `Swing - ${startDate}`),
-        startDate: startDate,
-        endDate: endDateStr,
-        context: ""
-    });
-    
-    // Reload the swing settings display
-    document.getElementById('sw-name').value = getSwingSettings().name || "";
-    document.getElementById('sw-start').value = startDate;
-    document.getElementById('sw-end').value = endDateStr;
-    document.getElementById('sw-context').value = "";
-    
-    toast(`New swing started: ${startDate} to ${endDateStr}`);
-    renderLog(); // Refresh the log
-}
+            if (sessionStorage.getItem(PASSWORD_KEY) === "true") {
+                // Already authenticated, show page
+                document.documentElement.classList.remove('blocked');
+                return;
+            }
 
+            let attempts = 0;
+            let authenticated = false;
 
-// Initialize swing banner on page load
-if (document.readyState === 'loading') {
-    } else {
-}
+            while (!authenticated && attempts < 3) {
+                const password = prompt("🔐 Enter password to access Swing Management Tool:", "");
 
-</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
-// Load GitHub token to UI when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(loadGitHubTokenToUI, 100);
-});
+                if (password === null) {
+                    alert("❌ Access denied.
+⚠️ This tool is for Tivan Limited employees only.");
+                    return;
+                }
 
-
-function startNewSwing() {
-    const days = prompt("How many days in this swing? (e.g. 7)", "7");
-    if (!days || isNaN(days)) return;
-    
-    const numDays = parseInt(days);
-    const startDate = today();
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + numDays - 1);
-    const endDateStr = endDate.toISOString().split('T')[0];
-    
-    setSwingSettings({
-        name: prompt("Swing name? (e.g. Swing 1 - April)", `Swing - ${startDate}`),
-        startDate: startDate,
-        endDate: endDateStr,
-        context: ""
-    });
-    
-    // Reload the swing settings display
-    document.getElementById('sw-name').value = getSwingSettings().name || "";
-    document.getElementById('sw-start').value = startDate;
-    document.getElementById('sw-end').value = endDateStr;
-    document.getElementById('sw-context').value = "";
-    
-    toast(`New swing started: ${startDate} to ${endDateStr}`);
-    renderLog(); // Refresh the log
-}
-
-
-// Initialize swing banner on page load
-if (document.readyState === 'loading') {
-    } else {
-}
-
-</script>
+                if (password === "Tivan0923@") {
+                    sessionStorage.setItem(PASSWORD_KEY, "true");
+                    authenticated = true;
+                    document.documentElement.classList.remove('blocked');
+                } else {
+                    attempts++;
+                    if (attempts < 3) {
+                        alert("❌ Incorrect password. Try again.
+⚠️ This tool is for Tivan Limited employees only.");
+                    } else {
+                        alert("❌ Access denied. Too many incorrect attempts.
+⚠️ This tool is for Tivan Limited employees only.");
+                        return;
+                    }
+                }
+            }
+        })();
+    </script>
     <style>
         :root {
             --blue:       #1e3a5f;
@@ -137,7 +106,7 @@ if (document.readyState === 'loading') {
             --amber:      #b7791f;
             --green:      #276749;
             --purple:     #553c9a;
-            --bg:         #ffffff;
+            --bg:         #f7fafc;
             --white:      #ffffff;
             --border:     #e2e8f0;
             --text:       #2d3748;
@@ -146,11 +115,11 @@ if (document.readyState === 'loading') {
 
         /* ── Dark mode ── */
         body[data-theme="dark"] {
-            --bg:     #0f172a;
-            --white:  #1e293b;
-            --border: #334155;
-            --text:   #f1f5f9;
-            --muted:  #94a3b8;
+            --bg:     #0f1923;
+            --white:  #1a2635;
+            --border: #2d3f52;
+            --text:   #e2e8f0;
+            --muted:  #7a95b0;
         }
         body[data-theme="dark"] .header       { background: #0d1520; }
         body[data-theme="dark"] .tabs         { background: #162030; }
@@ -509,12 +478,6 @@ if (document.readyState === 'loading') {
         }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        /* ── Modal ── */
-        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
-        .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); }
-        .modal-content { position: relative; background: var(--white); border-radius: 8px; padding: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-        .modal-content h2 { color: var(--text); }
-
         /* ── Print ── */
         @media print {
             .header-actions, .tabs, .btn-group, .btn,
@@ -535,7 +498,6 @@ if (document.readyState === 'loading') {
             body[data-tab="log"]      #pane-log      { display: block !important; }
             body[data-tab="handover"] #pane-handover { display: block !important; }
             body[data-tab="toolbox"]  #pane-toolbox  { display: block !important; }
-            body[data-tab="guide"]    #pane-guide    { display: block !important; }
             /* Proxy divs that replace textareas/inputs for print */
             .print-proxy {
                 display: block !important;
@@ -577,6 +539,10 @@ if (document.readyState === 'loading') {
         }
         #drill-stats-body input[type=number] { text-align: center; }
     </style>
+    <!-- MSAL.js for SharePoint authentication -->
+    <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+    <!-- PDF.js for PDF parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -587,8 +553,10 @@ if (document.readyState === 'loading') {
         <div class="header-meta" id="headerMeta">—</div>
     </div>
     <div class="header-actions">
+        <span id="connection-indicator" style="font-size:16px; cursor:help; margin-right:8px; vertical-align:middle;">●</span>
+        <span id="sync-queue-badge" style="display:none; background:#f6ad55; color:white; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:bold; margin-right:8px;" title="Pending syncs to SharePoint"></span>
+        <button class="btn btn-ghost-white btn-sm" id="auth-btn" onclick="handleAuthClick()" title="SharePoint account">Not signed in</button>
         <button class="btn btn-ghost-white btn-sm" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">☀</button>
-        <button class="btn btn-ghost-white btn-sm" id="feedback-toggle" onclick="toggleFeedbackModal()" title="Feedback">💬</button>
         <button class="btn btn-ghost-white btn-sm" id="settings-toggle" onclick="toggleSettings()" title="Settings">⚙</button>
         <button class="btn btn-ghost-white btn-sm" onclick="exportData()">Export</button>
         <button class="btn btn-ghost-white btn-sm" onclick="document.getElementById('importInput').click()">Import</button>
@@ -603,6 +571,7 @@ if (document.readyState === 'loading') {
     <button class="tab-btn" data-tab="handover" onclick="showTab('handover')">Handover Document</button>
     <button class="tab-btn" data-tab="toolbox" onclick="showTab('toolbox')">Toolbox Talks</button>
     <button class="tab-btn" data-tab="guide"   onclick="showTab('guide')">Tool Guide</button>
+    <button class="tab-btn" data-tab="feedback" onclick="showTab('feedback')">📝 Feedback</button>
 </div>
 
 <!-- ══════════════════════════════════ SETTINGS PANEL -->
@@ -613,14 +582,14 @@ if (document.readyState === 'loading') {
             <textarea id="recipients-input" placeholder="john.smith@company.com.au&#10;jane.doe@company.com.au"
                 style="min-height:64px;font-size:0.85rem;width:100%;"
                 oninput="setRecipients(this.value)"></textarea>
-            <div class="settings-hint">One address per line — synced to GitHub and shared with your team</div>
+            <div class="settings-hint">One address per line — saved on this device, not exported</div>
         </div>
         <div class="settings-group">
             <div class="settings-label">Handover Recipients</div>
             <textarea id="ho-recipients-input" placeholder="manager@company.com.au&#10;incoming.super@company.com.au"
                 style="min-height:64px;font-size:0.85rem;width:100%;"
                 oninput="setHandoverRecipients(this.value)"></textarea>
-            <div class="settings-hint">One address per line — synced to GitHub and shared with your team</div>
+            <div class="settings-hint">One address per line — saved on this device, not exported</div>
         </div>
         <div class="settings-group">
             <div class="settings-label">Records Folder URL</div>
@@ -629,14 +598,7 @@ if (document.readyState === 'loading') {
                 oninput="saveFolderUrl(this.value)">
             <div class="settings-hint">Included as a link in team emails</div>
         </div>
-        <div class="settings-group">
-            <div class="settings-label">Slack Webhook URL (for Feedback)</div>
-            <input type="password" id="settings-slack-webhook" placeholder="https://hooks.slack.com/services/…" autocomplete="off"
-                style="width:100%;font-size:0.85rem;"
-                oninput="saveSlackWebhook(this.value)">
-            <div class="settings-hint">Feedback will be sent to Slack — synced to GitHub and shared with your team</div>
-        </div>
-        <div class="settings-group">
+        <div class="settings-group" style="display:none;">
             <div class="settings-label">Anthropic API Key</div>
             <div style="display:flex;gap:6px;align-items:flex-start;">
                 <input type="password" id="settings-apikey" placeholder="sk-ant-api03-…" autocomplete="off"
@@ -644,27 +606,26 @@ if (document.readyState === 'loading') {
                 <button class="btn btn-primary btn-sm" onclick="saveApiKey()" style="flex-shrink:0;">Save Key</button>
             </div>
             <div class="api-hint" id="settings-apikey-hint" style="margin-top:4px;"></div>
-            <div class="settings-hint">Enables AI handover summaries — stored locally in your browser for security (never exported to GitHub)</div>
+            <div class="settings-hint">Enables AI executive summaries — stored locally, never exported</div>
         </div>
     </div>
-
-        <div class="settings-group">
-            <div class="settings-label">GitHub Token (for Swing Sync)</div>
-            <div style="display:flex;gap:6px;align-items:flex-start;">
-                <input type="password" id="settings-github-token" placeholder="ghp_xxxxxxxxxxxxx" autocomplete="off"
-                    style="flex:1;font-size:0.85rem;">
-                <button class="btn btn-primary btn-sm" onclick="saveGitHubToken()" style="flex-shrink:0;">Save</button>
-            </div>
-            <div id="settings-github-hint" style="margin-top:4px;font-size:0.75rem;color:#666;"></div>
-            <div class="settings-hint">Personal Access Token for syncing swing notes to GitHub — stored locally in your browser for security (never exported). Meetings are synced to GitHub and shared with your team.</div>
-        </div>
-
 </div>
 
 <div class="main">
 
     <!-- ══════════════════════════════════ PRESTART -->
     <div class="tab-pane" id="pane-prestart">
+
+        <div class="card" style="background:#f0f4f8;border:1px dashed #cbd5e0;">
+            <div style="display:flex;gap:12px;align-items:center;">
+                <div style="flex:1;">
+                    <div style="font-weight:600;margin-bottom:4px;">📄 Import from PDF</div>
+                    <div style="font-size:0.85rem;color:#4a5568;">Upload a prestart meeting PDF to auto-fill the form</div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="document.getElementById('pdf-import-input').click()">📤 Import PDF</button>
+                <input type="file" id="pdf-import-input" accept=".pdf" style="display:none;" onchange="handlePDFImport(event)">
+            </div>
+        </div>
 
         <div class="card">
             <div class="card-title">Shift Details</div>
@@ -696,12 +657,11 @@ if (document.readyState === 'loading') {
             <table>
                 <thead>
                     <tr>
-                        <th style="width:28%">Name</th>
-                        <th style="width:20%">Company</th>
+                        <th style="width:36%">Name</th>
                         <th style="width:15%">Result</th>
-                        <th style="width:12%">Initials</th>
+                        <th style="width:14%">Initials</th>
                         <th style="width:12%;text-align:center;">Signed</th>
-                        <th style="width:13%;" class="no-print"></th>
+                        <th style="width:10%;" class="no-print"></th>
                     </tr>
                 </thead>
                 <tbody id="att-body"></tbody>
@@ -829,10 +789,10 @@ if (document.readyState === 'loading') {
                     <textarea id="sw-context" placeholder="Brief description of the swing — e.g. End-of-program demob swing. Diamond drilling complete, focus on sample dispatch, rig extraction and site clean-up before wet season." style="min-height:64px;"></textarea>
                 </div>
                 <button class="btn btn-primary btn-sm" onclick="saveSwing()">Save Swing Settings</button>
-                <button class="btn btn-ghost btn-sm" onclick="startNewSwing()" style="margin-left:8px;">+ Start New Swing</button>
             </div>
         </div>
 
+        <div id="swing-banner-container"></div>
 
         <div class="card">
             <div class="card-title" id="log-list-title">Meeting Log</div>
@@ -886,7 +846,6 @@ if (document.readyState === 'loading') {
         <div class="btn-group no-print">
             <button class="btn btn-primary" onclick="saveHandover()">Save Handover</button>
             <button class="btn btn-ghost"   onclick="addHandoverSection()">+ Add Section</button>
-            <button class="btn btn-purple"  onclick="generateHandoverSummary()">✨ Generate AI Summary</button>
             <button class="btn btn-ghost"   onclick="window.print()">Print / PDF</button>
             <button class="btn btn-green"   onclick="sendHandover()">✉ Send to Team</button>
             <button class="btn btn-danger btn-sm" onclick="clearHandover()">Clear Handover</button>
@@ -1053,7 +1012,7 @@ if (document.readyState === 'loading') {
 
         <div class="card">
             <div class="card-title">Data and Backup</div>
-            <p style="margin-bottom:10px;">Meeting data and handovers are automatically synced to GitHub and shared across all users. Your GitHub token is stored locally in your browser for security (never exported). Once you configure your GitHub token, all swing notes are persistent and visible to your entire team.</p>
+            <p style="margin-bottom:10px;">All data is stored in your browser's local storage. It will persist between sessions on the same device but will be lost if you clear your browser data. It is recommended to use the Export button at the end of each swing to save a JSON backup to your records folder.</p>
             <p>To restore data on a new device or after a browser reset, use the Import button and load the most recent backup file.</p>
         </div>
 
@@ -1062,60 +1021,74 @@ if (document.readyState === 'loading') {
 
     </div><!-- /guide -->
 
+    <!-- ══════════════════════════════════ FEEDBACK -->
+    <div class="tab-pane" id="pane-feedback" style="display:none;">
+
+        <div class="card">
+            <div class="card-title">Share Your Feedback</div>
+            <p style="margin-bottom:14px;color:var(--muted);">Help us improve the Safety Meetings Tool with your suggestions, bugs, or observations. Your feedback is valuable and helps shape the future of this tool.</p>
+
+            <div class="row" style="margin-bottom:12px;">
+                <div class="field">
+                    <label>Your Name</label>
+                    <input type="text" id="fb-name" placeholder="Your name">
+                </div>
+                <div class="field">
+                    <label>Your Role</label>
+                    <input type="text" id="fb-role" placeholder="e.g. Geologist, Supervisor, Driller">
+                </div>
+            </div>
+
+            <div class="field" style="margin-bottom:12px;">
+                <label>Feedback Type</label>
+                <select id="fb-type">
+                    <option value="">— Select a type —</option>
+                    <option value="Bug Report">🐛 Bug Report (something isn't working)</option>
+                    <option value="Feature Request">✨ Feature Request (new capability)</option>
+                    <option value="Improvement">💡 Improvement (enhance existing feature)</option>
+                    <option value="Documentation">📖 Documentation (help/guide feedback)</option>
+                    <option value="Other">💬 Other comment</option>
+                </select>
+            </div>
+
+            <div class="field" style="margin-bottom:12px;">
+                <label>Your Feedback</label>
+                <textarea id="fb-message" placeholder="Describe what you'd like us to know. Be as specific as possible — what were you trying to do? What happened? What did you expect?"></textarea>
+            </div>
+
+            <div class="btn-group no-print" style="margin-top:0;">
+                <button class="btn btn-primary" onclick="submitFeedback()">✓ Submit Feedback</button>
+                <button class="btn btn-ghost" onclick="clearFeedbackForm()">Clear</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Recent Feedback (This Device)</div>
+            <p style="margin-bottom:12px;color:var(--muted);font-size:0.88rem;">Feedback submitted from this device. This list is stored locally and not shared.</p>
+            <div id="fb-list-container">
+                <p style="color:var(--muted);font-style:italic;">No feedback submitted yet. Share your thoughts above!</p>
+            </div>
+        </div>
+
+        <div class="card" style="background:var(--blue);color:white;border:none;">
+            <div class="card-title" style="color:white;border-color:rgba(255,255,255,0.3);">How to Send Feedback to the Team</div>
+            <p style="margin-bottom:10px;color:rgba(255,255,255,0.9);">Your feedback is saved locally on this device. To share it with the team:</p>
+            <ol style="margin-left:20px;line-height:2;color:rgba(255,255,255,0.9);">
+                <li><strong>Email your feedback</strong> to your Site Geologist or Site Supervision</li>
+                <li><strong>Or click "Export Feedback"</strong> below to download all feedback as a file and share it</li>
+                <li>Include your name, role, and the type of feedback to help us prioritize</li>
+            </ol>
+            <div class="btn-group no-print" style="margin-top:14px;">
+                <button class="btn btn-ghost-white" onclick="exportFeedback()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);">⬇ Export Feedback</button>
+                <button class="btn btn-ghost-white" onclick="clearAllFeedback()" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);">🗑 Clear All Feedback</button>
+            </div>
+        </div>
+
+    </div><!-- /feedback -->
+
 </div><!-- /main -->
 
 <div class="toast" id="toast"></div>
-
-<!-- FEEDBACK MODAL -->
-<div class="modal" id="feedback-modal" style="display:none;">
-    <div class="modal-overlay" onclick="closeFeedbackModal()"></div>
-    <div class="modal-content">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <h2 style="margin:0;font-size:1.1rem;">💬 Feedback</h2>
-            <button class="btn btn-ghost btn-sm" onclick="closeFeedbackModal()" style="font-size:1.2rem;padding:0;width:30px;height:30px;">✕</button>
-        </div>
-
-        <div class="field" style="margin-bottom:12px;">
-            <label>Your Name</label>
-            <input type="text" id="modal-fb-name" placeholder="Your name">
-        </div>
-
-        <div class="field" style="margin-bottom:12px;">
-            <label>Feedback Type</label>
-            <select id="modal-fb-type">
-                <option value="">— Select a type —</option>
-                <option value="Bug Report">🐛 Bug Report</option>
-                <option value="Feature Request">✨ Feature Request</option>
-                <option value="Improvement">💡 Improvement</option>
-                <option value="Documentation">📖 Documentation</option>
-                <option value="Other">💬 Other</option>
-            </select>
-        </div>
-
-        <div class="field" style="margin-bottom:12px;">
-            <label>Feature/Area</label>
-            <select id="modal-fb-feature">
-                <option value="">— Select area —</option>
-                <option value="Prestart Meeting">📋 Prestart Meeting</option>
-                <option value="Swing Log">📊 Swing Log</option>
-                <option value="Handover Document">📄 Handover</option>
-                <option value="Toolbox Talks">🎯 Toolbox Talks</option>
-                <option value="Settings">⚙️ Settings</option>
-                <option value="General">💬 General</option>
-            </select>
-        </div>
-
-        <div class="field" style="margin-bottom:12px;">
-            <label>Your Feedback</label>
-            <textarea id="modal-fb-message" placeholder="Describe your feedback…" style="min-height:100px;"></textarea>
-        </div>
-
-        <div class="btn-group" style="gap:8px;">
-            <button class="btn btn-primary" onclick="submitModalFeedback()">✓ Submit</button>
-            <button class="btn btn-ghost" onclick="closeFeedbackModal()">Cancel</button>
-        </div>
-    </div>
-</div>
 
 <script>
 // ══════════════════════════════════════════════════
@@ -1130,118 +1103,6 @@ const HANDOVER_RECIPIENTS_KEY  = 'prestart_v1_handover_recipients'; // device-lo
 const TOOLBOXES_KEY = 'prestart_v1_toolboxes';
 const ROSTER_KEY    = 'prestart_v1_roster';
 
-// ══════════════════════════════════════════════════
-// GITHUB SYNC CONFIGURATION
-// ══════════════════════════════════════════════════
-const GITHUB_OWNER = 'tp-tvn';
-const GITHUB_REPO = 'Swing-management-tool';
-// Get GitHub token from localStorage or environment
-function getGitHubToken() {
-    return localStorage.getItem('GITHUB_TOKEN') || '';
-}
-// Use getter instead of constant
-Object.defineProperty(window, 'GITHUB_TOKEN', {
-    get: function() { return getGitHubToken(); },
-    enumerable: true,
-    configurable: true
-});
-const GITHUB_API_BASE = 'https://api.github.com/repos';
-const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com';
-
-function getSwingDate() {
-    const sw = getSwingSettings();
-    return sw.startDate || today();
-}
-
-function getSwingFilePath() {
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    const date = getSwingDate();
-    return `data/swings/${startDate}-to-${endDate}/${date}/meetings.json`;
-}
-
-function getHandoverFilePath() {
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    return `data/swings/${startDate}-to-${endDate}/handover.json`;
-}
-
-// ══════════════════════════════════════════════════
-// GITHUB SYNC FUNCTIONS
-// ══════════════════════════════════════════════════
-
-async function syncMeetingsToGitHub(meetings) {
-    if (!GITHUB_TOKEN) return;
-    const path = getSwingFilePath();
-    const url = `${GITHUB_API_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
-    const content = btoa(JSON.stringify(meetings, null, 2));
-    let sha = null;
-    try {
-        const getResp = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-        if (getResp.ok) sha = (await getResp.json()).sha;
-    } catch (e) { console.warn('Could not fetch current file SHA:', e); }
-    try {
-        const resp = await fetch(url, {
-            method: 'PUT',
-            headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: `Update swing notes for ${getSwingDate()}`, content: content, sha: sha, committer: { name: 'Swing Tool', email: 'swing-tool@tivan.local' } })
-        });
-        if (!resp.ok) console.error(`GitHub API error: ${resp.status}`, await resp.text());
-        else console.log('[OK] Meetings synced to GitHub');
-    } catch (e) { console.warn('GitHub sync failed:', e); }
-}
-
-async function syncHandoverToGitHub(handover) {
-    if (!GITHUB_TOKEN) return;
-    const path = getHandoverFilePath();
-    const url = `${GITHUB_API_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
-    const content = btoa(JSON.stringify(handover, null, 2));
-    let sha = null;
-    try {
-        const getResp = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-        if (getResp.ok) sha = (await getResp.json()).sha;
-    } catch (e) { console.warn('Could not fetch handover SHA:', e); }
-    try {
-        const resp = await fetch(url, {
-            method: 'PUT',
-            headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: `Update handover for swing ending ${getSwingDate()}`, content: content, sha: sha, committer: { name: 'Swing Tool', email: 'swing-tool@tivan.local' } })
-        });
-        if (!resp.ok) console.error(`GitHub API error: ${resp.status}`, await resp.text());
-        else console.log('[OK] Handover synced to GitHub');
-    } catch (e) { console.warn('Handover sync failed:', e); }
-}
-
-async function loadMeetingsFromGitHub() {
-    if (!GITHUB_TOKEN) return null;
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    const date = getSwingDate();
-    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/${date}/meetings.json`;
-    try {
-        const resp = await fetch(url);
-        if (resp.ok) return await resp.json();
-    } catch (e) { console.warn('Could not fetch meetings from GitHub:', e); }
-    return null;
-}
-
-async function loadHandoverFromGitHub() {
-    if (!GITHUB_TOKEN) return null;
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/handover.json`;
-    try {
-        const resp = await fetch(url);
-        if (resp.ok) return await resp.json();
-    } catch (e) { console.warn('Could not fetch handover from GitHub:', e); }
-    return null;
-}
-
-
 function getRoster() {
     try { return JSON.parse(localStorage.getItem(ROSTER_KEY)) || []; }
     catch { return []; }
@@ -1255,23 +1116,16 @@ function getToolboxes() {
 function setToolboxes(d) { localStorage.setItem(TOOLBOXES_KEY, JSON.stringify(d)); }
 
 function getMeetings() {
-    if (GITHUB_TOKEN && window.__githubMeetingsCache) return window.__githubMeetingsCache;
     try { return JSON.parse(localStorage.getItem(MEETINGS_KEY)) || []; }
     catch { return []; }
 }
-function setMeetings(d) { 
-    localStorage.setItem(MEETINGS_KEY, JSON.stringify(d)); 
-    if (GITHUB_TOKEN) syncMeetingsToGitHub(d).catch(err => console.warn('GitHub sync failed:', err));
-}
+function setMeetings(d) { localStorage.setItem(MEETINGS_KEY, JSON.stringify(d)); }
 
 function getHandover() {
     try { return JSON.parse(localStorage.getItem(HANDOVER_KEY)) || defaultHandover(); }
     catch { return defaultHandover(); }
 }
-function setHandover(d) { 
-    localStorage.setItem(HANDOVER_KEY, JSON.stringify(d)); 
-    if (GITHUB_TOKEN) syncHandoverToGitHub(d).catch(err => console.warn('Handover sync failed:', err));
-}
+function setHandover(d) { localStorage.setItem(HANDOVER_KEY, JSON.stringify(d)); }
 
 function getSwingSettings() {
     try { return JSON.parse(localStorage.getItem(SWING_KEY)) || {}; }
@@ -1283,16 +1137,10 @@ function getApiKey()        { return localStorage.getItem(APIKEY_KEY) || ''; }
 function setApiKey(k)       { localStorage.setItem(APIKEY_KEY, k); }
 
 function getRecipients()           { return localStorage.getItem(RECIPIENTS_KEY) || ''; }
-function setRecipients(v) { 
-    localStorage.setItem(RECIPIENTS_KEY, v); 
-    if (GITHUB_TOKEN) syncSettingsToGitHub().catch(err => console.warn('Settings sync failed:', err));
-}
+function setRecipients(v)          { localStorage.setItem(RECIPIENTS_KEY, v); }
 
 function getHandoverRecipients()   { return localStorage.getItem(HANDOVER_RECIPIENTS_KEY) || ''; }
-function setHandoverRecipients(v) { 
-    localStorage.setItem(HANDOVER_RECIPIENTS_KEY, v); 
-    if (GITHUB_TOKEN) syncSettingsToGitHub().catch(err => console.warn('Settings sync failed:', err));
-}
+function setHandoverRecipients(v)  { localStorage.setItem(HANDOVER_RECIPIENTS_KEY, v); }
 
 function defaultHandover() {
     return {
@@ -1315,6 +1163,502 @@ function defaultHandover() {
 }
 
 // ══════════════════════════════════════════════════
+// SHAREPOINT INTEGRATION
+// ══════════════════════════════════════════════════
+
+const SHAREPOINT_CONFIG = {
+    clientId: '7f280876-d61a-4d0b-890a-bc877913008e',
+    tenantId: '9008b84c-daf3-4680-a149-70463dba23c3',
+    siteUrl: 'https://tngltd.sharepoint.com/sites/SpeewahFluorite',
+    library: 'Shared Documents',
+    rootFolder: 'General/03 - HSEC/00 - MSMS/6. SPW_Records & Reporting/7. Meetings Tool'
+};
+
+const SYNC_QUEUE_KEY = 'prestart_v1_syncQueue';
+const CONNECTION_KEY = 'prestart_v1_connected';
+
+let msalApp = null;
+let currentUser = null;
+let isConnected = false;
+let isSyncing = false;
+
+const scopes = ['Sites.ReadWrite.All', 'Files.ReadWrite.All'];
+
+function initMSAL() {
+    const config = {
+        auth: {
+            clientId: SHAREPOINT_CONFIG.clientId,
+            authority: `https://login.microsoftonline.com/${SHAREPOINT_CONFIG.tenantId}`,
+            redirectUri: window.location.href.split('#')[0]
+        },
+        cache: {
+            cacheLocation: 'sessionStorage',
+            storeAuthStateInCookie: false
+        }
+    };
+    msalApp = new msal.PublicClientApplication(config);
+    msalApp.initialize();
+}
+
+async function getSharePointToken() {
+    if (!msalApp) return null;
+    try {
+        const token = await msalApp.acquireTokenSilent({ scopes });
+        return token.accessToken;
+    } catch (error) {
+        console.warn('Silent token acquisition failed', error);
+        return null;
+    }
+}
+
+async function signIn() {
+    console.log('signIn() called, msalApp:', !!msalApp);
+    if (!msalApp) {
+        console.error('MSAL app not initialized');
+        toast('SharePoint not initialized. Refresh the page.');
+        return false;
+    }
+    try {
+        console.log('Attempting popup sign-in with scopes:', scopes);
+        const result = await msalApp.loginPopup({ scopes });
+        console.log('Sign-in successful:', result);
+        currentUser = result.account;
+        updateAuthUI();
+        await loadFromSharePoint();
+        return true;
+    } catch (error) {
+        console.error('Sign-in failed:', error);
+        toast(`Sign-in failed: ${error.message}`);
+        return false;
+    }
+}
+
+function signOut() {
+    if (msalApp && currentUser) {
+        msalApp.logoutPopup({ account: currentUser });
+        currentUser = null;
+        updateAuthUI();
+    }
+}
+
+async function checkAuthentication() {
+    if (!msalApp) return false;
+    const accounts = msalApp.getAllAccounts();
+    if (accounts.length > 0) {
+        currentUser = accounts[0];
+        return true;
+    }
+    return false;
+}
+
+function handleAuthClick() {
+    if (currentUser) {
+        signOut();
+    } else {
+        signIn();
+    }
+}
+
+function updateAuthUI() {
+    const authBtn = document.getElementById('auth-btn');
+    if (!authBtn) return;
+
+    if (currentUser) {
+        authBtn.textContent = `Sign out (${currentUser.name || 'User'})`;
+    } else {
+        authBtn.textContent = 'Sign in';
+    }
+}
+
+async function checkSharePointConnection() {
+    const token = await getSharePointToken();
+    if (!token) return false;
+    try {
+        const response = await fetch(`${SHAREPOINT_CONFIG.siteUrl}/_api/web/`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        isConnected = response.ok;
+        updateConnectionUI();
+        return isConnected;
+    } catch {
+        isConnected = false;
+        updateConnectionUI();
+        return false;
+    }
+}
+
+function updateConnectionUI() {
+    const connIndicator = document.getElementById('connection-indicator');
+    if (!connIndicator) return;
+    if (isSyncing) {
+        connIndicator.textContent = '⟳';
+        connIndicator.title = 'Syncing...';
+        connIndicator.style.color = '#4299e1';
+    } else if (isConnected) {
+        connIndicator.textContent = '●';
+        connIndicator.title = 'Online';
+        connIndicator.style.color = '#48bb78';
+    } else {
+        connIndicator.textContent = '◯';
+        connIndicator.title = 'Offline';
+        connIndicator.style.color = '#f6ad55';
+    }
+}
+
+function startConnectionMonitor() {
+    setInterval(async () => {
+        await checkSharePointConnection();
+        if (isConnected && getSyncQueue().length > 0) {
+            await processSyncQueue();
+        }
+    }, 30000);
+}
+
+function getSyncQueue() {
+    try { return JSON.parse(localStorage.getItem(SYNC_QUEUE_KEY)) || []; }
+    catch { return []; }
+}
+
+function setSyncQueue(queue) {
+    localStorage.setItem(SYNC_QUEUE_KEY, JSON.stringify(queue));
+    updateSyncQueueUI();
+}
+
+function addToSyncQueue(type, data, filename) {
+    const queue = getSyncQueue();
+    queue.push({
+        type,
+        data,
+        filename,
+        timestamp: new Date().toISOString(),
+        retries: 0
+    });
+    setSyncQueue(queue);
+}
+
+function updateSyncQueueUI() {
+    const badge = document.getElementById('sync-queue-badge');
+    if (!badge) return;
+    const count = getSyncQueue().length;
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+async function processSyncQueue() {
+    if (isSyncing) return;
+    const queue = getSyncQueue();
+    if (queue.length === 0) return;
+
+    isSyncing = true;
+    updateConnectionUI();
+    toast('Syncing...');
+
+    const newQueue = [];
+    for (const item of queue) {
+        const success = await uploadToSharePoint(item.type, item.data, item.filename);
+        if (!success) {
+            newQueue.push({ ...item, retries: (item.retries || 0) + 1 });
+        }
+    }
+
+    setSyncQueue(newQueue);
+    isSyncing = false;
+    updateConnectionUI();
+
+    if (newQueue.length === 0) {
+        toast('✓ All changes synced to SharePoint');
+    } else {
+        toast(`Synced ${queue.length - newQueue.length} items (${newQueue.length} pending)`);
+    }
+}
+
+async function uploadToSharePoint(type, data, filename) {
+    const token = await getSharePointToken();
+    if (!token) return false;
+
+    const folderMap = {
+        meeting: 'Prestarts',
+        handover: 'Handovers',
+        toolbox: 'ToolboxTalks'
+    };
+    const folder = folderMap[type];
+    if (!folder) return false;
+
+    try {
+        const fileUrl = `${SHAREPOINT_CONFIG.siteUrl}/_api/web/GetFolderByServerRelativePath(decodedUrl='${encodeURIComponent(`/sites/SpeewahFluorite/Shared Documents/${SHAREPOINT_CONFIG.rootFolder}/${folder}/${filename}`)}')/files/add(overwrite=true)`;
+
+        const response = await fetch(fileUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        return response.ok;
+    } catch (error) {
+        console.error('Upload failed:', error);
+        return false;
+    }
+}
+
+async function loadFromSharePoint() {
+    const token = await getSharePointToken();
+    if (!token) return;
+
+    try {
+        const meetings = await loadSharePointFolder('Prestarts');
+        const handovers = await loadSharePointFolder('Handovers');
+        const toolboxes = await loadSharePointFolder('ToolboxTalks');
+
+        if (meetings) setMeetings(meetings);
+        if (handovers && handovers.length > 0) setHandover(handovers[0]);
+        if (toolboxes) setToolboxes(toolboxes);
+    } catch (error) {
+        console.error('Failed to load from SharePoint:', error);
+    }
+}
+
+async function loadSharePointFolder(folderName) {
+    const token = await getSharePointToken();
+    if (!token) return null;
+
+    try {
+        const folderUrl = `${SHAREPOINT_CONFIG.siteUrl}/_api/web/GetFolderByServerRelativePath(decodedUrl='${encodeURIComponent(`/sites/SpeewahFluorite/Shared Documents/${SHAREPOINT_CONFIG.rootFolder}/${folderName}`)}')`;
+        const filesUrl = `${folderUrl}/files`;
+
+        const response = await fetch(filesUrl, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) return null;
+        const data = await response.json();
+        const files = data.value || [];
+
+        const records = [];
+        for (const file of files) {
+            const fileContent = await fetch(`${SHAREPOINT_CONFIG.siteUrl}/_api/web/GetFileByServerRelativePath(decodedUrl='${encodeURIComponent(file.ServerRelativeUrl)}')/$value`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (fileContent.ok) {
+                const json = await fileContent.json();
+                records.push(json);
+            }
+        }
+
+        return records;
+    } catch {
+        return null;
+    }
+}
+
+function getMeetingFileName(date, shift) {
+    if (!date) return null;
+    const clean = date.replace(/-/g, '');
+    return `${clean}_${shift}.json`;
+}
+
+function getHandoverFileName(startDate, endDate) {
+    if (!startDate || !endDate) return null;
+    const s = startDate.replace(/-/g, '');
+    const e = endDate.replace(/-/g, '');
+    return `${s}_to_${e}.json`;
+}
+
+function getToolboxFileName(date, topic) {
+    if (!date) return null;
+    const clean = date.replace(/-/g, '');
+    const sanitized = (topic || 'Untitled').replace(/[^a-z0-9]/gi, '');
+    return `${clean}_${sanitized}.json`;
+}
+
+// ══════════════════════════════════════════════════
+// PDF IMPORT
+// ══════════════════════════════════════════════════
+
+async function handlePDFImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+        const text = await extractTextFromPDF(file);
+        const data = parsePDFText(text);
+        populateFormFromPDF(data);
+        toast('✓ PDF imported successfully! Please review and save.');
+    } catch (error) {
+        console.error('PDF import failed:', error);
+        toast(`⚠️ Failed to import PDF: ${error.message}`);
+    }
+}
+
+async function extractTextFromPDF(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            try {
+                const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
+                let fullText = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const text = await page.getTextContent();
+                    fullText += text.items.map(item => item.str).join(' ') + '\n';
+                }
+                resolve(fullText);
+            } catch (err) {
+                reject(err);
+            }
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+function parsePDFText(text) {
+    const data = {};
+
+    // Extract Shift Details - more precise parsing
+    const detailsSection = text.match(/SHIFT\s+DETAILS[\s\S]*?ATTENDANCE/i);
+    if (detailsSection) {
+        const section = detailsSection[0];
+
+        // Extract individual fields
+        const projMatch = section.match(/PROJECT\s+(\S+)/i);
+        if (projMatch) data.project = projMatch[1];
+
+        const dateMatch = section.match(/DATE\s+(\d{4}-\d{2}-\d{2}|\d+\/\d+\/\d+)/i);
+        if (dateMatch) {
+            let dateStr = dateMatch[1];
+            if (dateStr.includes('/')) {
+                const [m, d, y] = dateStr.split('/');
+                dateStr = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+            }
+            data.date = dateStr;
+        }
+
+        // Extract shift - look for "Dayshift" or "Nightshift" specifically
+        const shiftMatch = section.match(/SHIFT\s+(Dayshift|Nightshift|Day|Night)/i);
+        if (shiftMatch) {
+            data.shift = shiftMatch[1].includes('Night') ? 'Nightshift' : 'Dayshift';
+        }
+
+        const supervisorMatch = section.match(/SUPERVISOR\s+(\w*)/i);
+        if (supervisorMatch) data.supervisor = supervisorMatch[1] || '';
+    }
+
+    // Extract Attendance records
+    const attTable = text.match(/ATTENDANCE[\s\S]*?(?:PREVIOUS 24|$)/i);
+    if (attTable) {
+        const lines = attTable[0].split('\n');
+        data.attendance = [];
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            // Match pattern: Name Company Pass/Fail Initials
+            const match = line.match(/^([A-Z][a-z]+ [A-Z][a-z]+)\s+(\w+)\s+(Pass|Fail)\s+([A-Z]{2})/i);
+            if (match) {
+                data.attendance.push({
+                    name: match[1],
+                    company: match[2],
+                    result: match[3],
+                    initials: match[4]
+                });
+            }
+        }
+    }
+
+    // Extract Previous 24hrs
+    const prev24 = text.match(/PREVIOUS 24[\s\S]*?(?:QUICK STATS|$)/i);
+    if (prev24) {
+        data.prev24 = prev24[0].replace(/PREVIOUS 24[\s\S]*?PERFORMANCE\s*/i, '').trim();
+    }
+
+    // Extract Earthworks stats - only from the stats section
+    const statsSection = text.match(/QUICK STATS[\s\S]*?EARTHWORKS[\s\S]*?(?:DRILLING|Daily Tasks)/i);
+    if (statsSection) {
+        // Extract only numbers for pad counts (they'll be empty in the PDF we're testing)
+        const signedMatch = statsSection[0].match(/PADS SIGNED OFF\s*(\d+)?/i);
+        const clearedMatch = statsSection[0].match(/PADS CLEARED\s*(\d+)?/i);
+        const rehabMatch = statsSection[0].match(/PADS REHABILITATED\s*(\d+)?/i);
+
+        data.ewSignedOff = signedMatch && signedMatch[1] ? signedMatch[1] : '';
+        data.ewCleared = clearedMatch && clearedMatch[1] ? clearedMatch[1] : '';
+        data.ewRehab = rehabMatch && rehabMatch[1] ? rehabMatch[1] : '';
+    }
+
+    // Extract Daily Tasks
+    const dailyTasks = text.match(/DAILY TASKS\s+([\s\S]*?)(?:SAFETY FOCUS|$)/i);
+    if (dailyTasks) {
+        data.dailyTasks = dailyTasks[1].trim();
+    }
+
+    // Extract Safety Focus
+    const safetyFocus = text.match(/SAFETY FOCUS\s+([\s\S]*?)(?:HIGH RISK|$)/i);
+    if (safetyFocus) {
+        data.safetyFocus = safetyFocus[1].trim();
+    }
+
+    // Extract High Risk Work
+    const highRisk = text.match(/HIGH RISK[\s\S]*?\s+([\s\S]*?)(?:GENERAL BUSINESS|$)/i);
+    if (highRisk) {
+        data.highRisk = highRisk[1].trim();
+    }
+
+    // Extract General Business
+    const generalBusiness = text.match(/GENERAL BUSINESS\s+([\s\S]*?)(?:ACTIONS|$)/i);
+    if (generalBusiness) {
+        data.generalBusiness = generalBusiness[1].trim();
+    }
+
+    return data;
+}
+
+function populateFormFromPDF(data) {
+    try {
+        if (data.project) document.getElementById('f-project').value = data.project;
+        if (data.date) document.getElementById('f-date').value = data.date;
+        if (data.shift) {
+            const shiftSelect = document.getElementById('f-shift');
+            // Only set if it's a valid option
+            if (['Dayshift', 'Nightshift'].includes(data.shift)) {
+                shiftSelect.value = data.shift;
+            }
+        }
+        if (data.supervisor) document.getElementById('f-supervisor').value = data.supervisor;
+    } catch (error) {
+        console.warn('Error populating shift details:', error);
+    }
+
+    // Populate attendance
+    if (data.attendance && data.attendance.length > 0) {
+        attRows = [];
+        data.attendance.forEach(att => {
+            attRows.push({
+                id: uid(),
+                name: att.name,
+                result: att.result,
+                initials: att.initials
+            });
+        });
+        renderAtt();
+    }
+
+    if (data.prev24) document.getElementById('f-prev24').value = data.prev24;
+    if (data.ewSignedOff) document.getElementById('f-ew-signedoff').value = data.ewSignedOff;
+    if (data.ewCleared) document.getElementById('f-ew-cleared').value = data.ewCleared;
+    if (data.ewRehab) document.getElementById('f-ew-rehab').value = data.ewRehab;
+    if (data.dailyTasks) document.getElementById('f-tasks').value = data.dailyTasks;
+    if (data.safetyFocus) document.getElementById('f-safety').value = data.safetyFocus;
+    if (data.highRisk) document.getElementById('f-highrisk').value = data.highRisk;
+    if (data.generalBusiness) document.getElementById('f-general').value = data.generalBusiness;
+
+    updateHeader();
+}
+
+// ══════════════════════════════════════════════════
 // TABS
 // ══════════════════════════════════════════════════
 function showTab(name) {
@@ -1325,7 +1669,7 @@ function showTab(name) {
     document.body.dataset.tab = name;
     if (name === 'log')      renderLog();
     if (name === 'handover') renderHandover();
-    if (name === 'feedback') { try { renderFeedbackList(); } catch(e) { console.error('Feedback render error:', e); } }
+    if (name === 'feedback') renderFeedbackList();
 }
 
 // ══════════════════════════════════════════════════
@@ -1376,9 +1720,15 @@ function newToolbox() {
     for (let i = 0; i < 10; i++) addTbRow();
 }
 
-function saveToolbox() {
+async function saveToolbox() {
     const date = document.getElementById('tb-date').value;
     if (!date) { toast('Set a date first.'); return; }
+
+    if (!currentUser) {
+        toast('⚠️ Please sign in to save to SharePoint.');
+        return;
+    }
+
     const record = {
         id:        tbCurrentId || uid(),
         date,
@@ -1389,12 +1739,31 @@ function saveToolbox() {
         attendees: tbRows.filter(r => r.name.trim()),
         savedAt:   new Date().toISOString(),
     };
+
+    const filename = getToolboxFileName(date, record.topic);
+    if (!filename) { toast('Unable to generate filename.'); return; }
+
     tbCurrentId = record.id;
     const list = getToolboxes();
     const idx  = list.findIndex(x => x.id === record.id);
     if (idx >= 0) list[idx] = record; else list.push(record);
     setToolboxes(list);
-    toast('Toolbox talk saved!');
+
+    // Try to save to SharePoint
+    const connected = await checkSharePointConnection();
+    if (connected) {
+        const success = await uploadToSharePoint('toolbox', record, filename);
+        if (success) {
+            toast('✓ Toolbox talk saved to SharePoint!');
+        } else {
+            toast('⚠️ Cannot reach SharePoint — will sync when reconnected');
+            addToSyncQueue('toolbox', record, filename);
+        }
+    } else {
+        toast('⚠️ Offline — changes saved locally, will sync when reconnected');
+        addToSyncQueue('toolbox', record, filename);
+    }
+
     renderToolboxLog();
 }
 
@@ -1437,8 +1806,8 @@ function loadToolbox(id) {
 // ══════════════════════════════════════════════════
 let attRows = [];
 
-function addAttRow(name='', company='', result='Pass', initials='', signed=false) {
-    attRows.push({ id: uid(), name, company, result, initials, signed });
+function addAttRow(name='', result='Pass', initials='', signed=false) {
+    attRows.push({ id: uid(), name, result, initials, signed });
     renderAtt();
 }
 
@@ -1447,8 +1816,6 @@ function renderAtt() {
         <tr data-id="${r.id}">
             <td><input type="text" value="${esc(r.name)}" placeholder="Full name"
                 oninput="attSet('${r.id}','name',this.value)"></td>
-            <td><input type="text" value="${esc(r.company || '')}" placeholder="Company"
-                oninput="attSet('${r.id}','company',this.value)"></td>
             <td><select class="${resultClass(r.result)}"
                 onchange="attSet('${r.id}','result',this.value);this.className=resultClass(this.value)">
                 <option ${r.result==='Pass'?'selected':''}>Pass</option>
@@ -1638,17 +2005,42 @@ function readForm() {
     };
 }
 
-function saveMeeting() {
+async function saveMeeting() {
     const m = readForm();
     if (!m.date) { toast('Set a date first.'); return; }
+
+    if (!currentUser) {
+        toast('⚠️ Please sign in to save to SharePoint.');
+        return;
+    }
+
+    const filename = getMeetingFileName(m.date, m.shift);
+    if (!filename) { toast('Unable to generate filename.'); return; }
+
     currentId = m.id;
     const meetings = getMeetings();
     const idx = meetings.findIndex(x => x.id === m.id);
     if (idx >= 0) meetings[idx] = m; else meetings.push(m);
     setMeetings(meetings);
+
     const rosterNames = m.attendance.map(r => r.name).filter(Boolean);
     if (rosterNames.length) setRoster(rosterNames);
-    toast('Saved!');
+
+    // Try to save to SharePoint
+    const connected = await checkSharePointConnection();
+    if (connected) {
+        const success = await uploadToSharePoint('meeting', m, filename);
+        if (success) {
+            toast('✓ Saved to SharePoint!');
+        } else {
+            toast('⚠️ Cannot reach SharePoint — will sync when reconnected');
+            addToSyncQueue('meeting', m, filename);
+        }
+    } else {
+        toast('⚠️ Offline — changes saved locally, will sync when reconnected');
+        addToSyncQueue('meeting', m, filename);
+    }
+
     updateHeader();
 
     // Auto-generate executive summary if API key is present
@@ -1657,37 +2049,12 @@ function saveMeeting() {
     }
 }
 
-function autofillPrev24() {
-    const dateStr = document.getElementById('f-date').value;
-    if (!dateStr) return;
-
-    const date = new Date(dateStr);
-    date.setDate(date.getDate() - 1);
-    const prevDateStr = date.toISOString().split('T')[0];
-
-    const meetings = getMeetings();
-    const prevMeeting = meetings.find(m => m.date === prevDateStr);
-
-    if (prevMeeting && prevMeeting.dailyTasks) {
-        // Update textarea
-        document.getElementById('f-prev24').value = prevMeeting.dailyTasks;
-
-        // Update blue preview box
-        const el24 = document.getElementById('ctx-prev24');
-        el24.innerHTML =
-            `<div class="ctx-label">Yesterday's Tasks — ${fmtDate(prevMeeting.date)} ${prevMeeting.shift}</div>` +
-            `<div class="ctx-box">${esc(prevMeeting.dailyTasks)}</div>`;
-    }
-}
-
 function updateHeader() {
     const date  = document.getElementById('f-date').value;
     const shift = document.getElementById('f-shift').value;
     const proj  = document.getElementById('f-project').value;
-    const sw    = getSwingSettings();
-    const swingName = sw.name ? `[${sw.name}]` : '';
     document.getElementById('headerMeta').textContent =
-        [proj, fmtDate(date), shift, swingName].filter(Boolean).join(' · ');
+        [proj, fmtDate(date), shift].filter(Boolean).join(' · ');
     document.title = `Pre-Start Meeting ${date || today()}`;
 }
 
@@ -1842,37 +2209,7 @@ function toggleSwingSettings() {
     document.getElementById('sw-toggle-btn').textContent = swSettingsOpen ? '▲ Collapse' : '▼ Expand';
 }
 
-async function loadSwingMeetingsRange(startDate, endDate) {
-    if (!GITHUB_TOKEN) return [];
-
-    const meetings = [];
-    const current = new Date(startDate);
-    const end = new Date(endDate);
-
-    while (current <= end) {
-        const dateStr = current.toISOString().split('T')[0];
-        const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/${dateStr}/meetings.json`;
-
-        try {
-            const resp = await fetch(url);
-            if (resp.ok) {
-                const dayMeetings = await resp.json();
-                meetings.push(...dayMeetings);
-                console.log(`[OK] Loaded ${dayMeetings.length} meetings for ${dateStr}`);
-            }
-        } catch (e) {
-            console.warn(`Could not fetch meetings for ${dateStr}:`, e);
-        }
-
-        current.setDate(current.getDate() + 1);
-    }
-
-    console.log(`[OK] Loaded ${meetings.length} total meetings from GitHub`);
-    return meetings;
-}
-
-async function saveSwing() {
-    const oldSw = getSwingSettings();
+function saveSwing() {
     const sw = {
         name:      document.getElementById('sw-name').value,
         startDate: document.getElementById('sw-start').value,
@@ -1881,20 +2218,10 @@ async function saveSwing() {
         folderUrl: document.getElementById('settings-folder-url').value,
     };
     setSwingSettings(sw);
-
-    // Only load from GitHub if dates actually changed
-    const datesChanged = oldSw.startDate !== sw.startDate || oldSw.endDate !== sw.endDate;
-    if (datesChanged && GITHUB_TOKEN && sw.startDate && sw.endDate) {
-        const meetings = await loadSwingMeetingsRange(sw.startDate, sw.endDate);
-        if (meetings.length > 0) {
-            window.__githubMeetingsCache = meetings;
-            setMeetings(meetings);
-        }
-    }
-
     toast('Swing settings saved!');
     renderLog();
 }
+
 function loadSwingSettingsUI() {
     const sw = getSwingSettings();
     document.getElementById('sw-name').value       = sw.name      || '';
@@ -1924,6 +2251,29 @@ function filterBySwing(meetings) {
     });
 }
 
+function renderSwingBanner(filtered) {
+    const sw = getSwingSettings();
+    const container = document.getElementById('swing-banner-container');
+    if (!sw.name && !sw.startDate) { container.innerHTML = ''; return; }
+
+    const openActions  = filtered.flatMap(m => (m.actions || []).filter(a => !a.done)).length;
+    const supervisors  = [...new Set(filtered.map(m => m.supervisor).filter(Boolean))];
+
+    container.innerHTML = `
+        <div class="swing-banner">
+            <div class="swing-banner-name">${esc(sw.name || 'Current Swing')}</div>
+            <div class="swing-banner-dates">
+                ${sw.startDate ? fmtDate(sw.startDate) : '—'} &nbsp;→&nbsp; ${sw.endDate ? fmtDate(sw.endDate) : '—'}
+            </div>
+            <div class="swing-stats">
+                <div class="swing-stat"><strong>${filtered.length}</strong> meetings</div>
+                ${openActions ? `<div class="swing-stat"><strong>${openActions}</strong> open action${openActions>1?'s':''}</div>` : ''}
+                ${supervisors.length ? `<div class="swing-stat" style="flex:1;"><strong>Supervisors:</strong> ${esc(supervisors.join(', '))}</div>` : ''}
+            </div>
+            ${sw.context ? `<div class="swing-banner-context">${esc(sw.context)}</div>` : ''}
+        </div>`;
+}
+
 // ══════════════════════════════════════════════════
 // LOG
 // ══════════════════════════════════════════════════
@@ -1935,6 +2285,8 @@ function renderLog() {
 
     const allMeetings = getMeetings();
     const filtered    = filterBySwing(allMeetings).sort((a, b) => b.date.localeCompare(a.date));
+
+    renderSwingBanner(filtered);
 
     const isFiltered = !!(getSwingSettings().startDate || getSwingSettings().endDate);
     document.getElementById('log-list-title').textContent = isFiltered
@@ -2024,10 +2376,9 @@ function viewMeeting(id) {
 
     if (m.attendance && m.attendance.length) {
         html += `<div style="margin-bottom:16px;"><div class="card-title">Attendance</div>
-            <table><thead><tr><th>Name</th><th>Company</th><th>Result</th><th>Initials</th><th style="text-align:center;">Signed</th></tr></thead>
+            <table><thead><tr><th>Name</th><th>Result</th><th>Initials</th><th style="text-align:center;">Signed</th></tr></thead>
             <tbody>${m.attendance.map(a=>`<tr>
                 <td>${esc(a.name)}</td>
-                <td>${esc(a.company||'')}</td>
                 <td style="color:${a.result==='Pass'?'var(--green)':a.result==='Fail'?'var(--red)':'var(--muted)'};font-weight:600;">${a.result}</td>
                 <td>${esc(a.initials||'')}</td>
                 <td style="text-align:center;">${a.signed?'✓':'—'}</td>
@@ -2222,10 +2573,33 @@ function addHandoverSection() {
     renderHandover();
 }
 
-function saveHandover() {
+async function saveHandover() {
+    if (!currentUser) {
+        toast('⚠️ Please sign in to save to SharePoint.');
+        return;
+    }
+
     collectHo();
+    const sw = getSwingSettings();
+    const filename = getHandoverFileName(sw.startDate, sw.endDate);
+    if (!filename) { toast('Set swing dates first.'); return; }
+
     setHandover(ho);
-    toast('Handover saved!');
+
+    // Try to save to SharePoint
+    const connected = await checkSharePointConnection();
+    if (connected) {
+        const success = await uploadToSharePoint('handover', ho, filename);
+        if (success) {
+            toast('✓ Handover saved to SharePoint!');
+        } else {
+            toast('⚠️ Cannot reach SharePoint — will sync when reconnected');
+            addToSyncQueue('handover', ho, filename);
+        }
+    } else {
+        toast('⚠️ Offline — changes saved locally, will sync when reconnected');
+        addToSyncQueue('handover', ho, filename);
+    }
 }
 
 // ══════════════════════════════════════════════════
@@ -2312,7 +2686,7 @@ function buildMailto(summaryPoints) {
     const shift     = document.getElementById('f-shift').value   || '';
     const folderUrl = getSwingSettings().folderUrl || 'https://tngltd.sharepoint.com/:f:/s/SpeewahFluorite/IgDafJGerqIJSbXo1P7HdlBFAXJJeSSYaq0AvZlUDF17GE0?e=6tnWBf';
 
-    const subject = `${project} Prestart — ${fmtDateLong(date)} ${shift}`;
+    const subject = `${project} Prestart — ${fmtDate(date)} ${shift}`;
 
     // Build quick stats block
     const ewS = document.getElementById('f-ew-signedoff').value;
@@ -2344,7 +2718,7 @@ function buildMailto(summaryPoints) {
         statsBlock += '\n';
     }
 
-    let body = `Hi Team,\n\nPlease find the morning prestart notes for ${fmtDateLong(date)} in the records folder below.\n\n`;
+    let body = `Hi Team,\n\nPlease find the morning prestart notes for ${fmtDate(date)} in the records folder below.\n\n`;
     if (summaryPoints) {
         body += `Main points from today:\n\n${summaryPoints}\n\n`;
     }
@@ -2367,32 +2741,12 @@ async function synthesisePoints() {
     const general = document.getElementById('f-general').value.trim();
 
     if (!apiKey) {
-        // Fallback — extract first sentence from each field, prioritize safety
-        const points = [];
-
-        // Safety (highest priority)
-        if (safety) {
-            const safetyPoint = safety.split(/[.\n]/)[0].trim();
-            if (safetyPoint) points.push('• ' + safetyPoint);
-        }
-
-        // High risk work
-        if (highrisk) {
-            const riskPoint = highrisk.split(/[.\n]/)[0].trim();
-            if (riskPoint && riskPoint !== safetyPoint) points.push('• ' + riskPoint);
-        }
-
-        // Other key points (prev24, tasks, general)
-        const otherFields = [prev24, tasks, general].filter(Boolean);
-        for (const field of otherFields) {
-            if (points.length >= 3) break;
-            const point = field.split(/[.\n]/)[0].trim();
-            if (point && !points.some(p => p.includes(point))) {
-                points.push('• ' + point);
-            }
-        }
-
-        return points.length > 0 ? points.join('\n') : null;
+        // Fallback — first sentence of each relevant field, safety first
+        const fallback = [safety, highrisk, prev24, tasks, general]
+            .filter(Boolean)
+            .slice(0, 3)
+            .map(s => '• ' + s.split(/[.\n]/)[0].trim());
+        return fallback.join('\n') || null;
     }
 
     const ewS = document.getElementById('f-ew-signedoff').value;
@@ -2447,12 +2801,35 @@ Be factual, concise, plain language. Each bullet one sentence.`;
 }
 
 async function sendToTeam() {
-    const points = await synthesisePoints();
-    const mailto = buildMailto(points);
-    toast('Opening email...');
-    window.location.href = mailto;
-}
+    const date    = document.getElementById('f-date').value;
+    const sugName = `Pre-Start Meeting ${date || today()}.html`;
 
+    toast('Preparing…');
+    const points  = await synthesisePoints();
+    const mailto  = buildMailto(points);
+
+    if ('showSaveFilePicker' in window) {
+        try {
+            const handle = await window.showSaveFilePicker({
+                suggestedName: sugName,
+                types: [{ description: 'Web Page', accept: { 'text/html': ['.html'] } }]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(generateMeetingHTML());
+            await writable.close();
+            toast('Saved! Opening folder and email…');
+            const folderUrl = getSwingSettings().folderUrl || '';
+            if (folderUrl) window.open(folderUrl, '_blank');
+            setTimeout(() => { window.location.href = mailto; }, 400);
+        } catch (err) {
+            if (err.name === 'AbortError') return; // user cancelled — do nothing
+            // API failed for another reason — fall back to print
+            fallbackPrintAndEmail(mailto);
+        }
+    } else {
+        fallbackPrintAndEmail(mailto);
+    }
+}
 
 function fallbackPrintAndEmail(mailto) {
     const handler = () => {
@@ -2460,7 +2837,7 @@ function fallbackPrintAndEmail(mailto) {
         setTimeout(() => { window.location.href = mailto; }, 300);
     };
     window.addEventListener('afterprint', handler);
-    toast('Save as PDF in the print dialog, then your email will open automatically.');
+    toast('Save as PDF, then your email will open automatically.');
     window.print();
 }
 
@@ -2481,10 +2858,9 @@ function generateMeetingHTML() {
     const attHTML = attRows.length ? `
         <h2>Attendance &amp; Breathalyser</h2>
         <table>
-            <thead><tr><th>Name</th><th>Company</th><th>Result</th><th>Initials</th><th>Signed</th></tr></thead>
+            <thead><tr><th>Name</th><th>Result</th><th>Initials</th><th>Signed</th></tr></thead>
             <tbody>${attRows.map(r => `<tr>
                 <td>${esc(r.name)}</td>
-                <td>${esc(r.company || '')}</td>
                 <td style="color:${r.result==='Pass'?'#276749':r.result==='Fail'?'#c53030':'#b7791f'};font-weight:600;">${esc(r.result)}</td>
                 <td>${esc(r.initials)}</td>
                 <td style="text-align:center;">${r.signed ? '✓' : '—'}</td>
@@ -2535,6 +2911,100 @@ function generateMeetingHTML() {
 <head>
 <meta charset="UTF-8">
 <title>Pre-Start Meeting ${date || today()}</title>
+    <style>
+        html.blocked { display: none; }
+    </style>
+    <script>
+        // Block page rendering until authentication succeeds
+        document.documentElement.classList.add('blocked');
+
+        (function() {
+            const CORRECT_PASSWORD = "Tivan0923@";
+            const PASSWORD_KEY = "swing_tool_authenticated";
+
+            if (sessionStorage.getItem(PASSWORD_KEY) === "true") {
+                // Already authenticated, show page
+                document.documentElement.classList.remove('blocked');
+                return;
+            }
+
+            let attempts = 0;
+            let authenticated = false;
+
+            while (!authenticated && attempts < 3) {
+                const password = prompt("🔐 Enter password to access Swing Management Tool:", "");
+
+                if (password === null) {
+                    alert("❌ Access denied.
+⚠️ This tool is for Tivan Limited employees only.");
+                    return;
+                }
+
+                if (password === "Tivan0923@") {
+                    sessionStorage.setItem(PASSWORD_KEY, "true");
+                    authenticated = true;
+                    document.documentElement.classList.remove('blocked');
+                } else {
+                    attempts++;
+                    if (attempts < 3) {
+                        alert("❌ Incorrect password. Try again.
+⚠️ This tool is for Tivan Limited employees only.");
+                    } else {
+                        alert("❌ Access denied. Too many incorrect attempts.
+⚠️ This tool is for Tivan Limited employees only.");
+                        return;
+                    }
+                }
+            }
+        })();
+    </script>
+    <style>
+        html.blocked { display: none; }
+    </style>
+    <script>
+        // Block page rendering until authentication succeeds
+        document.documentElement.classList.add('blocked');
+
+        (function() {
+            const CORRECT_PASSWORD = "Tivan0923@";
+            const PASSWORD_KEY = "swing_tool_authenticated";
+
+            if (sessionStorage.getItem(PASSWORD_KEY) === "true") {
+                // Already authenticated, show page
+                document.documentElement.classList.remove('blocked');
+                return;
+            }
+
+            let attempts = 0;
+            let authenticated = false;
+
+            while (!authenticated && attempts < 3) {
+                const password = prompt("🔐 Enter password to access Swing Management Tool:", "");
+
+                if (password === null) {
+                    alert("❌ Access denied.
+⚠️ This tool is for Tivan Limited employees only.");
+                    return;
+                }
+
+                if (password === "Tivan0923@") {
+                    sessionStorage.setItem(PASSWORD_KEY, "true");
+                    authenticated = true;
+                    document.documentElement.classList.remove('blocked');
+                } else {
+                    attempts++;
+                    if (attempts < 3) {
+                        alert("❌ Incorrect password. Try again.
+⚠️ This tool is for Tivan Limited employees only.");
+                    } else {
+                        alert("❌ Access denied. Too many incorrect attempts.
+⚠️ This tool is for Tivan Limited employees only.");
+                        return;
+                    }
+                }
+            }
+        })();
+    </script>
 <style>
   body { font-family: Arial, sans-serif; font-size: 12pt; color: #2d3748; margin: 20mm 18mm; }
   h1   { font-size: 16pt; color: #1e3a5f; border-bottom: 2px solid #1e3a5f; padding-bottom: 6px; margin-bottom: 4px; }
@@ -2597,145 +3067,6 @@ function importData(e) {
     e.target.value = '';
 }
 
-
-function setGitHubToken(token) {
-    if (token) {
-        localStorage.setItem('GITHUB_TOKEN', token);
-        toast('GitHub token saved');
-    } else {
-        localStorage.removeItem('GITHUB_TOKEN');
-        toast('GitHub token removed');
-    }
-}
-
-function getGitHubTokenStatus() {
-    const token = getGitHubToken();
-    if (!token) return 'Not configured';
-    return 'Configured (token: ' + token.substring(0, 10) + '...)';
-}
-
-
-function saveGitHubToken() {
-    const token = document.getElementById('settings-github-token').value.trim();
-    if (!token) {
-        toast('Please enter a GitHub token');
-        return;
-    }
-    setGitHubToken(token);
-    updateGitHubTokenHint();
-}
-
-function updateGitHubTokenHint() {
-    const hint = document.getElementById('settings-github-hint');
-    if (!hint) return;
-    const status = getGitHubTokenStatus();
-    hint.textContent = status;
-    hint.style.color = getGitHubToken() ? '#28a745' : '#999';
-}
-
-function loadGitHubTokenToUI() {
-    const input = document.getElementById('settings-github-token');
-    if (input) {
-        const token = getGitHubToken();
-        if (token) {
-            input.value = token;
-        }
-        updateGitHubTokenHint();
-    }
-}
-
-
-// ══════════════════════════════════════════════════
-// SETTINGS SYNC TO GITHUB
-// ══════════════════════════════════════════════════
-
-function getSettingsFilePath() {
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    return `data/swings/${startDate}-to-${endDate}/settings.json`;
-}
-
-async function syncSettingsToGitHub() {
-    if (!GITHUB_TOKEN) {
-        console.warn('GitHub token not configured, settings not synced');
-        return;
-    }
-    
-    const settings = {
-        recipients: getRecipients(),
-        handoverRecipients: getHandoverRecipients(),
-        recordsFolderUrl: document.getElementById('settings-records-url')?.value || '',
-        slackWebhook: getSlackWebhook(),
-        lastUpdated: new Date().toISOString()
-    };
-    
-    const path = getSettingsFilePath();
-    const url = `${GITHUB_API_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
-    const content = btoa(JSON.stringify(settings, null, 2));
-    
-    let sha = null;
-    try {
-        const getResp = await fetch(url, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
-        if (getResp.ok) sha = (await getResp.json()).sha;
-    } catch (e) {
-        console.warn('Could not fetch current settings SHA:', e);
-    }
-    
-    try {
-        const resp = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: `Update team settings`,
-                content: content,
-                sha: sha,
-                committer: { name: 'Swing Tool', email: 'swing-tool@tivan.local' }
-            })
-        });
-        
-        if (!resp.ok) {
-            console.error(`GitHub API error: ${resp.status}`, await resp.text());
-        } else {
-            console.log('[OK] Settings synced to GitHub');
-        }
-    } catch (e) {
-        console.warn('Settings sync failed:', e);
-    }
-}
-
-async function loadSettingsFromGitHub() {
-    if (!GITHUB_TOKEN) return null;
-    
-    const sw = getSwingSettings();
-    const startDate = sw.startDate || today();
-    const endDate = sw.endDate || today();
-    const url = `${GITHUB_RAW_BASE}/${GITHUB_OWNER}/${GITHUB_REPO}/main/data/swings/${startDate}-to-${endDate}/settings.json`;
-    
-    try {
-        const resp = await fetch(url);
-        if (resp.ok) {
-            const settings = await resp.json();
-            // Apply loaded settings
-            if (settings.recipients) setRecipients(settings.recipients);
-            if (settings.handoverRecipients) setHandoverRecipients(settings.handoverRecipients);
-            if (settings.recordsFolderUrl) {
-                const elem = document.getElementById('settings-records-url');
-                if (elem) elem.value = settings.recordsFolderUrl;
-            }
-            if (settings.slackWebhook) saveSlackWebhook(settings.slackWebhook);
-            console.log('[OK] Settings loaded from GitHub');
-            return settings;
-        }
-    } catch (e) {
-        console.warn('Could not load settings from GitHub:', e);
-    }
-    return null;
-}
-
 // ══════════════════════════════════════════════════
 // UTILS
 // ══════════════════════════════════════════════════
@@ -2746,12 +3077,6 @@ function fmtDate(s) {
     if (!s) return '—';
     const d = new Date(s + 'T00:00:00');
     return d.toLocaleDateString('en-AU', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
-}
-
-function fmtDateLong(s) {
-    if (!s) return '—';
-    const d = new Date(s + 'T00:00:00');
-    return d.toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 }
 
 function esc(s) {
@@ -2768,11 +3093,9 @@ function toast(msg) {
 }
 
 // ══════════════════════════════════════════════════
-// FEEDBACK & API
+// FEEDBACK
 // ══════════════════════════════════════════════════
 const FEEDBACK_KEY = 'prestart_v1_feedback';
-const SLACK_WEBHOOK_KEY = 'prestart_v1_slack_webhook';
-const API_KEY = 'prestart_v1_api_key';
 
 function getFeedback() {
     try { return JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || []; }
@@ -2781,86 +3104,35 @@ function getFeedback() {
 
 function setFeedback(d) { localStorage.setItem(FEEDBACK_KEY, JSON.stringify(d)); }
 
-function getSlackWebhook() {
-    return localStorage.getItem(SLACK_WEBHOOK_KEY) || '';
-}
-
-function saveSlackWebhook(url) {
-    localStorage.setItem(SLACK_WEBHOOK_KEY, url);
-}
-
-async function submitFeedback() {
+function submitFeedback() {
     const name = document.getElementById('fb-name').value.trim();
+    const role = document.getElementById('fb-role').value.trim();
     const type = document.getElementById('fb-type').value;
-    const feature = document.getElementById('fb-feature').value;
     const message = document.getElementById('fb-message').value.trim();
 
     if (!name) { toast('Please enter your name'); return; }
     if (!type) { toast('Please select a feedback type'); return; }
-    if (!feature) { toast('Please select which area you\'re providing feedback about'); return; }
     if (!message) { toast('Please enter your feedback'); return; }
 
     const feedback = {
         id: uid(),
         timestamp: new Date().toISOString(),
-        name, type, feature, message
+        name, role, type, message
     };
 
     const all = getFeedback();
     all.push(feedback);
     setFeedback(all);
 
-    // Send to Slack if webhook is configured
-    const webhookUrl = getSlackWebhook();
-    if (webhookUrl) {
-        const slackMessage = {
-            text: `📝 New Feedback Submitted`,
-            blocks: [
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: `*New Feedback from ${name}*\n_${type}_`
-                    }
-                },
-                {
-                    type: 'section',
-                    fields: [
-                        { type: 'mrkdwn', text: `*Name:*\n${name}` },
-                        { type: 'mrkdwn', text: `*Area:*\n${feature}` },
-                        { type: 'mrkdwn', text: `*Type:*\n${type}` }
-                    ]
-                },
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: `*Feedback:*\n${message}`
-                    }
-                }
-            ]
-        };
-
-        try {
-            await fetch(webhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(slackMessage)
-            });
-        } catch (e) {
-            console.error('Slack notification failed:', e);
-        }
-    }
-
     clearFeedbackForm();
     renderFeedbackList();
-    toast('Thank you! Feedback submitted.' + (webhookUrl ? ' ✓ Sent to Slack' : ''));
+    toast('Thank you! Feedback submitted.');
 }
 
 function clearFeedbackForm() {
     document.getElementById('fb-name').value = '';
+    document.getElementById('fb-role').value = '';
     document.getElementById('fb-type').value = '';
-    document.getElementById('fb-feature').value = '';
     document.getElementById('fb-message').value = '';
 }
 
@@ -2934,106 +3206,10 @@ function toggleSettings() {
     panel.classList.toggle('open');
 }
 
-function toggleFeedbackModal() {
-    const modal = document.getElementById('feedback-modal');
-    modal.style.display = modal.style.display === 'none' ? 'flex' : 'none';
-}
-
-function closeFeedbackModal() {
-    document.getElementById('feedback-modal').style.display = 'none';
-}
-
-async function submitModalFeedback() {
-    const name = document.getElementById('modal-fb-name').value.trim();
-    const type = document.getElementById('modal-fb-type').value;
-    const feature = document.getElementById('modal-fb-feature').value;
-    const message = document.getElementById('modal-fb-message').value.trim();
-
-    if (!name) { toast('Please enter your name'); return; }
-    if (!type) { toast('Please select a feedback type'); return; }
-    if (!feature) { toast('Please select which area you\'re providing feedback about'); return; }
-    if (!message) { toast('Please enter your feedback'); return; }
-
-    const feedback = {
-        id: uid(),
-        timestamp: new Date().toISOString(),
-        name, type, feature, message
-    };
-
-    const all = getFeedback();
-    all.push(feedback);
-    setFeedback(all);
-
-    // Send to Slack if webhook is configured
-    const webhookUrl = getSlackWebhook();
-    if (webhookUrl) {
-        const slackMessage = {
-            text: `📝 New Feedback Submitted`,
-            blocks: [
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: `*New Feedback from ${name}*\n_${type}_`
-                    }
-                },
-                {
-                    type: 'section',
-                    fields: [
-                        { type: 'mrkdwn', text: `*Name:*\n${name}` },
-                        { type: 'mrkdwn', text: `*Area:*\n${feature}` },
-                        { type: 'mrkdwn', text: `*Type:*\n${type}` }
-                    ]
-                },
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: `*Feedback:*\n${message}`
-                    }
-                }
-            ]
-        };
-
-        try {
-            await fetch(webhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(slackMessage)
-            });
-        } catch (e) {
-            console.error('Slack notification failed:', e);
-        }
-    }
-
-    document.getElementById('modal-fb-name').value = '';
-    document.getElementById('modal-fb-type').value = '';
-    document.getElementById('modal-fb-feature').value = '';
-    document.getElementById('modal-fb-message').value = '';
-    closeFeedbackModal();
-    toast('Thank you! Feedback submitted.' + (webhookUrl ? ' ✓ Sent to Slack' : ''));
-}
-
 function saveFolderUrl(v) {
     const sw = getSwingSettings();
     sw.folderUrl = v;
     setSwingSettings(sw);
-}
-
-function getApiKey() {
-    const key = localStorage.getItem(API_KEY) || '';
-    return key;
-}
-
-function setApiKey(key) {
-    localStorage.setItem(API_KEY, key);
-}
-
-function updateApikeyHint() {
-    const hasKey = !!getApiKey();
-    const hint = document.getElementById('settings-apikey-hint');
-    hint.textContent = hasKey ? '✓ API key saved' : '';
-    hint.style.color = hasKey ? 'var(--green)' : '';
 }
 
 function saveApiKey() {
@@ -3045,93 +3221,6 @@ function saveApiKey() {
     }
     updateApikeyHint();
     toast('API key saved!');
-}
-
-async function generateHandoverSummary() {
-    const apiKey = getApiKey();
-    if (!apiKey) {
-        toast('⚠️ Please configure your Claude API key in Settings first');
-        document.getElementById('settings-panel').classList.add('open');
-        return;
-    }
-
-    const incoming = document.getElementById('ho-incoming').value.trim();
-    const outgoing = document.getElementById('ho-outgoing').value.trim();
-    const staying = document.getElementById('ho-staying').value.trim();
-    const sections = document.querySelectorAll('[data-ho-section-id]');
-
-    if (sections.length === 0) {
-        toast('⚠️ Please add some handover sections first');
-        return;
-    }
-
-    const summaryBtn = event?.target;
-    if (summaryBtn) summaryBtn.disabled = true;
-
-    try {
-        const sectionContent = Array.from(sections).map(sec => {
-            const title = sec.querySelector('.ho-section-title')?.value || '';
-            const content = sec.querySelector('textarea')?.value || '';
-            return `${title}:\n${content}`;
-        }).join('\n\n');
-
-        const prompt = `You are an expert shift manager. Create a brief, professional executive summary of this handover document. Focus on key points, critical issues, and action items. Keep it concise and actionable.
-
-Incoming Team: ${incoming || 'Not specified'}
-Outgoing Team: ${outgoing || 'Not specified'}
-Staying On: ${staying || 'Not specified'}
-
-Handover Details:
-${sectionContent}
-
-Provide a clear, structured summary suitable for briefing the incoming shift.`;
-
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01'
-            },
-            body: JSON.stringify({
-                model: 'claude-3-5-sonnet-20241022',
-                max_tokens: 500,
-                messages: [
-                    { role: 'user', content: prompt }
-                ]
-            })
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error?.message || 'API error');
-        }
-
-        const data = await response.json();
-        const summary = data.content[0].text;
-
-        const summaryDiv = document.getElementById('ho-summary-generated') || (() => {
-            const div = document.createElement('div');
-            div.id = 'ho-summary-generated';
-            div.className = 'card';
-            document.getElementById('ho-sections').insertAdjacentElement('beforebegin', div);
-            return div;
-        })();
-
-        summaryDiv.innerHTML = `
-            <div class="card-title">AI Generated Summary</div>
-            <div style="white-space:pre-wrap;word-break:break-word;color:var(--text);line-height:1.6;">
-                ${esc(summary)}
-            </div>
-        `;
-
-        toast('✓ Summary generated!');
-    } catch (err) {
-        toast('❌ Error: ' + (err.message || 'Failed to generate summary'));
-        console.error(err);
-    } finally {
-        if (summaryBtn) summaryBtn.disabled = false;
-    }
 }
 
 // ══════════════════════════════════════════════════
@@ -3195,13 +3284,14 @@ window.addEventListener('afterprint', () => {
 // ══════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
     document.body.dataset.tab = 'prestart';
     applyTheme(localStorage.getItem('prestart_v1_theme') === 'dark');
     document.getElementById('recipients-input').value          = getRecipients();
     document.getElementById('ho-recipients-input').value       = getHandoverRecipients();
-    document.getElementById('settings-slack-webhook').value    = getSlackWebhook();
-    updateApikeyHint();
     newMeeting();
     newToolbox();
     renderToolboxLog();
@@ -3209,48 +3299,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(id).addEventListener('change', updateHeader);
     });
 
-    document.getElementById('f-date').addEventListener('change', autofillPrev24);
+    // Initialize SharePoint integration
+    initMSAL();
+    const authenticated = await checkAuthentication();
+    if (authenticated) {
+        await loadFromSharePoint();
+        updateAuthUI();
+    }
+    updateConnectionUI();
+    startConnectionMonitor();
 });
-
-// Load GitHub token to UI when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(loadGitHubTokenToUI, 100);
-});
-
-
-function startNewSwing() {
-    const days = prompt("How many days in this swing? (e.g. 7)", "7");
-    if (!days || isNaN(days)) return;
-    
-    const numDays = parseInt(days);
-    const startDate = today();
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + numDays - 1);
-    const endDateStr = endDate.toISOString().split('T')[0];
-    
-    setSwingSettings({
-        name: prompt("Swing name? (e.g. Swing 1 - April)", `Swing - ${startDate}`),
-        startDate: startDate,
-        endDate: endDateStr,
-        context: ""
-    });
-    
-    // Reload the swing settings display
-    document.getElementById('sw-name').value = getSwingSettings().name || "";
-    document.getElementById('sw-start').value = startDate;
-    document.getElementById('sw-end').value = endDateStr;
-    document.getElementById('sw-context').value = "";
-    
-    toast(`New swing started: ${startDate} to ${endDateStr}`);
-    renderLog(); // Refresh the log
-}
-
-
-// Initialize swing banner on page load
-if (document.readyState === 'loading') {
-    } else {
-}
-
 </script>
 </body>
 </html>
