@@ -49,50 +49,6 @@ alert("❌ Access denied. Too many incorrect attempts.\n⚠️ This tool is for 
         })();
     </script>
     <style>
-        html.blocked { display: none; }
-    </style>
-    <script>
-        // Block page rendering until authentication succeeds
-        document.documentElement.classList.add('blocked');
-
-        (function() {
-            const CORRECT_PASSWORD = "Tivan0923@";
-            const PASSWORD_KEY = "swing_tool_authenticated";
-
-            if (sessionStorage.getItem(PASSWORD_KEY) === "true") {
-                // Already authenticated, show page
-                document.documentElement.classList.remove('blocked');
-                return;
-            }
-
-            let attempts = 0;
-            let authenticated = false;
-
-            while (!authenticated && attempts < 3) {
-                const password = prompt("🔐 Enter password to access Swing Management Tool:", "");
-
-                if (password === null) {
-                    alert("❌ Access denied.\n⚠️ This tool is for Tivan Limited employees only.");
-                    return;
-                }
-
-                if (password === "Tivan0923@") {
-                    sessionStorage.setItem(PASSWORD_KEY, "true");
-                    authenticated = true;
-                    document.documentElement.classList.remove('blocked');
-                } else {
-                    attempts++;
-                    if (attempts < 3) {
-                        alert("❌ Incorrect password. Try again.\n⚠️ This tool is for Tivan Limited employees only.");
-                    } else {
-                        alert("❌ Access denied. Too many incorrect attempts.\n⚠️ This tool is for Tivan Limited employees only.");
-                        return;
-                    }
-                }
-            }
-        })();
-    </script>
-    <style>
         :root {
             --blue:       #1e3a5f;
             --blue-light: #2c5282;
@@ -2993,19 +2949,9 @@ function generateMeetingHTML() {
             }
         })();
     </script>
-<style>
-  body { font-family: Arial, sans-serif; font-size: 12pt; color: #2d3748; margin: 20mm 18mm; }
-  h1   { font-size: 16pt; color: #1e3a5f; border-bottom: 2px solid #1e3a5f; padding-bottom: 6px; margin-bottom: 4px; }
-  .meta { font-size: 10pt; color: #718096; margin-bottom: 18px; }
-  h2   { font-size: 11pt; color: #1e3a5f; border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; margin: 18px 0 6px; }
-  p    { margin: 0 0 10px; line-height: 1.5; }
-  table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 10px; }
-  th   { background: #1e3a5f; color: #fff; text-align: left; padding: 5px 8px; }
-  td   { border: 1px solid #e2e8f0; padding: 4px 8px; vertical-align: top; }
-  tr:nth-child(even) td { background: #f7fafc; }
-  @media print { body { margin: 15mm; } }
-</style>
+
 </head>
+<body>
 <body>
 <h1>Daily Prestart Meeting — ${esc(project)}</h1>
 <div class="meta">${fmtDate(date)} &nbsp;|&nbsp; ${shift}${supervisor ? ' &nbsp;|&nbsp; Supervisor: ' + supervisor : ''}</div>
